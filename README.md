@@ -1,2 +1,2 @@
-# kotinode
+# KoTiNode
 KoTiNode API
