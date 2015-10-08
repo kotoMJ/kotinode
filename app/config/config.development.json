@@ -1,0 +1,4 @@
+{
+    "mongo" : "mongodb://localhost/kotinode",
+    "port" : 8080
+}

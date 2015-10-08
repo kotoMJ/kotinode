@@ -10,25 +10,36 @@ var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 var KotoEvent     = require('./app/models/kotoevent');
 var moment      = require('moment');
+var config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'prod' ? 'production' : 'development');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8080;        // set our port
+var port = config.port;
 
-mongoose.connect('mongodb://localhost/test'); // connect to our database
-
+mongoose.connect(config.mongo);
 
 // ROUTES FOR OUR API
 // =============================================================================
 var api_router = express.Router();              // get an instance of the express Router
+var web_router = express.Router();
+
+web_router.use(function (req, res, next) {
+   console.log('Access WEB KoTi request');
+    next();
+});
+
+// test route to make sure everything is working (accessed at GET http://localhost:8080/)
+web_router.get('/', function(req, res) {
+    res.send("<html><body>Access WEB KoTi request</body></html>");
+});
 
 // middleware to use for all requests
 api_router.use(function(req, res, next) {
     // do logging
-    console.log('Routing koti request.');
+    console.log('Access API KoTi request.');
     next(); // make sure we go to the next routes and don't stop here
 });
 
@@ -38,8 +49,6 @@ api_router.get('/', function(req, res) {
 });
 
 // more routes for our API will happen here
-
-// on routes that end in /bears
 // ----------------------------------------------------
 api_router.route('/kotinode')
 
@@ -137,6 +146,7 @@ api_router.route('/kotinode/:kotoevent_id')
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
+app.use('/', web_router);
 app.use('/api', api_router);
 
 
