@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 var KotoEvent     = require('./app/models/kotoevent');
 var moment      = require('moment');
-var config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'prod' ? 'production' : 'development');
+var config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
