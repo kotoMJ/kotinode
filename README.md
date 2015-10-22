@@ -5,6 +5,7 @@ Main server(REST API) and frontend intended to be server for all Kotomisak's mob
 
 Current version of KoTiNode is rather a skeleton for an API with following main TODO's:
 - create API for [KoTiNode](https://github.com/kotomisak/koti-point-android) mobile app
+- create scripts for mongodb
 - use authentication (OAuth2) for secured access
 - administration web for mobile app's data
 - public face for the [Kotopeky](www.kotopeky.cz) and [Tihava](www.tihava.cz) willages
