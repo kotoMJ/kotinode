@@ -7,7 +7,7 @@ Current version of KoTiNode is rather a skeleton for an API with following main 
 - create API for [KoTiNode](https://github.com/kotomisak/koti-point-android) mobile app
 - use authentication (OAuth2) for secured access
 - administration web for mobile app's data
-- public face for the Kotopeky and Tihava willages
+- public face for the [Kotopeky](www.kotopeky.cz) and [Tihava](www.tihava.cz) willages
 - ...
 
 
