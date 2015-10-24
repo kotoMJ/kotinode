@@ -8,7 +8,7 @@ Current version of KoTiNode is rather a skeleton for an API with following main 
 - create scripts for mongodb
 - use authentication (OAuth2) for secured access
 - administration web for mobile app's data
-- public face for the [Kotopeky](www.kotopeky.cz) and [Tihava](www.tihava.cz) willages
+- public face for the [Kotopeky](http://www.kotopeky.cz) and [Tihava](http://www.tihava.cz) willages
 - ...
 
 
