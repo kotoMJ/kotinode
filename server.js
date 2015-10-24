@@ -8,10 +8,10 @@ var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
-var KotoEvent     = require('./app/models/kotoevent');
 var KotoInventory = require('./app/models/kotoinventory')
-var moment      = require('moment');
 var config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
+var kotipointController = require('./app/controllers/kotoevent');
+var kotoinventoryController = require('./app/controllers/kotoinventory');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -53,121 +53,25 @@ api_router.get('/', function(req, res) {
 // ----------------------------------------------------
 api_router.route('/kotinode/inventory')
 
-    // create a bear (accessed at POST http://url:port/api/kotinode)
-    .post(function(req, res) {
-        console.log("/kotinode inventory post");
-        var kotoevent = new KotoEvent();      // create a new instance of the KotoEvent model
-        console.log('req.body='+req.body);
-        res.json(req.body);
-    })
-
-    // get all the kotoinventory (accessed at GET http://url:port/api/kotinode)
-    .get(function(req, res) {
-        KotoInventory.find(function(err, inventory) {
-            if (err)
-                res.send(err);
-
-            res.json(inventory);
-        });
-    });
-
+    .post(kotoinventoryController.postInventory)
+    .get(kotoinventoryController.getInventory);
 
 // ----------------------------------------------------
 // more routes for our API will happen here
 // ----------------------------------------------------
 api_router.route('/kotinode/event')
 
-    // create a bear (accessed at POST http://url:port/api/kotinode)
-    .post(function(req, res) {
-        console.log("/kotinode event post");
-        var kotoevent = new KotoEvent();      // create a new instance of the KotoEvent model
-        kotoevent.name = req.body.name;  // set the kotinode name (comes from the request)
-        kotoevent.date = moment(req.body.date, "DD.MM.YYYY:ssZ").toDate();
-        kotoevent.note = req.body.note;
-        kotoevent.description = req.body.descriptioncc;
-
-
-        // save the bear and check for errors
-        kotoevent.save(function(err) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'KotoEvent created!' });
-        });
-
-    })
-
-    // get all the kotinode (accessed at GET http://url:port/api/kotinode)
-    .get(function(req, res) {
-        KotoEvent.find(function(err, kotinode) {
-            if (err)
-                res.send(err);
-
-            res.json(kotinode);
-        });
-    })
-
-    // delete all kotinode (accessed at DELETE http://url:port/api/kotinode/)
-    .delete(function(req, res) {
-        KotoEvent.remove({}, function(err, bear) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'All KotoEvents deleted' });
-        });
-    });
-
+    .post(kotipointController.postEvents)
+    .get(kotipointController.getEvents)
+    .delete(kotipointController.deleteEvents);
 
 // on routes that end in /kotinode/:kotoevent_id
 // ----------------------------------------------------
 api_router.route('/kotinode/event/:kotoevent_id')
 
-    // get the bear with that id (accessed at GET http://url:port/api/kotinode/:kotoevent_id)
-    .get(function(req, res) {
-        KotoEvent.findById(req.params.kotoevent_id, function(err, bear) {
-            if (err)
-                res.send(err);
-            res.json(bear);
-        });
-    })
-
-    // update the bear with this id (accessed at PUT http://url:port/api/kotinode/:kotoevent_id)
-    .put(function(req, res) {
-
-        // use our bear model to find the bear we want
-        KotoEvent.findById(req.params.kotoevent_id, function(err, kotoevent) {
-
-            if (err)
-                res.send(err);
-
-            kotoevent.name = req.body.name;  // update the kotinode info
-            kotoevent.date = req.body.date;
-            kotoevent.note = req.body.note;
-            kotoevent.description = req.body.description;
-
-            // save the bear
-            kotoevent.save(function(err) {
-                if (err)
-                    res.send(err);
-
-                res.json({ message: 'KotoEvent updated!' });
-            });
-
-        });
-    })
-
-    // delete the bear with this id (accessed at DELETE http://url:port/api/kotinode/:kotoevent_id)
-    .delete(function(req, res) {
-        KotoEvent.remove({
-            _id: req.params.kotoevent_id
-        }, function(err, bear) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'KotoEvent deleted' });
-        });
-    });
-
+    .get(kotipointController.getEvent)
+    .put(kotipointController.putEvenet)
+    .delete(kotipointController.deleteEvent);
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
