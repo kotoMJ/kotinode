@@ -5,6 +5,7 @@
 
 // call the packages we need
 var express    = require('express');        // call express
+var fs = require('fs');
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
@@ -17,6 +18,8 @@ var kotoinventoryController = require('./app/controllers/kotoinventory');
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use('/public', express.static(__dirname + "/public"));
 
 var port = config.port;
 
@@ -34,7 +37,9 @@ web_router.use(function (req, res, next) {
 
 // test route to make sure everything is working (accessed at GET http://url:port/)
 web_router.get('/', function(req, res) {
-    res.send("<html><body>Access WEB KoTi request</body></html>");
+    fs.readFile(__dirname + '/public/index.html', 'utf8', function(err, text){
+        res.send(text);
+    });
 });
 
 // middleware to use for all requests
