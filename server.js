@@ -35,13 +35,6 @@ web_router.use(function (req, res, next) {
     next();
 });
 
-// test route to make sure everything is working (accessed at GET http://url:port/)
-web_router.get('/', function(req, res) {
-    fs.readFile(__dirname + '/public/index.html', 'utf8', function(err, text){
-        res.send(text);
-    });
-});
-
 // middleware to use for all requests
 api_router.use(function(req, res, next) {
     // do logging
@@ -49,10 +42,25 @@ api_router.use(function(req, res, next) {
     next(); // make sure we go to the next routes and don't stop here
 });
 
-// test route to make sure everything is working (accessed at GET http://lurl:port/api)
-api_router.get('/', function(req, res) {
-    res.json({ message: 'Welcome to Koto API!' });
+
+// ===== ROUTE to WEB ========
+
+// test route to make sure everything is working (accessed at GET http://url:port/)
+web_router.get('/', function(req, res) {
+    fs.readFile(__dirname + '/public/welcome/index.html', 'utf8', function(err, text){
+        res.send(text);
+    });
 });
+
+// test route to make sure everything is working (accessed at GET http://url:port/)
+web_router.get('/project', function(req, res) {
+    fs.readFile(__dirname + '/public/project/index.html', 'utf8', function(err, text){
+        res.send(text);
+    });
+});
+
+
+// ===== ROUTE to SERVER API ========
 
 
 // ----------------------------------------------------
