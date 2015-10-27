@@ -1,7 +1,5 @@
 #KoTiNode server
 
-[KoTiProject preview](http://kotopeky.cz/project)
-
 KoTiNode is a server(REST API) and frontend intended to be server for all Kotomisak's mobile applications and also the related Web application.
 
 Current version of KoTiNode is rather a skeleton for an API with following main TODO's:
@@ -12,6 +10,9 @@ Current version of KoTiNode is rather a skeleton for an API with following main 
 - public face for the [Kotopeky](http://www.kotopeky.cz) and [Tihava](http://www.tihava.cz) willages
 - ...
 
+<a href="http://kotopeky.cz/project">
+<img border="0" alt="project" src="./public/images/KoTiDiagram.png">
+</a>
 
 *Run using:*
 
