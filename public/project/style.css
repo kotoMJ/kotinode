@@ -39,3 +39,20 @@ section {
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%) }
+
+.kotoGitHubLink {
+    right: 0px;
+    top: 0px;
+    position: absolute;
+    display: block;
+    width: 64px;
+    height: 64px;
+    background: url('../images/octocat-64.png') bottom;
+    text-indent: -99999px;
+    padding: 2px;
+}
+.kotoGitHubLink:hover {
+    /*cursor: crosshair;*/
+    background: url('../images/octocat-64-green.png') bottom;
+}
+
