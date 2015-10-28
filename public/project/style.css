@@ -56,3 +56,4 @@ section {
     background: url('../images/octocat-64-green.png') bottom;
 }
 
+div#preload { display: none; }
