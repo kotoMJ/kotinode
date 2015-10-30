@@ -6,9 +6,9 @@ var moment      = require('moment');
 // http://url:port/api/kotinode/event
 // ----------------------------------------------------
 
-// create kotievent accessed at POST http://url:port/api/kotinode
+// create kotievent accessed at POST http://url:port/api/kotinode/event
 exports.postEvents = function(req, res) {
-    console.log("/kotinode event post");
+    console.log("/kotinode/event/ event post");
     var kotoevent = new KotoEvent();      // create a new instance of the KotoEvent model
     kotoevent.name = req.body.name;  // set the kotinode name (comes from the request)
     kotoevent.date = moment(req.body.date, "DD.MM.YYYY:ssZ").toDate();
@@ -25,17 +25,28 @@ exports.postEvents = function(req, res) {
     });
 };
 
-// get all the kotinode items (accessed at GET http://url:port/api/kotinode
+// get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
 exports.getEvents = function(req,res) {
-    KotoEvent.find(function(err, kotinode) {
-        if (err)
-            res.send(err);
-
-        res.json(kotinode);
-    });
+        //TODO temporary fixed response
+        res.json([{headline: "Test headline 1 from API", text: "Test text 1 from API"},
+                  {headline: "Test headline 2 from API", text: "Test text 2 from API"},
+                  {headline: "Test headline 3 from API", text: "Test text 3 from API"},
+                  {headline: "Test headline 4 from API", text: "Test text 4 from API"},
+                  {headline: "Test headline 5 from API", text: "Test text 5 from API"},
+                  {headline: "Test headline 6 from API", text: "Test text 6 from API"},
+                  {headline: "Test headline 7 from API", text: "Test text 7 from API"}])
 };
+//// get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
+//exports.getEvents = function(req,res) {
+//    KotoEvent.find(function(err, kotinode) {
+//        if (err)
+//            res.send(err);
+//
+//        res.json(kotinode);
+//    });
+//};
 
-// delete all kotinode (accessed at DELETE http://url:port/api/kotinode/)
+// delete all kotinode (accessed at DELETE http://url:port/api/kotinode/event)
 exports.deleteEvents = function(req, res) {
     KotoEvent.remove({}, function(err, bear) {
         if (err)
