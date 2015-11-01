@@ -1,4 +1,5 @@
 {
     "mongo" : "mongodb://localhost/kotinode",
-    "port" : 8080
+    "port" : 8080,
+    "tagEnv" : "tag_localhost"
 }

@@ -1,6 +1,7 @@
 var KotoEvent     = require('../models/kotoevent');
 var moment      = require('moment');
-
+var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
+var tagEnv = kotiConfig.tagEnv;
 // ----------------------------------------------------
 // CRUD FOR LIST of EVENTS
 // http://url:port/api/kotinode/event
@@ -28,13 +29,26 @@ exports.postEvents = function(req, res) {
 // get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
 exports.getEvents = function(req,res) {
         //TODO temporary fixed response for Android tunning
-        res.json([{headline: "Headline local 1 from API",mChildItemList:[{text: "Detail local 1 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
-                  {headline: "Headline local 2 from API",mChildItemList:[{text: "Detail local 2 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
-                  {headline: "Headline local 3 from API",mChildItemList:[{text: "Detail local 3 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
-                  {headline: "Headline local 4 from API",mChildItemList:[{text: "Detail local 4 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
-                  {headline: "Headline local 5 from API",mChildItemList:[{text: "Detail local 5 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
-                  {headline: "Headline local 6 from API",mChildItemList:[{text: "Detail local 6 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
-                  {headline: "Headline local 7 from API",mChildItemList:[{text: "Detail local 7 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]}
+        res.json([{headline: "Headline "+tagEnv+" 1 from API",mChildItemList:[{text: "Detail "+tagEnv+" 1 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 2 from API",mChildItemList:[{text: "Detail "+tagEnv+" 2 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 3 from API",mChildItemList:[{text: "Detail "+tagEnv+" 3 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 4 from API",mChildItemList:[{text: "Detail "+tagEnv+" 4 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 5 from API",mChildItemList:[{text: "Detail "+tagEnv+" 5 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 6 from API",mChildItemList:[{text: "Detail "+tagEnv+" 6 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 7 from API",mChildItemList:[{text: "Detail "+tagEnv+" 7 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 8 from API",mChildItemList:[{text: "Detail "+tagEnv+" 8 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 9 from API",mChildItemList:[{text: "Detail "+tagEnv+" 9 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 10 from API",mChildItemList:[{text: "Detail "+tagEnv+" 10 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 11 from API",mChildItemList:[{text: "Detail "+tagEnv+" 11 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 12 from API",mChildItemList:[{text: "Detail "+tagEnv+" 12 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 13 from API",mChildItemList:[{text: "Detail "+tagEnv+" 13 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 14 from API",mChildItemList:[{text: "Detail "+tagEnv+" 14 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 15 from API",mChildItemList:[{text: "Detail "+tagEnv+" 15 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 16 from API",mChildItemList:[{text: "Detail "+tagEnv+" 16 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 17 from API",mChildItemList:[{text: "Detail "+tagEnv+" 17 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 18 from API",mChildItemList:[{text: "Detail "+tagEnv+" 18 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 19 from API",mChildItemList:[{text: "Detail "+tagEnv+" 19 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline "+tagEnv+" 20 from API",mChildItemList:[{text: "Detail "+tagEnv+" 20 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]}
                 ])
 };
 //// get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
