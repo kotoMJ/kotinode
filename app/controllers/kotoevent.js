@@ -27,14 +27,15 @@ exports.postEvents = function(req, res) {
 
 // get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
 exports.getEvents = function(req,res) {
-        //TODO temporary fixed response
-        res.json([{headline: "Test headline 1 from API", text: "Test text 1 from API"},
-                  {headline: "Test headline 2 from API", text: "Test text 2 from API"},
-                  {headline: "Test headline 3 from API", text: "Test text 3 from API"},
-                  {headline: "Test headline 4 from API", text: "Test text 4 from API"},
-                  {headline: "Test headline 5 from API", text: "Test text 5 from API"},
-                  {headline: "Test headline 6 from API", text: "Test text 6 from API"},
-                  {headline: "Test headline 7 from API", text: "Test text 7 from API"}])
+        //TODO temporary fixed response for Android tunning
+        res.json([{headline: "Headline local 1 from API",mChildItemList:[{text: "Detail local 1 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline local 2 from API",mChildItemList:[{text: "Detail local 2 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline local 3 from API",mChildItemList:[{text: "Detail local 3 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline local 4 from API",mChildItemList:[{text: "Detail local 4 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline local 5 from API",mChildItemList:[{text: "Detail local 5 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline local 6 from API",mChildItemList:[{text: "Detail local 6 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]},
+                  {headline: "Headline local 7 from API",mChildItemList:[{text: "Detail local 7 from API",imageResource:"https://developers.google.com/admob/images/smartfill.png"}]}
+                ])
 };
 //// get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
 //exports.getEvents = function(req,res) {
