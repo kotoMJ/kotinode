@@ -38,7 +38,7 @@ web_router.use(function (req, res, next) {
 // middleware to use for all requests
 api_router.use(function(req, res, next) {
     // do logging
-    console.log('Access API KoTi request '+new Date(2015,01,01).toJSON());
+    console.log('Access API KoTi request ');
     next(); // make sure we go to the next routes and don't stop here
 });
 
