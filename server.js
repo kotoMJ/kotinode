@@ -13,6 +13,7 @@ var KotoInventory = require('./app/models/kotoinventory')
 var config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var kotipointController = require('./app/controllers/kotoevent');
 var kotoinventoryController = require('./app/controllers/kotoinventory');
+var demoTransparentAccount = require('./app/controllers/demoaccounts')
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -62,6 +63,9 @@ web_router.get('/project', function(req, res) {
 
 // ===== ROUTE to SERVER API ========
 
+api_router.route('/kotinode/account')
+
+    .get(demoTransparentAccount.getAccounts)
 
 // ----------------------------------------------------
 api_router.route('/kotinode/inventory')
