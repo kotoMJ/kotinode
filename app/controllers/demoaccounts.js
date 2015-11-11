@@ -12,3 +12,10 @@ exports.getAccounts = function(req,res) {
     // follow date format with ISO-8601
     res.json(demoAccounts)
 };
+
+// get all the kotinode items (accessed at GET http://url:port/api/kotinode/account
+exports.getTransactions = function(req,res) {
+    var demoTransactions = JSON.parse(fs.readFileSync('app/data/transaction.list.json', 'utf8'));
+    // follow date format with ISO-8601
+    res.json(demoTransactions)
+};

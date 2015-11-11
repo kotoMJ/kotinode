@@ -67,6 +67,10 @@ api_router.route('/kotinode/account')
 
     .get(demoTransparentAccount.getAccounts)
 
+api_router.route('/kotinode/transaction')
+
+    .get(demoTransparentAccount.getTransactions)
+
 // ----------------------------------------------------
 api_router.route('/kotinode/inventory')
 

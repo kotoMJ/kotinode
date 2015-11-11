@@ -1,0 +1,470 @@
+{
+  "pageNumber": 0,
+  "pageCount": 24,
+  "pageSize": 25,
+  "transactionsCount": 590,
+  "nextPage": 1,
+  "transactions": [
+    {
+      "amount": {
+        "value": -264,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Domácí platba - S24/IB",
+      "dueDate": "2015-11-09",
+      "valuationDate": "2015-11-09",
+      "senderName": null,
+      "sender": {
+        "variableSymbol": "157692",
+        "constantSymbol": "0308",
+        "description": "FP - toner do tiskárny"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": -2450,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Domácí platba - S24/IB",
+      "dueDate": "2015-11-06",
+      "valuationDate": "2015-11-06",
+      "senderName": null,
+      "sender": {
+        "variableSymbol": "2510015",
+        "description": "FO - oprava a výměna světel"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 1958,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úhrada",
+      "dueDate": "2015-11-05",
+      "valuationDate": "2015-11-05",
+      "senderName": "JAROSLAV KASAL",
+      "sender": {
+        "variableSymbol": "17",
+        "constantSymbol": "0",
+        "description": "PREDPIS BYT 17 KASAL, OBETI 6.KVETNA 553"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 1728,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úhrada",
+      "dueDate": "2015-11-03",
+      "valuationDate": "2015-11-03",
+      "senderName": "ALOIS KITTL",
+      "sender": {
+        "variableSymbol": "12",
+        "constantSymbol": "0",
+        "description": "12"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 1958,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úhrada",
+      "dueDate": "2015-11-02",
+      "valuationDate": "2015-11-02",
+      "senderName": "Margarita Shilyakova",
+      "sender": {
+        "variableSymbol": "29",
+        "constantSymbol": "0",
+        "description": "Fond oprav,byt č.29"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": -66,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Popl. za odch. clearing",
+      "dueDate": "2015-10-31",
+      "valuationDate": "2015-10-31",
+      "senderName": null,
+      "sender": {
+        "constantSymbol": "0158"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": -200,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Poplatky ",
+      "dueDate": "2015-10-31",
+      "valuationDate": "2015-10-31",
+      "senderName": null,
+      "sender": {
+        "constantSymbol": "0158"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": -92,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Poplatky ",
+      "dueDate": "2015-10-31",
+      "valuationDate": "2015-10-31",
+      "senderName": null,
+      "sender": {
+        "constantSymbol": "0158",
+        "description": "(01.10.2015 - 31.10.2015)"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 5.76,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úrok kredit",
+      "dueDate": "2015-10-31",
+      "valuationDate": "2015-10-31",
+      "senderName": null,
+      "sender": {
+        "specificSymbol": "0000000000",
+        "specificSymbolParty": "0000000000",
+        "constantSymbol": "0598"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": -1.09,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Daň z úroku",
+      "dueDate": "2015-10-31",
+      "valuationDate": "2015-10-31",
+      "senderName": null,
+      "sender": {
+        "specificSymbol": "0000000000",
+        "specificSymbolParty": "0000000000",
+        "constantSymbol": "0000"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": -55,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Popl. S24 - domácí platba",
+      "dueDate": "2015-10-31",
+      "valuationDate": "2015-10-31",
+      "senderName": null,
+      "sender": {
+        "constantSymbol": "0158"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": -37518,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "INKASO",
+      "dueDate": "2015-10-31",
+      "valuationDate": "2015-10-31",
+      "senderName": "Společenství Praha 4, Obětí 6.května 553",
+      "sender": {
+        "variableSymbol": "0000000002",
+        "constantSymbol": "0498"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": -300,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "INKASO",
+      "dueDate": "2015-10-31",
+      "valuationDate": "2015-10-31",
+      "senderName": "Společenství Praha 4, Obětí 6.května 553",
+      "sender": {
+        "variableSymbol": "0000000004",
+        "constantSymbol": "0898"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": -9143,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Domácí platba - S24/IB",
+      "dueDate": "2015-10-30",
+      "valuationDate": "2015-10-30",
+      "senderName": null,
+      "sender": {
+        "specificSymbol": "2101",
+        "specificSymbolParty": "2101",
+        "variableSymbol": "1142037736",
+        "constantSymbol": "7618",
+        "description": "PSSZ - penále"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": -500,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Domácí platba - S24/IB",
+      "dueDate": "2015-10-30",
+      "valuationDate": "2015-10-30",
+      "senderName": null,
+      "sender": {
+        "specificSymbol": "2101",
+        "specificSymbolParty": "2101",
+        "variableSymbol": "1142037736",
+        "constantSymbol": "114",
+        "description": "PSSZ - exekuční náklady"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 1397,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úhrada",
+      "dueDate": "2015-10-26",
+      "valuationDate": "2015-10-26",
+      "senderName": "LIBERSKÝ VÁCLAV",
+      "sender": {
+        "variableSymbol": "14",
+        "constantSymbol": "308"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 1307,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úhrada",
+      "dueDate": "2015-10-25",
+      "valuationDate": "2015-10-25",
+      "senderName": "Papajová Jana",
+      "sender": {
+        "variableSymbol": "13",
+        "constantSymbol": "0"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 1958,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úhrada",
+      "dueDate": "2015-10-23",
+      "valuationDate": "2015-10-23",
+      "senderName": "STRAKA JAN",
+      "sender": {
+        "variableSymbol": "17",
+        "constantSymbol": "0"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 2635,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úhrada",
+      "dueDate": "2015-10-23",
+      "valuationDate": "2015-10-23",
+      "senderName": "Koudelka Zdeněk JUDr",
+      "sender": {
+        "variableSymbol": "31",
+        "constantSymbol": "558"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 1939,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úhrada",
+      "dueDate": "2015-10-23",
+      "valuationDate": "2015-10-23",
+      "senderName": "Koudelka Zdeněk JUDr",
+      "sender": {
+        "variableSymbol": "43",
+        "constantSymbol": "558",
+        "description": "záloha služby byt 43"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 1658,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úhrada",
+      "dueDate": "2015-10-23",
+      "valuationDate": "2015-10-23",
+      "senderName": "KUDRNKOVÁ VERONIKA",
+      "sender": {
+        "variableSymbol": "24",
+        "constantSymbol": "0"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 1739,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úhrada",
+      "dueDate": "2015-10-23",
+      "valuationDate": "2015-10-23",
+      "senderName": "Kubová, Dagmar, Ing.",
+      "sender": {
+        "variableSymbol": "1",
+        "constantSymbol": "0",
+        "description": "Dagmar Kubová"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 1808,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Došlá platba",
+      "dueDate": "2015-10-23",
+      "valuationDate": "2015-10-23",
+      "senderName": "HRUSKOVA JAROSLAVA",
+      "sender": {
+        "variableSymbol": "3",
+        "constantSymbol": "0"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 3035,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úhrada",
+      "dueDate": "2015-10-22",
+      "valuationDate": "2015-10-22",
+      "senderName": "VRBA JAROSLAV",
+      "sender": {
+        "variableSymbol": "30",
+        "constantSymbol": "558"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    },
+    {
+      "amount": {
+        "value": 2997,
+        "precision": 2,
+        "currency": "CZK"
+      },
+      "transactionType": "Úhrada",
+      "dueDate": "2015-10-22",
+      "valuationDate": "2015-10-22",
+      "senderName": "SPITZKOPFOVÁ JANA",
+      "sender": {
+        "variableSymbol": "32",
+        "constantSymbol": "0"
+      },
+      "receiver": {
+        "iban": "CZ7508000000000109213309"
+      }
+    }
+  ]
+}
