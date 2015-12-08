@@ -1,80 +1,103 @@
 [
   {
+    "id":1,
     "headline": "Tvoření pro dospělé",
-    "releaseDate":"2015-10-15T00:00:00.000Z",
-    "mChildItemList":[
-      {
-        "eventDate":"2015-11-8T00:00:00.000Z",
-        "header":"Od 13:00 v podkroví OÚ",
-        "text": "Tentokrát budeme dělat ozdobnou krabičku na papírové kapesníky. Dno a víko bude z keramiky, stěny vypletené z pedigu.",
-        "imageResource":""
-      }
-    ]
+    "label": null,
+    "eventDate": "2015-11-8T00:00:00.000Z",
+    "eventLocation": [
+      "Kotopeky"
+    ],
+    "textCapital": "Od 13:00 v podkroví OÚ",
+    "text": "Tentokrát budeme dělat ozdobnou krabičku na papírové kapesníky. Dno a víko bude z keramiky, stěny vypletené z pedigu.",
+    "imageResource": null
   },
   {
+    "id":2,
     "headline": "Keramika pro děti",
-    "releaseDate":"2015-10-14T00:00:00.000Z",
-    "mChildItemList":[
-      {
-        "eventDate":"2015-10-19T00:00:00.000Z",
-        "header":"Každé liché pondělí.",
-        "text": "Od 16:00 v podkroví OÚ Kotopeky. První informativní schůzka se koná 19.10. Kurzovné: 80,-Kč/hodinu.",
-        "imageResource":""
-      }
-    ]
+    "label": null,
+    "eventDate": "2015-10-19T00:00:00.000Z",
+    "eventLocation": [
+      "Kotopeky"
+    ],
+    "textCapital": "Každé liché pondělí.",
+    "text": "Od 16:00 v podkroví OÚ Kotopeky. První informativní schůzka se koná 19.10. Kurzovné: 80,-Kč/hodinu.",
+    "imageResource": null
   },
   {
+    "id":3,
     "headline": "Bazárek v Praskolesích",
-    "releaseDate":"2015-10-14T00:00:00.000Z",
-    "mChildItemList":[
-      {
-        "eventDate":"2015-10-31T00:00:00.000Z",
-        "header":"Chcete nabídnout nepotřebné věci?",
-        "text": "Kulturní dům Jitřenka 8:00, prodejní poplatek za stůl je 20,-",
-        "imageResource":""
-      }
-    ]
+    "label": null,
+    "eventDate": "2015-10-31T00:00:00.000Z",
+    "eventLocation": [
+      "Praskolesy"
+    ],
+    "textCapital": "Chcete nabídnout nepotřebné věci?",
+    "text": "Kulturní dům Jitřenka 8:00, prodejní poplatek za stůl je 20,-",
+    "imageResource": null
   },
   {
+    "id":4,
     "headline": "Nohejbalový turnaj v Praskolesích",
-    "releaseDate":"2015-10-07T00:00:00.000Z",
-    "mChildItemList":[
-      {
-        "eventDate":"2015-10-28T00:00:00.000Z",
-        "header":"Víceúčelové hřiště Praskolesy",
-        "text": "Prezentace(8:45-9:00), Start(9:30), Startovné (150,- včetně občerstvení), Registrace tel. 774 316 757",
-        "imageResource":""
-      }
-    ]
+    "label": null,
+    "eventDate": "2015-10-28T00:00:00.000Z",
+    "eventLocation": [
+      "Praskolesy"
+    ],
+    "textCapital": "Víceúčelové hřiště Praskolesy",
+    "text": "Prezentace(8:45-9:00), Start(9:30), Startovné (150,- včetně občerstvení), Registrace tel. 774 316 757",
+    "imageResource": null
   },
   {
-    "headline": "Zprávičky 09/2015",
-    "releaseDate":"2015-10-07T00:00:00.000Z",
-    "mChildItemList":[
-      {
-        "eventDate":"2015-09-07T00:00:00.000Z",
-        "header":"Zasedání zastupitelstva",
-        "text": "Předložen návrh firmy EXIT 34 na odkup obecních pozemků pod silnicí Hořovice-Žebrák za cenu 50 Kč/m2. OZ návrh zamítlo z důvodu neadekvátně nízké ceny",
-        "imageResource":""
-      },
-      {
-        "eventDate":"2015-09-07T00:00:00.000Z",
-        "header":"Zasedání zastupitelstva",
-        "text": "OZ se usneslo nechat zpracovat projekt na opravu stávajícího chodníku na Tihavě a případnou výstavbu nových chodníků v naší obci.",
-        "imageResource":""
-      },
-      {
-        "eventDate":"2015-10-23T00:00:00.000Z",
-        "header":null,
-        "text": "Svoz nebezpečného odpadu a elketrozařízení na zpětný odběr 16:00-18:00 Budova OÚ a Hasičská zbrojnice.",
-        "imageResource":""
-      },
-      {
-        "eventDate":"2015-10-11T00:00:00.000Z",
-        "header":null,
-        "text": "Pletení košíků od 13:00 v podkroví budovy OÚ, kurzovné 250,-.",
-        "imageResource":""
-      }
-    ]
+    "id":5,
+    "headline": "Pozemky pod silnicí Hořovice-Žebrák",
+    "label": [
+      "Zastupitelstvo 09/2015"
+    ],
+    "eventDate": "2015-09-07T00:00:00.000Z",
+    "eventLocation": [
+      "Kotopeky"
+    ],
+    "textCapital": null,
+    "text": "Předložen návrh firmy EXIT 34 na odkup obecních pozemků pod silnicí Hořovice-Žebrák za cenu 50 Kč/m2. OZ návrh zamítlo z důvodu neadekvátně nízké ceny",
+    "imageResource": null
+  },
+  {
+    "id":6,
+    "headline": "Chodníky v obci",
+    "label": [
+      "Zastupitelstvo 09/2015"
+    ],
+    "eventDate": "2015-09-07T00:00:00.000Z",
+    "eventLocation": [
+      "Kotopeky",
+      "Tíhava"
+    ],
+    "textCapital": null,
+    "text": "OZ se usneslo nechat zpracovat projekt na opravu stávajícího chodníku na Tihavě a případnou výstavbu nových chodníků v naší obci.",
+    "imageResource": null
+  },
+  {
+    "id":7,
+    "headline": "Nebezpečný odpad",
+    "label": null,
+    "eventDate": "2015-10-23T00:00:00.000Z",
+    "eventLocation": [
+      "Kotopeky"
+    ],
+    "textCapital": null,
+    "text": "Svoz nebezpečného odpadu a elketrozařízení na zpětný odběr 16:00-18:00 Budova OÚ a Hasičská zbrojnice.",
+    "imageResource": null
+  },
+  {
+    "id":8,
+    "headline": "Kurz pletení košíků",
+    "label": null,
+    "eventDate": "2015-10-11T00:00:00.000Z",
+    "eventLocation": [
+      "Kotopeky"
+    ],
+    "textCapital": null,
+    "text": "Pletení košíků od 13:00 v podkroví budovy OÚ, kurzovné 250,-.",
+    "imageResource": null
   }
 ]

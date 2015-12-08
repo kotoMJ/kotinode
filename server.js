@@ -81,15 +81,20 @@ api_router.route('/kotinode/inventory')
 // more routes for our API will happen here
 // ----------------------------------------------------
 api_router.route('/kotinode/event')
-
     .post(kotipointController.postEvents)
     .get(kotipointController.getEvents)
     .delete(kotipointController.deleteEvents);
 
+api_router.route('/kotinode/event/fixed')
+    .get(kotipointController.getEventsFixed);
+
+
+api_router.route('/kotinode/event/admin')
+    .get(kotipointController.refill);
+
 // on routes that end in /kotinode/:kotoevent_id
 // ----------------------------------------------------
 api_router.route('/kotinode/event/:kotoevent_id')
-
     .get(kotipointController.getEvent)
     .put(kotipointController.putEvenet)
     .delete(kotipointController.deleteEvent);

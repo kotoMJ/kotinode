@@ -3,6 +3,7 @@ var KotoEvent     = require('../models/kotoevent');
 var moment      = require('moment');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var tagEnv = kotiConfig.tagEnv;
+var mongoose   = require('mongoose');
 // ----------------------------------------------------
 // CRUD FOR LIST of EVENTS
 // http://url:port/api/kotinode/event
@@ -28,21 +29,20 @@ exports.postEvents = function(req, res) {
 };
 
 // get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
-exports.getEvents = function(req,res) {
-        //TODO temporary fixed response for Android tunning
+exports.getEventsFixed = function(req,res) {
         var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
         // follow date format with ISO-8601
         res.json(fixedEvents)
 };
 //// get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
-//exports.getEvents = function(req,res) {
-//    KotoEvent.find(function(err, kotinode) {
-//        if (err)
-//            res.send(err);
-//
-//        res.json(kotinode);
-//    });
-//};
+exports.getEvents = function(req,res) {
+    KotoEvent.find(function(err, kotinode) {
+        if (err)
+            res.send(err);
+
+        res.json(kotinode);
+    });
+};
 
 // delete all kotinode (accessed at DELETE http://url:port/api/kotinode/event)
 exports.deleteEvents = function(req, res) {
@@ -101,3 +101,37 @@ exports.deleteEvent = function(req,res){
         res.json({ message: 'KotoEvent deleted' });
     });
 };
+
+exports.refill = function(req,res){
+    var apiKey = req.headers['api_key'];
+    if (kotiConfig.api_key===apiKey) {
+        var KotoEventList = mongoose.model('KotoEvent', KotoEvent);
+        var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
+
+        mongoose.connection.db.dropDatabase(function(err, result) {
+                console.log(result);
+                if (err == null){
+                    console.log('DB dropped!');
+                }else{
+                    console.log('DB drop failed!'+err);
+                }
+
+            var KotoEventCollection = mongoose.model('KotoEvent', KotoEvent).collection;
+            //console.log(KotoEventCollection);
+            mongoose.model('KotoEvent', KotoEvent).collection.insert(fixedEvents, function (err, r) {
+
+            });
+            res.json({message: 'refilled'});
+        });
+        //mongoose.connection.db.dropCollection('KotoEvent', function(err, result) {
+        //    console.log(result);
+        //    if (err == null){
+        //        console.log('KotoEventCollection cleaned up!');
+        //    }else{
+        //        console.log('KotoEventCollection clean FAILED:'+err);
+        //    }
+        //});
+    }else{
+        res.json({message: 'admin'});
+    }
+}
