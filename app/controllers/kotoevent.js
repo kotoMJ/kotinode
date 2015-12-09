@@ -34,13 +34,14 @@ exports.getEventsFixed = function(req,res) {
         // follow date format with ISO-8601
         res.json(fixedEvents)
 };
+
 //// get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
 exports.getEvents = function(req,res) {
-    KotoEvent.find(function(err, kotinode) {
-        if (err)
-            res.send(err);
-
-        res.json(kotinode);
+    var offset= parseInt(req.query.offset);
+    var limit = parseInt(req.query.limit);
+    KotoEvent.find().
+        where('id').gt(offset).limit(limit).exec(function (err,event){
+        res.json(event);
     });
 };
 
@@ -59,14 +60,6 @@ exports.deleteEvents = function(req, res) {
 // CRUD for ONE EVENT
 // http://url:port/api/kotinode/event/:kotoevent_id
 // ----------------------------------------------------
-
-exports.getEvent = function(req,res){
-    KotoEvent.findById(req.params.kotoevent_id, function(err, bear) {
-        if (err)
-            res.send(err);
-        res.json(bear);
-    });
-};
 
 exports.putEvenet = function(req,res){
     // use our bear model to find the bear we want
@@ -134,4 +127,10 @@ exports.refill = function(req,res){
     }else{
         res.json({message: 'admin'});
     }
+}
+
+
+exports.empty = function(req,res){
+    console.log('request {} not implemented',req.code);
+    res.json({message: 'empty'});
 }

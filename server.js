@@ -81,23 +81,36 @@ api_router.route('/kotinode/inventory')
 // more routes for our API will happen here
 // ----------------------------------------------------
 api_router.route('/kotinode/event')
+    .get(function(req,res,next){kotipointController.getEvents(req,res);})
     .post(kotipointController.postEvents)
-    .get(kotipointController.getEvents)
-    .delete(kotipointController.deleteEvents);
+    .put(kotipointController.empty)
+    .patch(kotipointController.empty)
+    .delete(kotipointController.deleteEvents)
+    .purge(kotipointController.empty);
 
 api_router.route('/kotinode/event/fixed')
-    .get(kotipointController.getEventsFixed);
+    .get(kotipointController.getEventsFixed)
+    .post(kotipointController.empty)
+    .put(kotipointController.empty)
+    .patch(kotipointController.empty)
+    .delete(kotipointController.empty)
+    .purge(kotipointController.empty);
 
 
 api_router.route('/kotinode/event/admin')
-    .get(kotipointController.refill);
+    .get(kotipointController.empty)
+    .post(kotipointController.empty)
+    .put(kotipointController.empty)
+    .patch(kotipointController.empty)
+    .delete(kotipointController.refill)
+    .purge(kotipointController.refill)
 
 // on routes that end in /kotinode/:kotoevent_id
 // ----------------------------------------------------
 api_router.route('/kotinode/event/:kotoevent_id')
-    .get(kotipointController.getEvent)
-    .put(kotipointController.putEvenet)
-    .delete(kotipointController.deleteEvent);
+    .get(kotipointController.empty)
+    .put(kotipointController.empty)
+    .delete(kotipointController.empty);
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
