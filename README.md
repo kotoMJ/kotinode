@@ -14,13 +14,3 @@ Current version of KoTiNode is rather a skeleton for an API with following main 
 <img border="0" alt="project" src="./public/images/KoTiDiagram.png">
 </a>
 
-*Run using:*
-
-0. alias mongo.start="mongod --dbpath /work/mongodb/"
-1. npm start
-2. NODE_ENV=prod node server.js (DEFAULT)
-3. NODE_ENV=dev node server.js
-
-
-Notice that we are sending the data as x-www-form-urlencoded. 
-This will send all of our data to the Node server as query strings.
