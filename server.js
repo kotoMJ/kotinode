@@ -9,11 +9,11 @@ var fs = require('fs');
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
-var KotoInventory = require('./app/models/kotoinventory')
 var config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
-var kotipointController = require('./app/controllers/kotoevent');
-var kotoinventoryController = require('./app/controllers/kotoinventory');
-var demoTransparentAccount = require('./app/controllers/demoaccounts')
+var kotoEventController = require('./app/controllers/kotoevent');
+var kotiNodeAdminController = require('./app/controllers/kotinode_admin');
+var demoTransparentAccount = require('./app/controllers/demoaccounts');
+var logger = require('./app/utils/logger.js');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -38,8 +38,16 @@ web_router.use(function (req, res, next) {
 
 // middleware to use for all requests
 api_router.use(function(req, res, next) {
-    // do logging
-    console.log('Access API KoTi request ');
+    //init api request id to header
+    var rid = Math.floor((Math.random() * 1000000000000) + 1);
+    req.headers['rid']= rid;
+
+    //log basic incomming params
+    logger.log(req,'params:'+JSON.stringify(req.params));
+    logger.log(req,'query:'+JSON.stringify(req.query));
+    logger.log(req,'headers:'+JSON.stringify(req.headers));
+    logger.log(req,'method:'+req.method);
+    logger.log(req,'route:'+req.url);
     next(); // make sure we go to the next routes and don't stop here
 });
 
@@ -63,54 +71,55 @@ web_router.get('/project', function(req, res) {
 
 // ===== ROUTE to SERVER API ========
 
+// ----------------------------------------------------
+// ADMIN
+// ----------------------------------------------------
+api_router.route('/kotinode/admin')
+    .get(kotiNodeAdminController.empty)
+    .post(kotiNodeAdminController.empty)
+    .put(kotiNodeAdminController.empty)
+    .patch(kotiNodeAdminController.empty)
+    .delete(kotiNodeAdminController.reset)
+    .purge(kotiNodeAdminController.reset)
+
+// ----------------------------------------------------
+// DEMO ACCOUNT
+// ----------------------------------------------------
+
 api_router.route('/kotinode/account')
 
     .get(demoTransparentAccount.getAccounts)
+
 
 api_router.route('/kotinode/transaction')
 
     .get(demoTransparentAccount.getTransactions)
 
 // ----------------------------------------------------
-api_router.route('/kotinode/inventory')
-
-    .post(kotoinventoryController.postInventory)
-    .get(kotoinventoryController.getInventory);
-
-// ----------------------------------------------------
-// more routes for our API will happen here
+// KOTOEVENT
 // ----------------------------------------------------
 api_router.route('/kotinode/event')
-    .get(function(req,res,next){kotipointController.getEvents(req,res);})
-    .post(kotipointController.postEvents)
-    .put(kotipointController.empty)
-    .patch(kotipointController.empty)
-    .delete(kotipointController.deleteEvents)
-    .purge(kotipointController.empty);
+    .get(function(req,res,next){kotoEventController.getEvents(req,res);})
+    .post(kotoEventController.empty)
+    .put(kotoEventController.empty)
+    .patch(kotoEventController.empty)
+    .delete(kotoEventController.empty)
+    .purge(kotoEventController.empty);
 
 api_router.route('/kotinode/event/fixed')
-    .get(kotipointController.getEventsFixed)
-    .post(kotipointController.empty)
-    .put(kotipointController.empty)
-    .patch(kotipointController.empty)
-    .delete(kotipointController.empty)
-    .purge(kotipointController.empty);
+    .get(kotoEventController.getEventsFixed)
+    .post(kotoEventController.empty)
+    .put(kotoEventController.empty)
+    .patch(kotoEventController.empty)
+    .delete(kotoEventController.empty)
+    .purge(kotoEventController.empty);
 
-
-api_router.route('/kotinode/event/admin')
-    .get(kotipointController.empty)
-    .post(kotipointController.empty)
-    .put(kotipointController.empty)
-    .patch(kotipointController.empty)
-    .delete(kotipointController.refill)
-    .purge(kotipointController.refill)
-
-// on routes that end in /kotinode/:kotoevent_id
-// ----------------------------------------------------
 api_router.route('/kotinode/event/:kotoevent_id')
-    .get(kotipointController.empty)
-    .put(kotipointController.empty)
-    .delete(kotipointController.empty);
+    .get(kotoEventController.empty)
+    .put(kotoEventController.empty)
+    .delete(kotoEventController.empty);
+
+
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

@@ -4,14 +4,44 @@ var moment      = require('moment');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var tagEnv = kotiConfig.tagEnv;
 var mongoose   = require('mongoose');
+var logger = require('../utils/logger.js');
+
+
+//----------------------------------------------------
+//  DEFAULT response
+//----------------------------------------------------
+
+exports.empty = function(req,res){
+    logger.log(req,'Not implemented!');
+    res.json({message: 'empty'});
+}
+
 // ----------------------------------------------------
 // CRUD FOR LIST of EVENTS
 // http://url:port/api/kotinode/event
 // ----------------------------------------------------
 
+// get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
+exports.getEventsFixed = function(req,res) {
+    var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
+    // follow date format with ISO-8601
+    res.json(fixedEvents)
+};
+
+// GET http://localhost:8080/api/kotinode/event/?offset=1&limit=1
+exports.getEvents = function(req,res) {
+    var offset = isNaN(parseInt(req.query.offset))?0:parseInt(req.query.offset);
+    var limit = isNaN(parseInt(req.query.limit))?0:parseInt(req.query.limit);
+    KotoEvent.find().
+        where('id').gt(offset).limit(limit).exec(function (err,event){
+            res.json(event);
+        });
+};
+
 // create kotievent accessed at POST http://url:port/api/kotinode/event
 exports.postEvents = function(req, res) {
-    console.log("/kotinode/event/ event post");
+    var rid = req.headers['rid'];
+    logger.log(req,"/kotinode/event/ event post");
     var kotoevent = new KotoEvent();      // create a new instance of the KotoEvent model
     kotoevent.name = req.body.name;  // set the kotinode name (comes from the request)
     kotoevent.date = moment(req.body.date, "DD.MM.YYYY:ssZ").toDate();
@@ -28,23 +58,6 @@ exports.postEvents = function(req, res) {
     });
 };
 
-// get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
-exports.getEventsFixed = function(req,res) {
-        var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
-        // follow date format with ISO-8601
-        res.json(fixedEvents)
-};
-
-//// get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
-exports.getEvents = function(req,res) {
-    var offset= parseInt(req.query.offset);
-    var limit = parseInt(req.query.limit);
-    KotoEvent.find().
-        where('id').gt(offset).limit(limit).exec(function (err,event){
-        res.json(event);
-    });
-};
-
 // delete all kotinode (accessed at DELETE http://url:port/api/kotinode/event)
 exports.deleteEvents = function(req, res) {
     KotoEvent.remove({}, function(err, bear) {
@@ -55,6 +68,25 @@ exports.deleteEvents = function(req, res) {
     });
 };
 
+exports.refill = function(req,res){
+    var apiKey = req.headers['api_key'];
+    if (kotiConfig.api_key===apiKey) {
+        var KotoEventList = mongoose.model('KotoEvent', KotoEvent);
+        var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
+
+        res.json({message: 'Disabled!'})
+        //mongoose.connection.db.dropCollection('KotoEvent', function(err, result) {
+        //    logger.log(req,result);
+        //    if (err == null){
+        //        logger.log(req,'KotoEventCollection cleaned up!');
+        //    }else{
+        //        logger.log(req,'KotoEventCollection clean FAILED:'+err);
+        //    }
+        //});
+    }else{
+        res.json({message: 'admin'});
+    }
+}
 
 // ----------------------------------------------------
 // CRUD for ONE EVENT
@@ -94,43 +126,3 @@ exports.deleteEvent = function(req,res){
         res.json({ message: 'KotoEvent deleted' });
     });
 };
-
-exports.refill = function(req,res){
-    var apiKey = req.headers['api_key'];
-    if (kotiConfig.api_key===apiKey) {
-        var KotoEventList = mongoose.model('KotoEvent', KotoEvent);
-        var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
-
-        mongoose.connection.db.dropDatabase(function(err, result) {
-                console.log(result);
-                if (err == null){
-                    console.log('DB dropped!');
-                }else{
-                    console.log('DB drop failed!'+err);
-                }
-
-            var KotoEventCollection = mongoose.model('KotoEvent', KotoEvent).collection;
-            //console.log(KotoEventCollection);
-            mongoose.model('KotoEvent', KotoEvent).collection.insert(fixedEvents, function (err, r) {
-
-            });
-            res.json({message: 'refilled'});
-        });
-        //mongoose.connection.db.dropCollection('KotoEvent', function(err, result) {
-        //    console.log(result);
-        //    if (err == null){
-        //        console.log('KotoEventCollection cleaned up!');
-        //    }else{
-        //        console.log('KotoEventCollection clean FAILED:'+err);
-        //    }
-        //});
-    }else{
-        res.json({message: 'admin'});
-    }
-}
-
-
-exports.empty = function(req,res){
-    console.log('request {} not implemented',req.code);
-    res.json({message: 'empty'});
-}
