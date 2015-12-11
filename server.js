@@ -54,14 +54,24 @@ api_router.use(function(req, res, next) {
 
 // ===== ROUTE to WEB ========
 
-// test route to make sure everything is working (accessed at GET http://url:port/)
 web_router.get('/', function(req, res) {
     fs.readFile(__dirname + '/public/welcome/index.html', 'utf8', function(err, text){
         res.send(text);
     });
 });
 
-// test route to make sure everything is working (accessed at GET http://url:port/)
+web_router.get('/kbforest', function(req, res) {
+    fs.readFile(__dirname + '/public/kbforest/index.html', 'utf8', function(err, text){
+        res.send(text);
+    });
+});
+
+web_router.get('/kbsmart', function(req, res) {
+    fs.readFile(__dirname + '/public/kbsmart/index.html', 'utf8', function(err, text){
+        res.send(text);
+    });
+});
+
 web_router.get('/project', function(req, res) {
     fs.readFile(__dirname + '/public/project/index.html', 'utf8', function(err, text){
         res.send(text);

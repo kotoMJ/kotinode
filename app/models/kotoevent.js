@@ -5,13 +5,15 @@ var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
 var EventSchema   = new Schema({
-    headline: String,
+    id: { type: Number, required: true, unique: true},
+    headline: { type:String, required: true},
     label: [String],
-    eventDate: Date,//30.09.2015 01Z
+    eventDate: { type:Date, required: true},//30.09.2015 01Z
     eventLocation : [String],
     textCapital : String,
-    text : String,
-    imageResource: String
+    text : { type: String, required: true},
+    imageResource: String,
+    updateDate: {type: Date, default:Date.now }
 });
 
 module.exports = mongoose.model('KotoEvent', EventSchema);

@@ -33,7 +33,7 @@ exports.getEvents = function(req,res) {
     var offset = isNaN(parseInt(req.query.offset))?0:parseInt(req.query.offset);
     var limit = isNaN(parseInt(req.query.limit))?0:parseInt(req.query.limit);
     KotoEvent.find().
-        where('id').gt(offset).limit(limit).exec(function (err,event){
+        where('id').gt(offset).limit(limit).sort({id: 1}).exec(function (err,event){
             res.json(event);
         });
 };

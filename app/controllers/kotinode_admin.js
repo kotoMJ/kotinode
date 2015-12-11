@@ -22,8 +22,40 @@ exports.reset = function(req,res){
             }
 
             mongoose.model('KotoEvent', KotoEvent).collection.insert(fixedEvents, function (err, r) {
-
             });
+
+
+            /**
+             * DUMMY data for DEVELOPMENT
+             */
+
+            for (i=9; i<101; i++) {
+                mongoose.model('KotoEvent', KotoEvent).collection.insert({
+                    "id": i,
+                    "headline": Math.random().toString(36).substring(7),
+                    "label": null,
+                    "eventDate": "2015-10-11T00:00:00.000Z",
+                    "eventLocation": [
+                        Math.random().toString(36).substring(7)
+                    ],
+                    "textCapital": null,
+                    "text": Math.random().toString(36).substring(7),
+                    "imageResource": null
+                }, onInsert);
+            }
+
+            function onInsert(err, docs){
+                if(err){
+                    console.error(err);
+                }else{
+                    console.log(docs)
+                }
+            };
+
+
+
+
+
             res.json({message: 'DB dropped and reinitialized'});
         });
 
