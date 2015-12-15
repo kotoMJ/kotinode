@@ -32,10 +32,16 @@ exports.getEventsFixed = function(req,res) {
 exports.getEvents = function(req,res) {
     var offset = isNaN(parseInt(req.query.offset))?0:parseInt(req.query.offset);
     var limit = isNaN(parseInt(req.query.limit))?0:parseInt(req.query.limit);
-    KotoEvent.find().
-        where('id').gt(offset).limit(limit).sort({id: 1}).exec(function (err,event){
-            res.json(event);
-        });
+
+    setTimeout(function (){
+
+        KotoEvent.find().
+            where('id').gt(offset).limit(limit).sort({id: 1}).exec(function (err,event){
+                res.json(event);
+            });
+
+    }, 4000);// delay to simulate slow connection!
+
 };
 
 // create kotievent accessed at POST http://url:port/api/kotinode/event
@@ -68,25 +74,6 @@ exports.deleteEvents = function(req, res) {
     });
 };
 
-exports.refill = function(req,res){
-    var apiKey = req.headers['api_key'];
-    if (kotiConfig.api_key===apiKey) {
-        var KotoEventList = mongoose.model('KotoEvent', KotoEvent);
-        var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
-
-        res.json({message: 'Disabled!'})
-        //mongoose.connection.db.dropCollection('KotoEvent', function(err, result) {
-        //    logger.log(req,result);
-        //    if (err == null){
-        //        logger.log(req,'KotoEventCollection cleaned up!');
-        //    }else{
-        //        logger.log(req,'KotoEventCollection clean FAILED:'+err);
-        //    }
-        //});
-    }else{
-        res.json({message: 'admin'});
-    }
-}
 
 // ----------------------------------------------------
 // CRUD for ONE EVENT

@@ -8,19 +8,20 @@ var logger = require('../utils/logger.js');
 
 
 exports.reset = function(req,res){
-    var apiKey = req.headers['api_key'];
+    var apiKey = req.headers['apikey'];
     var rid = req.headers['rid'];
+    logger.log(req,"expected key:"+kotiConfig.api_key+", obtained key:"+apiKey+", match:"+(kotiConfig.api_key===apiKey))
     if (kotiConfig.api_key===apiKey) {
         var KotoEventList = mongoose.model('KotoEvent', KotoEvent);
         var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
-
+        logger.log(req,"Ready to drop DB...")
         mongoose.connection.db.dropDatabase(function(err, result) {
             if (err == null){
                 logger.log(req,'DB dropped!');
             }else{
                 logger.log(req,'DB drop failed!'+err);
             }
-
+            logger.log(req,"Ready to insert model...");
             mongoose.model('KotoEvent', KotoEvent).collection.insert(fixedEvents, function (err, r) {
             });
 
