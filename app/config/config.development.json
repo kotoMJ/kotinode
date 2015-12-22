@@ -1,5 +1,7 @@
 {
-    "mongo" : "mongodb://localhost/kotinode",
+    "mongoUri" : "mongodb://localhost/kotinode",
+    "mongoUser": "",
+    "mongoPass": "",
     "port" : 8080,
     "tagEnv" : "tag_localhost",
     "api_key" : "x3c4ku3s7g"

@@ -242,6 +242,7 @@
     }
 
     $.smartbanner = function (option) {
+        console.log('showSmartBanner');
         var $window = $(window)
         , data = $window.data('smartbanner')
         , options = typeof option == 'object' && option

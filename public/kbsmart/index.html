@@ -6,26 +6,29 @@
     <meta name="google-play-app" content="app-id=eu.inmite.prj.kb.mobilbank">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
     <link rel="stylesheet" href="/public/kbsmart/jquery.smartbanner.css" type="text/css" media="screen">
-  </head>
-  <body>
+
     <script src="/public/kbsmart/jquery.1.8.min.js"></script>
     <script src="/public/kbsmart/jquery.smartbanner.js"></script>
     <script type="text/javascript">
-        $(function () { $.smartbanner({
-            daysHidden: 0,
-            daysReminder: 0,
-            title:'Mobilní banka',
-            icon: '/public/kbsmart/android-touch-icon.png',
-            inGooglePlay: 'ZDARMA',
-            inAppStore: 'ZÍSKAT',
-            appStoreLanguage: "cs",
-            button: 'zobrazit',
-            layer: 'true',
-            force: 'android'
-        }) })
+      $(function () { $.smartbanner({
+//          appendToSelector: "#smartBannerWrapper",
+          daysHidden: 0,
+          daysReminder: 0,
+          title:'Mobilní banka',
+          icon: '/public/kbsmart/android-touch-icon.png',
+          inGooglePlay: 'ZDARMA',
+          inAppStore: 'ZÍSKAT',
+          appStoreLanguage: "cs",
+          button: 'zobrazit',
+          layer: 'true',
+          force: 'android'
+      }) })
     </script>
 
+  </head>
+  <body>
 
   </body>
 </html>
