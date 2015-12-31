@@ -10,7 +10,8 @@ var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 var config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
-var kotoEventController = require('./app/controllers/kotoevent');
+var kotoEventController = require('./app/controllers/kotoEventController');
+var kotoGalleryController = require('./app/controllers/kotoGalleryController')
 var kotiNodeAdminController = require('./app/controllers/kotinode_admin');
 var demoTransparentAccount = require('./app/controllers/demoaccounts');
 var logger = require('./app/utils/logger.js');
@@ -129,8 +130,24 @@ mongoose.connection.once('open', function() {
         .post(kotiNodeAdminController.empty)
         .put(kotiNodeAdminController.empty)
         .patch(kotiNodeAdminController.empty)
-        .delete(kotiNodeAdminController.reset)
-        .purge(kotiNodeAdminController.reset)
+        .delete(kotiNodeAdminController.empty)
+        .purge(kotiNodeAdminController.empty)
+
+    api_router.route('/kotinode/admin/event')
+        .get(kotiNodeAdminController.empty)
+        .post(kotiNodeAdminController.empty)
+        .put(kotiNodeAdminController.empty)
+        .patch(kotiNodeAdminController.empty)
+        .delete(kotiNodeAdminController.reset_keep_event)
+        .purge(kotiNodeAdminController.reset_keep_event)
+
+    api_router.route('/kotinode/admin/gallery')
+        .get(kotiNodeAdminController.empty)
+        .post(kotiNodeAdminController.empty)
+        .put(kotiNodeAdminController.empty)
+        .patch(kotiNodeAdminController.empty)
+        .delete(kotiNodeAdminController.reset_keep_gallery)
+        .purge(kotiNodeAdminController.reset_keep_gallery)
 
 // ----------------------------------------------------
 // DEMO ACCOUNT
@@ -169,6 +186,25 @@ mongoose.connection.once('open', function() {
         .put(kotoEventController.empty)
         .delete(kotoEventController.empty);
 
+// ----------------------------------------------------
+// GALLERY
+// ----------------------------------------------------
+
+    api_router.route('/kotinode/gallery')
+        .get(function(req,res,next){kotoGalleryController.getGallery(req,res);})
+        .post(kotoGalleryController.empty)
+        .put(kotoGalleryController.empty)
+        .patch(kotoGalleryController.empty)
+        .delete(kotoGalleryController.empty)
+        .purge(kotoGalleryController.empty);
+
+    api_router.route('/kotinode/gallery/fixed')
+        .get(kotoGalleryController.getGalleryFixed)
+        .post(kotoGalleryController.empty)
+        .put(kotoGalleryController.empty)
+        .patch(kotoGalleryController.empty)
+        .delete(kotoGalleryController.empty)
+        .purge(kotoGalleryController.empty);
 
 
 // REGISTER OUR ROUTES -------------------------------

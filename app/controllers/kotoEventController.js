@@ -1,5 +1,5 @@
 var fs = require('fs');
-var KotoEvent     = require('../models/kotoevent');
+var KotoEvent     = require('../models/kotoEventModel');
 var moment      = require('moment');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var tagEnv = kotiConfig.tagEnv;
@@ -28,10 +28,11 @@ exports.getEventsFixed = function(req,res) {
     res.json(fixedEvents)
 };
 
-// GET http://localhost:8080/api/kotinode/event/?offset=1&limit=1
+// GET http://localhost:8080/api/kotinode/event/?offset=1&limit=1&delay=2000
 exports.getEvents = function(req,res) {
     var offset = isNaN(parseInt(req.query.offset))?0:parseInt(req.query.offset);
     var limit = isNaN(parseInt(req.query.limit))?0:parseInt(req.query.limit);
+    var delay = isNaN(parseInt(req.query.delay))?0:parseInt(req.query.delay);
 
     setTimeout(function (){
 
@@ -40,7 +41,7 @@ exports.getEvents = function(req,res) {
                 res.json(event);
             });
 
-    }, 4000);// delay to simulate slow connection!
+    }, delay);// delay to simulate slow connection!
 
 };
 
