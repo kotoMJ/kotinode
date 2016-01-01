@@ -92,6 +92,10 @@ mongoose.connection.once('open', function() {
         next(); // make sure we go to the next routes and don't stop here
     });
 
+// ===== SERVE STATIC FILES ======
+    //route gallery
+    //http://localhost:8080/static/gallery/2015-11-15-Racice/DSC_0678.JPG
+    app.use('/static/gallery', express.static('public/gallery'));
 
 // ===== ROUTE to WEB ========
 
