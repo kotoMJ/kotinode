@@ -1,0 +1,13 @@
+PHOTO BATCH OPS:
+
+TRANSFORM ALL JPG to PNG
+find . -name "*.jpg" -exec mogrify -format png {} \;
+
+OPTIMIZE PNG
+sudo apt-get install optipng
+$ find . -name '*.png' | xargs optipng -nc -nb -o7 -full
+
+IMAGEMAGIC
+sudo apt-get install imagemagick
+http://www.howtogeek.com/109369/how-to-quickly-resize-convert-modify-images-from-the-linux-terminal/
+for file in *.png; do convert $file -resize 1500 $file; done
