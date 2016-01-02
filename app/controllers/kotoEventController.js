@@ -31,13 +31,21 @@ exports.getEvents = function(req,res) {
     var offset = isNaN(parseInt(req.query.offset))?0:parseInt(req.query.offset);
     var limit = isNaN(parseInt(req.query.limit))?0:parseInt(req.query.limit);
     var delay = isNaN(parseInt(req.query.delay))?0:parseInt(req.query.delay);
+    var sortFlag = 1;
+    if (req.query.sort ==='DESC') {
+        sortFlag = -1;
+    }
+    setTimeout(function () {
 
-    setTimeout(function (){
-
+        if (sortFlag > 0) {
         KotoEvent.find().
-            where('id').gt(offset).limit(limit).sort({id: 1}).exec(function (err,event){
+            where('id').gt(offset).limit(limit).sort({id: sortFlag}).exec(function (err, event) {
                 res.json(event);
             });
+        }else{
+            //TODO FIX DESC offset
+            res.json({ message: 'DESC Not implemented yet!' });
+        }
 
     }, delay);// delay to simulate slow connection!
 
