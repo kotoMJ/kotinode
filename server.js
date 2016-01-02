@@ -131,7 +131,7 @@ mongoose.connection.once('open', function() {
 // ADMIN
 // ----------------------------------------------------
     api_router.route('/kotinode/admin')
-        .get(kotoAdminController.gallery_list)
+        .get(kotoAdminController.empty)
         .post(kotoAdminController.empty)
         .put(kotoAdminController.empty)
         .patch(kotoAdminController.empty)
@@ -151,8 +151,8 @@ mongoose.connection.once('open', function() {
         .post(kotoAdminController.empty)
         .put(kotoAdminController.empty)
         .patch(kotoAdminController.empty)
-        .delete(kotoAdminController.reset_gallery)
-        .purge(kotoAdminController.reset_gallery)
+        .delete(kotoAdminController.reset_gallery_real)
+        .purge(kotoAdminController.reset_gallery_real)
 
 // ----------------------------------------------------
 // DEMO ACCOUNT
