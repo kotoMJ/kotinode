@@ -1,6 +1,5 @@
 var fs = require('fs');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
-var tagEnv = kotiConfig.tagEnv;
 // ----------------------------------------------------
 // CRUD FOR LIST of EVENTS
 // http://url:port/api/kotinode/event

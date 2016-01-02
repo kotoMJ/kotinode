@@ -2,8 +2,6 @@ var fs = require('fs');
 var KotoEvent     = require('../models/kotoEventModel');
 var moment      = require('moment');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
-var tagEnv = kotiConfig.tagEnv;
-var mongoose   = require('mongoose');
 var logger = require('../utils/logger.js');
 
 
