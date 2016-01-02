@@ -12,7 +12,7 @@ var mongoose   = require('mongoose');
 var config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var kotoEventController = require('./app/controllers/kotoEventController');
 var kotoGalleryController = require('./app/controllers/kotoGalleryController')
-var kotiNodeAdminController = require('./app/controllers/kotinode_admin');
+var kotoAdminController = require('./app/controllers/kotoAdminController');
 var demoTransparentAccount = require('./app/controllers/demoaccounts');
 var logger = require('./app/utils/logger.js');
 
@@ -130,28 +130,28 @@ mongoose.connection.once('open', function() {
 // ADMIN
 // ----------------------------------------------------
     api_router.route('/kotinode/admin')
-        .get(kotiNodeAdminController.empty)
-        .post(kotiNodeAdminController.empty)
-        .put(kotiNodeAdminController.empty)
-        .patch(kotiNodeAdminController.empty)
-        .delete(kotiNodeAdminController.empty)
-        .purge(kotiNodeAdminController.empty)
+        .get(kotoAdminController.empty)
+        .post(kotoAdminController.empty)
+        .put(kotoAdminController.empty)
+        .patch(kotoAdminController.empty)
+        .delete(kotoAdminController.empty)
+        .purge(kotoAdminController.empty)
 
     api_router.route('/kotinode/admin/event')
-        .get(kotiNodeAdminController.empty)
-        .post(kotiNodeAdminController.empty)
-        .put(kotiNodeAdminController.empty)
-        .patch(kotiNodeAdminController.empty)
-        .delete(kotiNodeAdminController.reset_keep_event)
-        .purge(kotiNodeAdminController.reset_keep_event)
+        .get(kotoAdminController.empty)
+        .post(kotoAdminController.empty)
+        .put(kotoAdminController.empty)
+        .patch(kotoAdminController.empty)
+        .delete(kotoAdminController.reset_keep_event)
+        .purge(kotoAdminController.reset_keep_event)
 
     api_router.route('/kotinode/admin/gallery')
-        .get(kotiNodeAdminController.empty)
-        .post(kotiNodeAdminController.empty)
-        .put(kotiNodeAdminController.empty)
-        .patch(kotiNodeAdminController.empty)
-        .delete(kotiNodeAdminController.reset_keep_gallery)
-        .purge(kotiNodeAdminController.reset_keep_gallery)
+        .get(kotoAdminController.empty)
+        .post(kotoAdminController.empty)
+        .put(kotoAdminController.empty)
+        .patch(kotoAdminController.empty)
+        .delete(kotoAdminController.reset_keep_gallery)
+        .purge(kotoAdminController.reset_keep_gallery)
 
 // ----------------------------------------------------
 // DEMO ACCOUNT
