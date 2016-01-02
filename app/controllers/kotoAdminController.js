@@ -4,12 +4,28 @@ var mongoose   = require('mongoose');
 var KotoEvent     = require('../models/kotoEventModel');
 var KotoGallery = require('../models/kotoGalleryModel')
 var logger = require('../utils/logger.js');
+var fileUtils = require('../utils/fileUtils.js');
 
+exports.gallery_list = function(req,res){
+    var apiKey = req.headers['apikey'];
+    var rid = req.headers['rid'];
+    logger.log(req,"expected key:"+kotiConfig.api_key+", obtained key:"+apiKey+", match:"+(kotiConfig.api_key===apiKey));
+    if (kotiConfig.api_key===apiKey) {
+        fileUtils.walkFiles('public/gallery', function(filePath, stat) {
+            // do something with "filePath"...
+            logger.log(req,"filePath:"+filePath+", stat:"+stat);
+        });
+        res.json({message: 'done'});
+    }else{
+        res.json({message: 'admin'});
+    }
+
+}
 
 exports.drop = function(req,res){
     var apiKey = req.headers['apikey'];
     var rid = req.headers['rid'];
-    logger.log(req,"expected key:"+kotiConfig.api_key+", obtained key:"+apiKey+", match:"+(kotiConfig.api_key===apiKey))
+    logger.log(req,"expected key:"+kotiConfig.api_key+", obtained key:"+apiKey+", match:"+(kotiConfig.api_key===apiKey));
     if (kotiConfig.api_key===apiKey) {
 
         //EVENT
@@ -32,7 +48,7 @@ exports.drop = function(req,res){
 exports.reset_event = function(req,res){
     var apiKey = req.headers['apikey'];
     var rid = req.headers['rid'];
-    logger.log(req,"expected key:"+kotiConfig.api_key+", obtained key:"+apiKey+", match:"+(kotiConfig.api_key===apiKey))
+    logger.log(req,"expected key:"+kotiConfig.api_key+", obtained key:"+apiKey+", match:"+(kotiConfig.api_key===apiKey));
     if (kotiConfig.api_key===apiKey) {
 
         //EVENT
@@ -89,7 +105,7 @@ exports.reset_event = function(req,res){
 exports.reset_gallery = function(req,res){
     var apiKey = req.headers['apikey'];
     var rid = req.headers['rid'];
-    logger.log(req,"expected key:"+kotiConfig.api_key+", obtained key:"+apiKey+", match:"+(kotiConfig.api_key===apiKey))
+    logger.log(req,"expected key:"+kotiConfig.api_key+", obtained key:"+apiKey+", match:"+(kotiConfig.api_key===apiKey));
     if (kotiConfig.api_key===apiKey) {
 
         //GALLERY
@@ -136,6 +152,8 @@ exports.reset_gallery = function(req,res){
         res.json({message: 'admin'});
     }
 }
+
+
 
 //----------------------------------------------------
 //  DEFAULT response

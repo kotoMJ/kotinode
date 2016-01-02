@@ -11,7 +11,7 @@ var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 var config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var kotoEventController = require('./app/controllers/kotoEventController');
-var kotoGalleryController = require('./app/controllers/kotoGalleryController')
+var kotoGalleryController = require('./app/controllers/kotoGalleryController');
 var kotoAdminController = require('./app/controllers/kotoAdminController');
 var demoTransparentAccount = require('./app/controllers/demoaccounts');
 var logger = require('./app/utils/logger.js');
@@ -131,7 +131,7 @@ mongoose.connection.once('open', function() {
 // ADMIN
 // ----------------------------------------------------
     api_router.route('/kotinode/admin')
-        .get(kotoAdminController.empty)
+        .get(kotoAdminController.gallery_list)
         .post(kotoAdminController.empty)
         .put(kotoAdminController.empty)
         .patch(kotoAdminController.empty)
