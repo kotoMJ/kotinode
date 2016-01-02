@@ -83,6 +83,7 @@ mongoose.connection.once('open', function() {
         var rid = Math.floor((Math.random() * 1000000000000) + 1);
         req.headers['rid']= rid;
 
+
         //log basic incomming params
         logger.log(req,'params:'+JSON.stringify(req.params));
         logger.log(req,'query:'+JSON.stringify(req.query));
@@ -134,24 +135,24 @@ mongoose.connection.once('open', function() {
         .post(kotoAdminController.empty)
         .put(kotoAdminController.empty)
         .patch(kotoAdminController.empty)
-        .delete(kotoAdminController.empty)
-        .purge(kotoAdminController.empty)
+        .delete(kotoAdminController.drop)
+        .purge(kotoAdminController.drop)
 
     api_router.route('/kotinode/admin/event')
         .get(kotoAdminController.empty)
         .post(kotoAdminController.empty)
         .put(kotoAdminController.empty)
         .patch(kotoAdminController.empty)
-        .delete(kotoAdminController.reset_keep_event)
-        .purge(kotoAdminController.reset_keep_event)
+        .delete(kotoAdminController.reset_event)
+        .purge(kotoAdminController.reset_event)
 
     api_router.route('/kotinode/admin/gallery')
         .get(kotoAdminController.empty)
         .post(kotoAdminController.empty)
         .put(kotoAdminController.empty)
         .patch(kotoAdminController.empty)
-        .delete(kotoAdminController.reset_keep_gallery)
-        .purge(kotoAdminController.reset_keep_gallery)
+        .delete(kotoAdminController.reset_gallery)
+        .purge(kotoAdminController.reset_gallery)
 
 // ----------------------------------------------------
 // DEMO ACCOUNT
