@@ -2,3 +2,4 @@
 /app/config/mongo.production.notes
 /app/config/config.production.json
 /npm-debug.log
+/public/gallery_full/**/*
