@@ -28,6 +28,7 @@ exports.getEventsFixed = function(req,res) {
 
 // GET http://localhost:8080/api/kotinode/event/?offset=1&limit=1&delay=2000
 exports.getEvents = function(req,res) {
+    logger.logMem(req,"Start exports.getEvents>>")
     var offset = isNaN(parseInt(req.query.offset))?0:parseInt(req.query.offset);
     var limit = isNaN(parseInt(req.query.limit))?0:parseInt(req.query.limit);
     var delay = isNaN(parseInt(req.query.delay))?0:parseInt(req.query.delay);
@@ -46,7 +47,7 @@ exports.getEvents = function(req,res) {
             //TODO FIX DESC offset
             res.json({ message: 'DESC Not implemented yet!' });
         }
-
+        logger.logMem(req,"Finish exports.getEvents>>")
     }, delay);// delay to simulate slow connection!
 
 };

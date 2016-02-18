@@ -26,6 +26,7 @@ exports.getGalleryFixed = function(req,res) {
 
 // GET http://url:port/api/kotinode/gallery/?offset=1&limit=1&delay=2000
 exports.getGallery = function(req,res) {
+    logger.logMem(req,"Start exports.getGallery>>");
     var offset = isNaN(parseInt(req.query.offset))?0:parseInt(req.query.offset);
     var limit = isNaN(parseInt(req.query.limit))?0:parseInt(req.query.limit);
     var delay = isNaN(parseInt(req.query.delay))?0:parseInt(req.query.delay);
@@ -44,7 +45,7 @@ exports.getGallery = function(req,res) {
             //TODO FIX DESC offset
             res.json({ message: 'DESC Not implemented yet!' });
         }
-
+        logger.logMem(req,"Finish exports.getGallery>>");
     }, delay);// delay to simulate slow connection!
 
 };

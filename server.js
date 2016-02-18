@@ -35,7 +35,7 @@ var mongoOptions = {
     server: {socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}},
     replset: {socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}}
 };
-mongoose.connect(config.mongoUri, mongoOptions);
+var dbCon = mongoose.connect(config.mongoUri, mongoOptions);
 
 // CONNECTION EVENTS
 // When successfully connected
