@@ -3,7 +3,8 @@ var numberUtils = require('./numberUtils.js');
 
 plainLog = function (req,msg){
     var rid = req.headers['rid'];
-    console.log('['+rid+'] '+msg);
+    var stamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    console.log('['+stamp+'|'+rid+'] '+msg);
 }
 exports.log = plainLog;
 
