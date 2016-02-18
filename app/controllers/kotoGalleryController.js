@@ -37,7 +37,7 @@ exports.getGallery = function(req,res) {
 
         if (sortFlag>0) {
             KotoGalleryModel.find().
-                where('id').gt(offset).limit(limit).sort({id: sortFlag}).exec(function (err, event) {
+                where('id').gte(offset).limit(limit).sort({id: sortFlag}).exec(function (err, event) {
                     res.json(event);
                 });
         }else{

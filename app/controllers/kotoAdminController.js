@@ -17,7 +17,7 @@ exports.reset_gallery_real = function(req,res){
             if (err == null) {
                 logger.log(req, 'Event model cleaned!');
                 logger.log(req, "Ready to re-insert model...");
-                var i = 1;
+                var i = 0;
                 fileUtils.walkDirs('public/gallery', function (dirPath, stat) {
                     logger.log(req, "filePath:" + dirPath + ", stat:" + stat);
                     var currentDir = path.basename(dirPath);
