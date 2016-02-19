@@ -30,6 +30,8 @@ exports.getGallery = function(req,res) {
     var offset = isNaN(parseInt(req.query.offset))?0:parseInt(req.query.offset);
     var limit = isNaN(parseInt(req.query.limit))?0:parseInt(req.query.limit);
     var delay = isNaN(parseInt(req.query.delay))?0:parseInt(req.query.delay);
+    var debug = (req.query.debug)?JSON.parse(req.query.debug): false;
+    logger.log(req,debug+''+req.query.debug);
     var sortFlag = 1;
     if (req.query.sort ==='DESC') {
         sortFlag = -1;
@@ -39,6 +41,7 @@ exports.getGallery = function(req,res) {
         if (sortFlag>0) {
             KotoGalleryModel.find().
                 where('id').gte(offset).limit(limit).sort({id: sortFlag}).exec(function (err, event) {
+                    if (debug) {logger.log(req, "response="+event);}
                     res.json(event);
                 });
         }else{
