@@ -151,8 +151,8 @@ mongoose.connection.once('open', function() {
         .post(kotoAdminController.empty)
         .put(kotoAdminController.empty)
         .patch(kotoAdminController.empty)
-        .delete(kotoAdminController.reset_gallery_real)
-        .purge(kotoAdminController.reset_gallery_real)
+        .delete(kotoAdminController.reset_gallery)
+        .purge(kotoAdminController.reset_gallery)
 
 // ----------------------------------------------------
 // DEMO ACCOUNT

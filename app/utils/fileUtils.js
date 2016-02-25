@@ -5,6 +5,7 @@ exports.walkFiles = function walkFile(currentDirPath, callback) {
         var stat = fs.statSync(filePath);
         if (stat.isFile()) {
             callback(filePath, stat);
+
         } else if (stat.isDirectory()) {
             walkFile(filePath, callback);
         }
