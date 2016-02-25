@@ -3,7 +3,8 @@ var path = require('path');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var mongoose   = require('mongoose');
 var KotoEvent     = require('../models/kotoEventModel');
-var KotoGallery = require('../models/kotoGalleryModel')
+var KotoGalleryItem = require('../models/kotoGalleryItemModel')
+var KotoGallerySummary = require('../models/kotoGallerySummaryModel')
 var logger = require('../utils/logger.js');
 var fileUtils = require('../utils/fileUtils.js');
 
@@ -13,37 +14,67 @@ exports.reset_gallery_real = function(req,res){
 
     logger.log(req,"expected key:"+kotiConfig.api_key+", obtained key:"+apiKey+", match:"+(kotiConfig.api_key===apiKey));
     if (kotiConfig.api_key===apiKey) {
-        KotoGallery.remove({},function(err, result) {
-            if (err == null) {
-                logger.log(req, 'Event model cleaned!');
-                logger.log(req, "Ready to re-insert model...");
-                var i = 0;
-                fileUtils.walkDirs('public/gallery', function (dirPath, stat) {
-                    logger.log(req, "filePath:" + dirPath + ", stat:" + stat);
-                    var currentDir = path.basename(dirPath);
-                    fileUtils.walkFiles('public/gallery/' + currentDir, function (filePath, stat) {
+        KotoGallerySummary.remove({},function(err, result) {
+            KotoGalleryItem.remove({}, function (err, result) {
+                if (err == null) {
+                    logger.log(req, 'Event model cleaned! Ready to re-insert model...');
+                    var gSummary = 0;
+                    fileUtils.walkDirs('public/gallery', function (dirPath, stat) {
+                        logger.log(req, "filePath:" + dirPath + ", stat:" + stat);
+                        var currentDir = path.basename(dirPath);
+                        var digestPhotoUrl = null;
+                        var gItem = 0;
+                        fileUtils.walkFiles('public/gallery/' + currentDir, function (filePath, stat) {
 
-                        mongoose.model('KotoGallery', KotoGallery).collection.insert({
-                            "id": i++,
-                            "label": currentDir,
-                            "url": req.headers['host']+"/"+filePath
-                        }, onInsert);
+                            var photoUrl = req.headers['host'] + "/" + filePath;
+                            mongoose.model('KotoGalleryItem', KotoGalleryItem).collection.insert({
+                                "id": gItem++,
+                                "galleryName": currentDir,
+                                "galleryDate": null,
+                                "url": photoUrl
+                            }, onInsertItem);
 
-                        function onInsert(err, docs) {
+                            function onInsertItem(err, docs) {
+                                if (err) {
+                                    logger.err(req,err);
+                                } else {
+                                    var photo = docs.ops[0];
+                                    logger.log(req, photo.galleryName+"id="+photo.id);
+                                    if ((digestPhotoUrl == null)||(photo.id == '0')){
+                                        logger.log(req,"digestPhoto:"+JSON.stringify(photo));
+                                        digestPhotoUrl = docs;
+                                    }
+                                    logger.log(req,docs)
+                                }
+                            };
+                        });
+
+                        mongoose.model('KotoGallerySummary', KotoGallerySummary).collection.insert({
+                            "id": gSummary++,
+                            "galleryName": currentDir,
+                            "galleryTitle" : "TODO set Title via property file",//https://www.npmjs.com/package/properties-reader, https://github.com/steveukx/properties
+                            "galleryDescription" : "TODO set Description via property file",//https://www.npmjs.com/package/properties-reader, https://github.com/steveukx/properties
+                            "galleryDate" : null,
+                            "galleryUrl" : req.headers['host'] + "/" + currentDir,
+                            "digestPhotoUrl" : digestPhotoUrl
+                        }, onInsertSummary);
+
+                        function onInsertSummary(err, docs) {
                             if (err) {
-                                console.error(err);
+                                logger.err(req,err);
                             } else {
-                                console.log(docs)
+                                logger.log(req,docs)
                             }
                         };
-                    });
-                });
-                logger.log(req, 'Event model re-insert done!' + err);
-            } else {
-                logger.log(req, 'Event model clean failed!' + err);
-            }
 
-            res.json({message: 'Insert real done'});
+                    });
+                    logger.log(req, 'Event model re-insert done!' + err);
+                } else {
+                    logger.log(req, 'Event model clean failed!' + err);
+                }
+
+                res.json({message: 'Insert real done'});
+            });
         });
     }else{
         res.json({message: 'admin'});
@@ -137,10 +168,10 @@ exports.reset_gallery_mock = function(req,res){
     if (kotiConfig.api_key===apiKey) {
 
         //GALLERY
-        //var KotoGalleryList = mongoose.model('KotoGallery', KotoGallery);
+        //var KotoGalleryList = mongoose.model('KotoGalleryItem', KotoGalleryItem);
         logger.log(req,"Ready to drop DB...")
         //empty object will match all items to remove
-        KotoGallery.remove({},function(err, result) {
+        KotoGalleryItem.remove({},function(err, result) {
             if (err == null){
                 logger.log(req,'Gallery model cleaned!');
             }else{
@@ -153,7 +184,7 @@ exports.reset_gallery_mock = function(req,res){
              */
 
             for (i=0; i<101; i++) {
-                mongoose.model('KotoGallery', KotoGallery).collection.insert({
+                mongoose.model('KotoGalleryItem', KotoGalleryItem).collection.insert({
                     "id": i,
                     "url": "http://"+Math.random().toString(36).substring(7)
                 }, onInsert);

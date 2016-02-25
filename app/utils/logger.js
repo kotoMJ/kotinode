@@ -6,7 +6,15 @@ plainLog = function (req,msg){
     var stamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
     console.log('['+stamp+'|'+rid+'] '+msg);
 }
+
+plainErrorLog = function (req,msg){
+    var rid = req.headers['rid'];
+    var stamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    console.log('['+stamp+'|'+rid+'] '+msg);
+}
+
 exports.log = plainLog;
+exports.err = plainErrorLog;
 
 memLog = function (req,msg){
     var rid = req.headers['rid'];

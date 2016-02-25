@@ -196,12 +196,21 @@ mongoose.connection.once('open', function() {
 // ----------------------------------------------------
 
     api_router.route('/kotinode/gallery')
+        .get(function(req,res,next){kotoGalleryController.getGallerySummary(req,res);})
+        .post(kotoGalleryController.empty)
+        .put(kotoGalleryController.empty)
+        .patch(kotoGalleryController.empty)
+        .delete(kotoGalleryController.empty)
+        .purge(kotoGalleryController.empty);
+
+    api_router.route('/kotinode/gallery/:galleryName')
         .get(function(req,res,next){kotoGalleryController.getGallery(req,res);})
         .post(kotoGalleryController.empty)
         .put(kotoGalleryController.empty)
         .patch(kotoGalleryController.empty)
         .delete(kotoGalleryController.empty)
         .purge(kotoGalleryController.empty);
+
 
     api_router.route('/kotinode/gallery/fixed')
         .get(kotoGalleryController.getGalleryFixed)
