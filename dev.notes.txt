@@ -11,3 +11,9 @@ IMAGEMAGIC
 sudo apt-get install imagemagick
 http://www.howtogeek.com/109369/how-to-quickly-resize-convert-modify-images-from-the-linux-terminal/
 for file in *.png; do convert $file -resize 1500 $file; done
+
+
+
+NPM PROXY
+npm config set proxy http://localhost:3128
+npm config set https-proxy http://localhost:3128

@@ -5,8 +5,10 @@ var mongoose   = require('mongoose');
 var KotoEvent     = require('../models/kotoEventModel');
 var KotoGalleryItem = require('../models/kotoGalleryItemModel')
 var KotoGallerySummary = require('../models/kotoGallerySummaryModel')
+var PropertiesReader = require('properties-reader')
 var logger = require('../utils/logger.js');
 var fileUtils = require('../utils/fileUtils.js');
+var moment = require('moment');
 
 exports.reset_gallery_real = function(req,res){
     var apiKey = req.headers['apikey'];
@@ -24,13 +26,18 @@ exports.reset_gallery_real = function(req,res){
                         var currentDir = path.basename(dirPath);
                         var digestPhotoUrl = null;
                         var gItem = 0;
+                        //https://www.npmjs.com/package/properties-reader
+                        var galleryProperties = PropertiesReader('public/gallery/'+currentDir+'/description.properties');
+                        var galleryTitle = galleryProperties.get('title');
+                        var galleryDescription = galleryProperties.get('description');
+                        var galleryDate = moment(galleryProperties.get('date'), "DD.MM.YYYY:ssZ").toDate();
                         fileUtils.walkFiles('public/gallery/' + currentDir, function (filePath, stat) {
 
                             var photoUrl = req.headers['host'] + "/" + filePath;
                             mongoose.model('KotoGalleryItem', KotoGalleryItem).collection.insert({
                                 "id": gItem++,
                                 "galleryName": currentDir,
-                                "galleryDate": null,
+                                "galleryDate": galleryDate,
                                 "url": photoUrl
                             }, onInsertItem);
 
@@ -52,9 +59,9 @@ exports.reset_gallery_real = function(req,res){
                         mongoose.model('KotoGallerySummary', KotoGallerySummary).collection.insert({
                             "id": gSummary++,
                             "galleryName": currentDir,
-                            "galleryTitle" : "TODO set Title via property file",//https://www.npmjs.com/package/properties-reader, https://github.com/steveukx/properties
-                            "galleryDescription" : "TODO set Description via property file",//https://www.npmjs.com/package/properties-reader, https://github.com/steveukx/properties
-                            "galleryDate" : null,
+                            "galleryTitle" : galleryTitle,
+                            "galleryDescription" : galleryDescription,
+                            "galleryDate" : galleryDate,
                             "galleryUrl" : req.headers['host'] + "/" + currentDir,
                             "digestPhotoUrl" : digestPhotoUrl
                         }, onInsertSummary);
