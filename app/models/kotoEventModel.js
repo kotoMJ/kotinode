@@ -5,7 +5,7 @@ var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
 var EventSchema   = new Schema({
-    id: { type: Number, required: true, unique: true},
+    sortId: { type: Number, required: true},
     headline: { type:String, required: true},
     label: [String],
     eventDate: { type:Date, required: true},//30.09.2015 01Z

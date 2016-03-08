@@ -160,27 +160,42 @@ exports.reset_event = function(req,res){
                 logger.log(req,'Event model clean failed!'+err);
             }
             logger.log(req,"Ready to re-insert model...");
+
+
+            /**
+             * Read data from local json file.
+             */
             mongoose.model('KotoEvent', KotoEventModel).collection.insert(fixedEvents, function (err, r) {
             });
 
 
             /**
-             * DUMMY data for DEVELOPMENT
+             * Generate additional dummy data for development purpose.
              */
+            var dummyCount = isNaN(parseInt(req.query.dummyCount))?0:parseInt(req.query.dummyCount);
+            if (dummyCount >0) {
 
-            for (i=9; i<101; i++) {
-                mongoose.model('KotoEvent', KotoEventModel).collection.insert({
-                    "id": i,
-                    "headline": Math.random().toString(36).substring(7),
-                    "label": null,
-                    "eventDate": "2015-10-11T00:00:00.000Z",
-                    "eventLocation": [
-                        Math.random().toString(36).substring(7)
-                    ],
-                    "textCapital": null,
-                    "text": Math.random().toString(36).substring(7),
-                    "imageResource": null
-                }, onInsert);
+            var startIndex = 0;
+                KotoEventModel.find()
+                    .sort({eventDate: -1}).exec(function (err, eventList) {
+                         if (eventList){
+                             startIndex = eventList.length;
+                         }
+                    });
+
+                for (i = startIndex; i < (startIndex+dummyCount); i++) {
+                    mongoose.model('KotoEvent', KotoEventModel).collection.insert({
+                        "headline": Math.random().toString(36).substring(7),
+                        "label": null,
+                        "eventDate": "2015-10-11T00:00:00.000Z",
+                        "eventLocation": [
+                            Math.random().toString(36).substring(7)
+                        ],
+                        "textCapital": null,
+                        "text": Math.random().toString(36).substring(7),
+                        "imageResource": null
+                    }, onInsert);
+                }
             }
 
             function onInsert(err, docs){
@@ -198,6 +213,35 @@ exports.reset_event = function(req,res){
     }else{
         res.json({message: 'admin'});
     }
+}
+
+exports.sortEvent = function(req,res){
+
+    KotoEventModel.find()
+        .sort({eventDate: -1}).exec(function (err, eventList) {
+            var index=0;
+            eventList.forEach(function(record){
+                console.log("ToUpdate:"+record);
+                mongoose.model('KotoEvent', KotoEventModel).collection.findAndModify(
+                    {sortId:record.sortId},//query
+                    [['eventDate','asc']],//sort order
+                    {$set: {sortId:index++}},//replacement, replaces only the field "id"
+                    {new:true},//options
+                    onUpdateEvent);
+            });
+        });
+
+    function onUpdateEvent(err, object) {
+        if (err) {
+            logger.err(req,err.message);
+        } else {
+            console.log("Updated:"+JSON.stringify(object));
+            //console.dir(object);
+            //logger.log(req,"onUpdateSummary:"+JSON.stringify(object));
+        }
+    };
+
+    res.json({message: 'sort done!'});
 }
 
 //----------------------------------------------------

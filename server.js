@@ -142,7 +142,7 @@ mongoose.connection.once('open', function() {
         .get(kotoAdminController.empty)
         .post(kotoAdminController.empty)
         .put(kotoAdminController.empty)
-        .patch(kotoAdminController.empty)
+        .patch(kotoAdminController.sortEvent)
         .delete(kotoAdminController.reset_event)
         .purge(kotoAdminController.reset_event)
 

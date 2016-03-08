@@ -1,5 +1,5 @@
 var fs = require('fs');
-var KotoEvent     = require('../models/kotoEventModel');
+var KotoEventModel     = require('../models/kotoEventModel');
 var moment      = require('moment');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var logger = require('../utils/logger.js');
@@ -32,21 +32,13 @@ exports.getEvents = function(req,res) {
     var offset = isNaN(parseInt(req.query.offset))?0:parseInt(req.query.offset);
     var limit = isNaN(parseInt(req.query.limit))?0:parseInt(req.query.limit);
     var delay = isNaN(parseInt(req.query.delay))?0:parseInt(req.query.delay);
-    var sortFlag = 1;
-    if (req.query.sort ==='DESC') {
-        sortFlag = -1;
-    }
-    setTimeout(function () {
 
-        if (sortFlag > 0) {
-        KotoEvent.find().
-            where('id').gt(offset).limit(limit).sort({id: sortFlag}).exec(function (err, event) {
+    setTimeout(function () {
+        // Currently the sorting is given by sortId order (kotoAdminController.sortEvent()).
+        KotoEventModel.find().
+            where('sortId').gte(offset).limit(limit).sort({sortId: 1}).exec(function (err, event) {
                 res.json(event);
             });
-        }else{
-            //TODO FIX DESC offset
-            res.json({ message: 'DESC Not implemented yet!' });
-        }
         logger.logMem(req,"Finish exports.getEvents>>")
     }, delay);// delay to simulate slow connection!
 
@@ -56,11 +48,11 @@ exports.getEvents = function(req,res) {
 exports.postEvents = function(req, res) {
     var rid = req.headers['rid'];
     logger.log(req,"/kotinode/event/ event post");
-    var kotoevent = new KotoEvent();      // create a new instance of the KotoEvent model
+    var kotoevent = new KotoEventModel();      // create a new instance of the KotoEvent model
     kotoevent.name = req.body.name;  // set the kotinode name (comes from the request)
     kotoevent.date = moment(req.body.date, "DD.MM.YYYY:ssZ").toDate();
     kotoevent.note = req.body.note;
-    kotoevent.description = req.body.descriptioncc;
+    kotoevent.description = req.body.description;
 
 
     // save the bear and check for errors
@@ -74,7 +66,7 @@ exports.postEvents = function(req, res) {
 
 // delete all kotinode (accessed at DELETE http://url:port/api/kotinode/event)
 exports.deleteEvents = function(req, res) {
-    KotoEvent.remove({}, function(err, bear) {
+    KotoEventModel.remove({}, function(err, bear) {
         if (err)
             res.send(err);
 
@@ -90,7 +82,7 @@ exports.deleteEvents = function(req, res) {
 
 exports.putEvenet = function(req,res){
     // use our bear model to find the bear we want
-    KotoEvent.findById(req.params.kotoevent_id, function(err, kotoevent) {
+    KotoEventModel.findById(req.params.kotoevent_id, function(err, kotoevent) {
 
         if (err)
             res.send(err);
@@ -112,7 +104,7 @@ exports.putEvenet = function(req,res){
 };
 
 exports.deleteEvent = function(req,res){
-    KotoEvent.remove({
+    KotoEventModel.remove({
         _id: req.params.kotoevent_id
     }, function(err, bear) {
         if (err)
