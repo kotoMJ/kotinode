@@ -187,7 +187,7 @@ exports.reset_event = function(req,res){
                     mongoose.model('KotoEvent', KotoEventModel).collection.insert({
                         "headline": Math.random().toString(36).substring(7),
                         "label": null,
-                        "eventDate": "2015-10-11T00:00:00.000Z",
+                        "eventDate": "2015-01-01T00:00:00.000Z",
                         "eventLocation": [
                             Math.random().toString(36).substring(7)
                         ],
