@@ -150,7 +150,7 @@ mongoose.connection.once('open', function() {
         .get(kotoAdminController.empty)
         .post(kotoAdminController.empty)
         .put(kotoAdminController.empty)
-        .patch(kotoAdminController.empty)
+        .patch(kotoAdminController.sortGallerySummary)
         .delete(kotoAdminController.reset_gallery)
         .purge(kotoAdminController.reset_gallery)
 

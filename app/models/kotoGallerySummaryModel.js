@@ -3,7 +3,7 @@ var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
 var GallerySummarySchema   = new Schema({
-    id: { type: Number, required: true, unique: true},
+    sortId: { type: Number, required: true}, //, unique: true},
     galleryName: { type:String, required: true},
     galleryTitle: { type:String, required: true},
     galleryDescription: { type:String, required: true},

@@ -2,9 +2,9 @@ var fs = require('fs');
 var path = require('path');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var mongoose   = require('mongoose');
-var KotoEvent     = require('../models/kotoEventModel');
-var KotoGalleryItem = require('../models/kotoGalleryItemModel')
-var KotoGallerySummary = require('../models/kotoGallerySummaryModel')
+var KotoEventModel     = require('../models/kotoEventModel');
+var KotoGalleryItemModel = require('../models/kotoGalleryItemModel')
+var KotoGallerySummaryModel = require('../models/kotoGallerySummaryModel')
 var PropertiesReader = require('properties-reader')
 var logger = require('../utils/logger.js');
 var fileUtils = require('../utils/fileUtils.js');
@@ -17,8 +17,8 @@ exports.reset_gallery = function(req,res){
 
     logger.log(req,"expected key:"+kotiConfig.api_key+", obtained key:"+apiKey+", match:"+(kotiConfig.api_key===apiKey));
     if (kotiConfig.api_key===apiKey) {
-        KotoGallerySummary.remove({},function(err, result) {
-            KotoGalleryItem.remove({}, function (err, result) {
+        KotoGallerySummaryModel.remove({},function(err, result) {
+            KotoGalleryItemModel.remove({}, function (err, result) {
                 if (err == null) {
                     logger.log(req, 'Event model cleaned! Ready to re-insert model...');
                     var gSummary = 0;
@@ -36,7 +36,7 @@ exports.reset_gallery = function(req,res){
                             if (stringUtils.strEndsWith(photoUrl, "png")||
                                 stringUtils.strEndsWith(photoUrl, "jpg")) {
                                 logger.log(req,"Inserting url:"+photoUrl);
-                                mongoose.model('KotoGalleryItem', KotoGalleryItem).collection.insert({
+                                mongoose.model('KotoGalleryItem', KotoGalleryItemModel).collection.insert({
                                     "id": gItem++,
                                     "galleryName": currentDir,
                                     "galleryDate": galleryDate,
@@ -54,8 +54,9 @@ exports.reset_gallery = function(req,res){
                             } else {
                                 var photo = docs.ops[0];
                                 if (photo.id == '0'){
-                                    mongoose.model('KotoGallerySummary', KotoGallerySummary).collection.insert({
-                                        "id": gSummary++,
+                                    //For every first photoItem in gallery insert summary record of this gallery.
+                                    mongoose.model('KotoGallerySummary', KotoGallerySummaryModel).collection.insert({
+                                        "sortId": gSummary++,
                                         "galleryName": currentDir,
                                         "galleryTitle" : galleryTitle,
                                         "galleryDescription" : galleryDescription,
@@ -77,6 +78,7 @@ exports.reset_gallery = function(req,res){
 
                     });
                     logger.log(req, 'Gallery model re-insert done!');
+
                 } else {
                     logger.log(req, 'Gallery model clean failed! '+err);
                 }
@@ -87,6 +89,35 @@ exports.reset_gallery = function(req,res){
     }else{
         res.json({message: 'admin'});
     }
+}
+
+exports.sortGallerySummary = function(req,res){
+
+    KotoGallerySummaryModel.find()
+        .sort({galleryDate: -1}).exec(function (err, eventList) {
+            var i=0;
+            eventList.forEach(function(record){
+                console.log("ToUpdate:"+record);
+                mongoose.model('KotoGallerySummary', KotoGallerySummaryModel).collection.findAndModify(
+                   {sortId:record.sortId},//query
+                   [['galleryDate','asc']],//sort order
+                   {$set: {sortId:i++}},//replacement, replaces only the field "id"
+                   {new:true},//options
+                   onUpdateSummary);
+            });
+        });
+
+    function onUpdateSummary(err, object) {
+        if (err) {
+            logger.err(req,err.message);
+        } else {
+            console.log("Updated:"+JSON.stringify(object));
+            //console.dir(object);
+            //logger.log(req,"onUpdateSummary:"+JSON.stringify(object));
+        }
+    };
+
+    res.json({message: 'sort done!'});
 }
 
 exports.drop = function(req,res){
@@ -122,14 +153,14 @@ exports.reset_event = function(req,res){
         //var KotoEventList = mongoose.model('KotoEvent', KotoEvent);
         var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
         logger.log(req,"Ready to drop DB...")
-        KotoEvent.remove({},function(err, result) {
+        KotoEventModel.remove({},function(err, result) {
             if (err == null){
                 logger.log(req,'Event model cleaned!');
             }else{
                 logger.log(req,'Event model clean failed!'+err);
             }
             logger.log(req,"Ready to re-insert model...");
-            mongoose.model('KotoEvent', KotoEvent).collection.insert(fixedEvents, function (err, r) {
+            mongoose.model('KotoEvent', KotoEventModel).collection.insert(fixedEvents, function (err, r) {
             });
 
 
@@ -138,7 +169,7 @@ exports.reset_event = function(req,res){
              */
 
             for (i=9; i<101; i++) {
-                mongoose.model('KotoEvent', KotoEvent).collection.insert({
+                mongoose.model('KotoEvent', KotoEventModel).collection.insert({
                     "id": i,
                     "headline": Math.random().toString(36).substring(7),
                     "label": null,
