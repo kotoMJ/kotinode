@@ -39,7 +39,7 @@
     "eventLocation": [
       "Praskolesy"
     ],
-    "textCapital": ["Víceúčelové hřiště Praskolesy"],
+    "textCapital": [ "Víceúčelové hřiště Praskolesy" ],
     "text": [
       "Prezentace(8:45-9:00)",
       "Start(9:30)",
@@ -159,7 +159,9 @@
     "eventLocation": [
       "Kotopeky"
     ],
-    "textCapital": ["Sál obecní budovy OÚ 14:00"],
+    "textCapital": [
+      "Sál obecní budovy OÚ 14:00"
+    ],
     "text": [
       "Pohostinství Na Rychtě pořádá dne 21.02.2016 od 14:00 na sále budovy OÚ dětský maškarní karneval"
     ],

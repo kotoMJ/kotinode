@@ -10,8 +10,8 @@ var EventSchema   = new Schema({
     label: [String],
     eventDate: { type:Date, required: true},//30.09.2015 01Z
     eventLocation : [String],
-    textCapital : String,
-    text : { type: String, required: true},
+    textCapital : [String],
+    text : { type: [String], required: true},
     imageResource: String,
     updateDate: {type: Date, default:Date.now }
 });
