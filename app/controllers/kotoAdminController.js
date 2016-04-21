@@ -14,6 +14,9 @@ var moment = require('moment');
 exports.reset_gallery = function(req,res){
     var apiKey = req.headers['apikey'];
     var rid = req.headers['rid'];
+    var resolutionType = req.headers['resolutionType'];
+    if(typeof variable === 'undefined'){resolutionType = 'low'}
+    var galleryPath = 'public/gallery/'+resolutionType+'/'
 
     logger.log(req,"expected key:"+kotiConfig.api_key+", obtained key:"+apiKey+", match:"+(kotiConfig.api_key===apiKey));
     if (kotiConfig.api_key===apiKey) {
@@ -22,19 +25,18 @@ exports.reset_gallery = function(req,res){
                 if (err == null) {
                     logger.log(req, 'Event model cleaned! Ready to re-insert model...');
                     var gSummary = 0;
-                    fileUtils.walkDirs('public/gallery', function (dirPath, stat) {
+                    fileUtils.walkDirs(galleryPath, function (dirPath, stat) {
                         var currentDir = path.basename(dirPath);
                         var gItem = 0;
                         //https://www.npmjs.com/package/properties-reader
-                        var galleryProperties = PropertiesReader('public/gallery/'+currentDir+'/description.properties');
+                        var galleryProperties = PropertiesReader(galleryPath+currentDir+'/description.properties');
                         var galleryTitle = galleryProperties.get('title');
                         var galleryDescription = galleryProperties.get('description');
                         var galleryDate = moment(galleryProperties.get('date'), "DD.MM.YYYY:ssZ").toDate();
-                        fileUtils.walkFiles('public/gallery/' + currentDir, function (filePath, stat) {
+                        fileUtils.walkFiles(galleryPath + currentDir, function (filePath, stat) {
                             var photoUrl = req.headers['host'] + "/" + filePath;
 
-                            if (stringUtils.strEndsWith(photoUrl, "png")||
-                                stringUtils.strEndsWith(photoUrl, "jpg")) {
+                            if (stringUtils.strEndsWith(photoUrl, "webp")) {
                                 logger.log(req,"Inserting url:"+photoUrl);
                                 mongoose.model('KotoGalleryItem', KotoGalleryItemModel).collection.insert({
                                     "id": gItem++,
