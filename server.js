@@ -13,6 +13,7 @@ var config = require('config.json')('./app/config/config.json', process.env.NODE
 var kotoEventController = require('./app/controllers/kotoEventController');
 var kotoGalleryController = require('./app/controllers/kotoGalleryController');
 var kotoAdminController = require('./app/controllers/kotoAdminController');
+var showcaseClassController = require('./app/controllers/showcaseClassController');
 var demoTransparentAccount = require('./app/controllers/demoaccounts');
 var logger = require('./app/utils/logger.js');
 
@@ -220,6 +221,16 @@ mongoose.connection.once('open', function() {
         .delete(kotoGalleryController.empty)
         .purge(kotoGalleryController.empty);
 
+// ----------------------------------------------------
+// DB SHOWCASE - CLASS
+// ----------------------------------------------------
+    api_router.route('/dbshowcase/class')
+        .get(function(req,res,next){showcaseClassController.getShowcaseClassFixed(req,res);})
+        .post(showcaseClassController.empty)
+        .put(showcaseClassController.empty)
+        .patch(showcaseClassController.empty)
+        .delete(showcaseClassController.empty)
+        .purge(showcaseClassController.empty);
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

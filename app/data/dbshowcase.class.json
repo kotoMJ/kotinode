@@ -1,0 +1,29 @@
+[
+  {
+    "id":1,
+    "name":"A",
+    "grade":1,
+    "studentList":[
+      {
+        "id":1,
+        "name":"Juraj Kuliska",
+        "birthDate":"1985-01-01T00:00:00.000Z",
+        "schoolClassId":1
+      },
+      {
+        "id":2,
+        "name":"Michal Jenicek",
+        "birthDate":"1980-01-01T00:00:00.000Z",
+        "schoolClassId":2
+      }
+    ],
+    "teacherList":[
+      {
+        "id":1,
+        "name":"Martin Petrus",
+        "birthDate":"1970-01-01T00:00:00.000Z",
+        "schoolClassId":1
+      }
+    ]
+  }
+]
