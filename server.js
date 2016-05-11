@@ -13,7 +13,7 @@ var config = require('config.json')('./app/config/config.json', process.env.NODE
 var kotoEventController = require('./app/controllers/kotoEventController');
 var kotoGalleryController = require('./app/controllers/kotoGalleryController');
 var kotoAdminController = require('./app/controllers/kotoAdminController');
-var showcaseClassController = require('./app/controllers/showcaseClassController');
+var showcaseController = require('./app/controllers/showcaseController');
 var demoTransparentAccount = require('./app/controllers/demoaccounts');
 var logger = require('./app/utils/logger.js');
 
@@ -225,12 +225,35 @@ mongoose.connection.once('open', function() {
 // DB SHOWCASE - CLASS
 // ----------------------------------------------------
     api_router.route('/dbshowcase/class')
-        .get(function(req,res,next){showcaseClassController.getShowcaseClassFixed(req,res);})
-        .post(showcaseClassController.empty)
-        .put(showcaseClassController.empty)
-        .patch(showcaseClassController.empty)
-        .delete(showcaseClassController.empty)
-        .purge(showcaseClassController.empty);
+        .get(function(req,res,next){showcaseController.getShowcaseClassFixed(req,res);})
+        .post(showcaseController.empty)
+        .put(showcaseController.empty)
+        .patch(showcaseController.empty)
+        .delete(showcaseController.empty)
+        .purge(showcaseController.empty);
+
+// ----------------------------------------------------
+// DB SHOWCASE - STUDENT
+// ----------------------------------------------------
+    api_router.route('/dbshowcase/student')
+        .get(function(req,res,next){showcaseController.getShowcaseStudentFixed(req,res);})
+        .post(showcaseController.empty)
+        .put(showcaseController.empty)
+        .patch(showcaseController.empty)
+        .delete(showcaseController.empty)
+        .purge(showcaseController.empty);
+
+// ----------------------------------------------------
+// DB SHOWCASE - STUDENT
+// ----------------------------------------------------
+    api_router.route('/dbshowcase/teacher')
+        .get(function(req,res,next){showcaseController.getShowcaseTeacherFixed(req,res);})
+        .post(showcaseController.empty)
+        .put(showcaseController.empty)
+        .patch(showcaseController.empty)
+        .delete(showcaseController.empty)
+        .purge(showcaseController.empty);
+
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

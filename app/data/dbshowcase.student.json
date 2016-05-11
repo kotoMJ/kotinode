@@ -1,0 +1,63 @@
+[
+  {
+    "id": 1,
+    "name": "Karel Hajek",
+    "birthDate": "2005-01-01T00:00:00.000Z",
+    "schoolClassId": 1
+  },
+  {
+    "id": 2,
+    "name": "Petr Ulicny",
+    "birthDate": "2004-02-01T00:00:00.000Z",
+    "schoolClassId": 1
+  },
+  {
+    "id": 3,
+    "name": "Vaclav Jancik",
+    "birthDate": "2005-03-01T00:00:00.000Z",
+    "schoolClassId": 1
+  },
+  {
+    "id": 4,
+    "name": "Petr Farek",
+    "birthDate": "2006-02-01T00:00:00.000Z",
+    "schoolClassId": 1
+  },
+  {
+    "id": 5,
+    "name": "Martin Dimitrov",
+    "birthDate": "2003-06-01T00:00:00.000Z",
+    "schoolClassId": 2
+  },
+  {
+    "id": 6,
+    "name": "Jan Svacina",
+    "birthDate": "2005-07-01T00:00:00.000Z",
+    "schoolClassId": 2
+  },
+  {
+    "id": 7,
+    "name": " Stanislav Vins",
+    "birthDate": "2005-10-01T00:00:00.000Z",
+    "schoolClassId": 2
+  },
+  {
+    "id": 8,
+    "name": " Marie Nedbalova",
+    "birthDate": "2005-01-01T00:00:00.000Z",
+    "schoolClassId": 2
+  },
+  {
+    "id": 9,
+    "name": " Stanislava Smoklova",
+    "birthDate": "2006-02-01T00:00:00.000Z",
+    "schoolClassId": 2
+  },
+  {
+    "id": 10,
+    "name": " Vladislav Dvoracek",
+    "birthDate": "2005-03-11T00:00:00.000Z",
+    "schoolClassId": 2
+  }
+
+]
