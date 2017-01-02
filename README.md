@@ -8,3 +8,5 @@ Project is being rewritten to technology/stack with client/server code.
 <img border="0" alt="project" src="./public/images/KoTiDiagram.png">
 </a>
 
+##Licence
+ © Copyleft (also known as GNU GPLv3)
