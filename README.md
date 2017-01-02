@@ -8,7 +8,7 @@ KoTiNode is a web client & server as a basic communication platform for small mu
 First stable release available on https://kotopeky.cz / https://tihava.cz
 
 2.0.0 (n/a)
-Project rewritten to technology/stack with client/server code & providing signIn/signUp for users.
+Project rewritten to react technology/stack with client/server code & providing signIn/signUp for users.
 
 ## Infrastructure overview
 
