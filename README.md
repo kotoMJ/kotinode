@@ -1,6 +1,6 @@
 #KoTiNode server
 
-KoTiNode is a server(REST API) and frontend intended to be server for all Kotomisak's mobile applications and also the related Web application.
+KoTiNode is a web client & server as a basic communication platform for small municipal infrastructure. 
 
 Project is being rewritten to technology/stack with client/server code.
 
