@@ -255,6 +255,19 @@ mongoose.connection.once('open', function() {
         .purge(showcaseController.empty);
 
 
+// ----------------------------------------------------
+// SECURITY SHOWCASE - SIMPLE AUTH
+// ----------------------------------------------------
+
+    api_router.route('/securityshowcase/login')
+        .get(showcaseController.empty)
+        .post(function(req,res,next){showcaseController.postShowcaseSecurityLogin(req,res);})
+        .put(showcaseController.empty)
+        .patch(showcaseController.empty)
+        .delete(showcaseController.empty)
+        .purge(showcaseController.empty);
+
+
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
     app.use('/', web_router);
