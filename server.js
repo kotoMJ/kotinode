@@ -13,6 +13,7 @@ var config = require('config.json')('./app/config/config.json', process.env.NODE
 var kotoEventController = require('./app/controllers/kotoEventController');
 var kotoGalleryController = require('./app/controllers/kotoGalleryController');
 var kotoAdminController = require('./app/controllers/kotoAdminController');
+var kotoUserController = require('./app/controllers/kotoUserController');
 var showcaseController = require('./app/controllers/showcaseController');
 var demoTransparentAccount = require('./app/controllers/demoaccounts');
 var logger = require('./app/utils/logger.js');
@@ -23,6 +24,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/public', express.static(__dirname + "/public"));
+
+// and support socket io
+var server = require('http').createServer(app);
+koTio = require('socket.io')(server);
 
 /*
  * Mongoose by default sets the auto_reconnect option to true.
@@ -74,7 +79,7 @@ mongoose.connection.once('open', function() {
     var web_router = express.Router();
 
     web_router.use(function (req, res, next) {
-        console.log('Access WEB KoTi request');
+        logger.log(req, 'Access WEB KoTi request');
         next();
     });
 
@@ -127,7 +132,20 @@ mongoose.connection.once('open', function() {
 
 
 // ===== ROUTE to SERVER API ========
+// ----------------------------------------------------
+// LOGIN - JWT AUTH
+// ----------------------------------------------------
 
+    api_router.route('/kotinode/login')
+        .get(kotoUserController.empty)
+        .post(function (req, res, next) {
+            kotoUserController.postKotoLogin(req, res);
+        })
+        .put(kotoUserController.empty)
+        .patch(kotoUserController.empty)
+        .delete(kotoUserController.empty)
+        .purge(kotoUserController.empty)
+        .options(kotoUserController.preflight);
 // ----------------------------------------------------
 // ADMIN
 // ----------------------------------------------------
