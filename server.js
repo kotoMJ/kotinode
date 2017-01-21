@@ -4,11 +4,11 @@
 // =============================================================================
 
 // call the packages we need
-var express    = require('express');        // call express
+var express = require('express');        // call express
 var fs = require('fs');
-var app        = express();                 // define our app using express
+var app = express();                 // define our app using express
 var bodyParser = require('body-parser');
-var mongoose   = require('mongoose');
+var mongoose = require('mongoose');
 var config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var kotoEventController = require('./app/controllers/kotoEventController');
 var kotoGalleryController = require('./app/controllers/kotoGalleryController');
@@ -20,7 +20,7 @@ var logger = require('./app/utils/logger.js');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.use('/public', express.static(__dirname + "/public"));
@@ -50,7 +50,7 @@ mongoose.connection.on('connected', function () {
 });
 
 // If the connection throws an error
-mongoose.connection.on('error',function (err) {
+mongoose.connection.on('error', function (err) {
     console.log('Mongoose default connection error: ' + err);
 });
 
@@ -60,7 +60,7 @@ mongoose.connection.on('disconnected', function () {
 });
 
 // If the Node process ends, close the Mongoose connection
-process.on('SIGINT', function() {
+process.on('SIGINT', function () {
     mongoose.connection.close(function () {
         console.log('Mongoose default connection disconnected through app termination');
         process.exit(0);
@@ -69,7 +69,7 @@ process.on('SIGINT', function() {
 
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 
-mongoose.connection.once('open', function() {
+mongoose.connection.once('open', function () {
     // Wait for the database connection to establish, then start the app.
 
 
@@ -84,18 +84,21 @@ mongoose.connection.once('open', function() {
     });
 
 // middleware to use for all requests
-    api_router.use(function(req, res, next) {
+    api_router.use(function (req, res, next) {
         //init api request id to header
         var rid = Math.floor((Math.random() * 1000000000000) + 1);
-        req.headers['rid']= rid;
-
+        req.headers['rid'] = rid;
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Credentials", "true");
+        res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+        res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers,Access-Control-Allow-Origin, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept");
 
         //log basic incomming params
-        logger.log(req,'params:'+JSON.stringify(req.params));
-        logger.log(req,'query:'+JSON.stringify(req.query));
-        logger.log(req,'headers:'+JSON.stringify(req.headers));
-        logger.log(req,'method:'+req.method);
-        logger.log(req,'route:'+req.url);
+        logger.log(req, 'params:' + JSON.stringify(req.params));
+        logger.log(req, 'query:' + JSON.stringify(req.query));
+        logger.log(req, 'headers:' + JSON.stringify(req.headers));
+        logger.log(req, 'method:' + req.method);
+        logger.log(req, 'route:' + req.url);
         next(); // make sure we go to the next routes and don't stop here
     });
 
@@ -106,26 +109,26 @@ mongoose.connection.once('open', function() {
 
 // ===== ROUTE to WEB ========
 
-    web_router.get('/', function(req, res) {
-        fs.readFile(__dirname + '/public/welcome/index.html', 'utf8', function(err, text){
+    web_router.get('/', function (req, res) {
+        fs.readFile(__dirname + '/public/welcome/index.html', 'utf8', function (err, text) {
             res.send(text);
         });
     });
 
-    web_router.get('/kbforest', function(req, res) {
-        fs.readFile(__dirname + '/public/kbforest/index.html', 'utf8', function(err, text){
+    web_router.get('/kbforest', function (req, res) {
+        fs.readFile(__dirname + '/public/kbforest/index.html', 'utf8', function (err, text) {
             res.send(text);
         });
     });
 
-    web_router.get('/kbsmart', function(req, res) {
-        fs.readFile(__dirname + '/public/kbsmart/index.html', 'utf8', function(err, text){
+    web_router.get('/kbsmart', function (req, res) {
+        fs.readFile(__dirname + '/public/kbsmart/index.html', 'utf8', function (err, text) {
             res.send(text);
         });
     });
 
-    web_router.get('/project', function(req, res) {
-        fs.readFile(__dirname + '/public/project/index.html', 'utf8', function(err, text){
+    web_router.get('/project', function (req, res) {
+        fs.readFile(__dirname + '/public/project/index.html', 'utf8', function (err, text) {
             res.send(text);
         });
     });
@@ -135,6 +138,8 @@ mongoose.connection.once('open', function() {
 // ----------------------------------------------------
 // LOGIN - JWT AUTH
 // ----------------------------------------------------
+    api_router.route('/')
+        .options(kotoUserController.preflight);
 
     api_router.route('/kotinode/login')
         .get(kotoUserController.empty)
@@ -190,7 +195,9 @@ mongoose.connection.once('open', function() {
 // KOTOEVENT
 // ----------------------------------------------------
     api_router.route('/kotinode/event')
-        .get(function(req,res,next){kotoEventController.getEvents(req,res);})
+        .get(function (req, res, next) {
+            kotoEventController.getEvents(req, res);
+        })
         .post(kotoEventController.empty)
         .put(kotoEventController.empty)
         .patch(kotoEventController.empty)
@@ -215,7 +222,9 @@ mongoose.connection.once('open', function() {
 // ----------------------------------------------------
 
     api_router.route('/kotinode/gallery')
-        .get(function(req,res,next){kotoGalleryController.getGallerySummary(req,res);})
+        .get(function (req, res, next) {
+            kotoGalleryController.getGallerySummary(req, res);
+        })
         .post(kotoGalleryController.empty)
         .put(kotoGalleryController.empty)
         .patch(kotoGalleryController.empty)
@@ -223,7 +232,9 @@ mongoose.connection.once('open', function() {
         .purge(kotoGalleryController.empty);
 
     api_router.route('/kotinode/gallery/:galleryName')
-        .get(function(req,res,next){kotoGalleryController.getGallery(req,res);})
+        .get(function (req, res, next) {
+            kotoGalleryController.getGallery(req, res);
+        })
         .post(kotoGalleryController.empty)
         .put(kotoGalleryController.empty)
         .patch(kotoGalleryController.empty)
@@ -243,7 +254,9 @@ mongoose.connection.once('open', function() {
 // DB SHOWCASE - CLASS
 // ----------------------------------------------------
     api_router.route('/dbshowcase/class')
-        .get(function(req,res,next){showcaseController.getShowcaseClassFixed(req,res);})
+        .get(function (req, res, next) {
+            showcaseController.getShowcaseClassFixed(req, res);
+        })
         .post(showcaseController.empty)
         .put(showcaseController.empty)
         .patch(showcaseController.empty)
@@ -254,7 +267,9 @@ mongoose.connection.once('open', function() {
 // DB SHOWCASE - STUDENT
 // ----------------------------------------------------
     api_router.route('/dbshowcase/student')
-        .get(function(req,res,next){showcaseController.getShowcaseStudentFixed(req,res);})
+        .get(function (req, res, next) {
+            showcaseController.getShowcaseStudentFixed(req, res);
+        })
         .post(showcaseController.empty)
         .put(showcaseController.empty)
         .patch(showcaseController.empty)
@@ -265,7 +280,9 @@ mongoose.connection.once('open', function() {
 // DB SHOWCASE - STUDENT
 // ----------------------------------------------------
     api_router.route('/dbshowcase/teacher')
-        .get(function(req,res,next){showcaseController.getShowcaseTeacherFixed(req,res);})
+        .get(function (req, res, next) {
+            showcaseController.getShowcaseTeacherFixed(req, res);
+        })
         .post(showcaseController.empty)
         .put(showcaseController.empty)
         .patch(showcaseController.empty)
@@ -279,7 +296,9 @@ mongoose.connection.once('open', function() {
 
     api_router.route('/securityshowcase/login')
         .get(showcaseController.empty)
-        .post(function(req,res,next){showcaseController.postShowcaseSecurityLogin(req,res);})
+        .post(function (req, res, next) {
+            showcaseController.postShowcaseSecurityLogin(req, res);
+        })
         .put(showcaseController.empty)
         .patch(showcaseController.empty)
         .delete(showcaseController.empty)
