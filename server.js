@@ -109,11 +109,13 @@ mongoose.connection.once('open', function () {
 
 // ===== ROUTE to WEB ========
 
-    web_router.get('/', function (req, res) {
-        fs.readFile(__dirname + '/public/welcome/index.html', 'utf8', function (err, text) {
-            res.send(text);
-        });
-    });
+    app.use('/', express.static('public/kotipoint-web'))
+
+    // web_router.get('/', function (req, res) {
+    //     fs.readFile(__dirname + '/public/welcome/index.html', 'utf8', function (err, text) {
+    //         res.send(text);
+    //     });
+    // });
 
     web_router.get('/kbforest', function (req, res) {
         fs.readFile(__dirname + '/public/kbforest/index.html', 'utf8', function (err, text) {
