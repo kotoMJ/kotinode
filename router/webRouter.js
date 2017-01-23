@@ -16,8 +16,12 @@ exports.getWebRouter = function () {
     // ===== ROUTE to WEB ========
 
     const allowedPaths = [
+        '/news',
+        '/projects',
         '/contact',
-        '/photo'
+        '/photos',
+        '/profile',
+        '/login'
     ];
 
     web_router.get('*', (req, res, next) => {
