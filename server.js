@@ -1,30 +1,12 @@
-// server.js
-
-// BASE SETUP
-// =============================================================================
-
 // call the packages we need
 var express = require('express');        // call express
-var fs = require('fs');
-var app = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
-var kotoEventController = require('./app/controllers/kotoEventController');
-var kotoGalleryController = require('./app/controllers/kotoGalleryController');
-var kotoAdminController = require('./app/controllers/kotoAdminController');
-var kotoUserController = require('./app/controllers/kotoUserController');
-var showcaseController = require('./app/controllers/showcaseController');
-var demoTransparentAccount = require('./app/controllers/demoaccounts');
 var logger = require('./app/utils/logger.js');
-
-// configure app to use bodyParser()
-// this will let us get the data from a POST
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-
-app.use('/public', express.static(__dirname + "/public"));
-
+var webRouter = require('./router/webRouter');
+var apiRouter = require('./router/apiRouter');
+var app = express();
 // and support socket io
 var server = require('http').createServer(app);
 koTio = require('socket.io')(server);
@@ -73,244 +55,23 @@ mongoose.connection.once('open', function () {
     // Wait for the database connection to establish, then start the app.
 
 
-    // ROUTES FOR OUR API
-// =============================================================================
-    var api_router = express.Router();              // get an instance of the express Router
-    var web_router = express.Router();
-
-    web_router.use(function (req, res, next) {
-        logger.log(req, 'Access WEB KoTi request');
-        next();
-    });
-
-// middleware to use for all requests
-    api_router.use(function (req, res, next) {
-        //init api request id to header
-        var rid = Math.floor((Math.random() * 1000000000000) + 1);
-        req.headers['rid'] = rid;
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Credentials", "true");
-        res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-        res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers,Access-Control-Allow-Origin, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept");
-
-        //log basic incomming params
-        logger.log(req, 'params:' + JSON.stringify(req.params));
-        logger.log(req, 'query:' + JSON.stringify(req.query));
-        logger.log(req, 'headers:' + JSON.stringify(req.headers));
-        logger.log(req, 'method:' + req.method);
-        logger.log(req, 'route:' + req.url);
-        next(); // make sure we go to the next routes and don't stop here
-    });
-
-// ===== SERVE STATIC FILES ======
-    //route gallery
-    //http://localhost:8080/public/gallery/2015-11-15-Racice/racice_001.png
-    app.use('/public/gallery', express.static('public/gallery'));
-
-// ===== ROUTE to WEB ========
-
-    app.use('/', express.static('public/kotipoint-web'))
-
-    // web_router.get('/', function (req, res) {
-    //     fs.readFile(__dirname + '/public/welcome/index.html', 'utf8', function (err, text) {
-    //         res.send(text);
-    //     });
-    // });
-
-    web_router.get('/kbforest', function (req, res) {
-        fs.readFile(__dirname + '/public/kbforest/index.html', 'utf8', function (err, text) {
-            res.send(text);
-        });
-    });
-
-    web_router.get('/kbsmart', function (req, res) {
-        fs.readFile(__dirname + '/public/kbsmart/index.html', 'utf8', function (err, text) {
-            res.send(text);
-        });
-    });
-
-    web_router.get('/project', function (req, res) {
-        fs.readFile(__dirname + '/public/project/index.html', 'utf8', function (err, text) {
-            res.send(text);
-        });
-    });
-
-
-// ===== ROUTE to SERVER API ========
-// ----------------------------------------------------
-// LOGIN - JWT AUTH
-// ----------------------------------------------------
-    api_router.route('/')
-        .options(kotoUserController.preflight);
-
-    api_router.route('/kotinode/login')
-        .get(kotoUserController.empty)
-        .post(function (req, res, next) {
-            kotoUserController.postKotoLogin(req, res);
-        })
-        .put(kotoUserController.empty)
-        .patch(kotoUserController.empty)
-        .delete(kotoUserController.empty)
-        .purge(kotoUserController.empty)
-        .options(kotoUserController.preflight);
-// ----------------------------------------------------
-// ADMIN
-// ----------------------------------------------------
-    api_router.route('/kotinode/admin')
-        .get(kotoAdminController.empty)
-        .post(kotoAdminController.empty)
-        .put(kotoAdminController.empty)
-        .patch(kotoAdminController.empty)
-        .delete(kotoAdminController.drop)
-        .purge(kotoAdminController.drop)
-
-    api_router.route('/kotinode/admin/event')
-        .get(kotoAdminController.empty)
-        .post(kotoAdminController.empty)
-        .put(kotoAdminController.empty)
-        .patch(kotoAdminController.sortEvent)
-        .delete(kotoAdminController.reset_event)
-        .purge(kotoAdminController.reset_event)
-
-    api_router.route('/kotinode/admin/gallery')
-        .get(kotoAdminController.empty)
-        .post(kotoAdminController.empty)
-        .put(kotoAdminController.empty)
-        .patch(kotoAdminController.sortGallerySummary)
-        .delete(kotoAdminController.reset_gallery)
-        .purge(kotoAdminController.reset_gallery)
-
-// ----------------------------------------------------
-// DEMO ACCOUNT
-// ----------------------------------------------------
-
-    api_router.route('/kotinode/account')
-
-        .get(demoTransparentAccount.getAccounts)
-
-
-    api_router.route('/kotinode/transaction')
-
-        .get(demoTransparentAccount.getTransactions)
-
-// ----------------------------------------------------
-// KOTOEVENT
-// ----------------------------------------------------
-    api_router.route('/kotinode/event')
-        .get(function (req, res, next) {
-            kotoEventController.getEvents(req, res);
-        })
-        .post(kotoEventController.empty)
-        .put(kotoEventController.empty)
-        .patch(kotoEventController.empty)
-        .delete(kotoEventController.empty)
-        .purge(kotoEventController.empty);
-
-    api_router.route('/kotinode/event/fixed')
-        .get(kotoEventController.getEventsFixed)
-        .post(kotoEventController.empty)
-        .put(kotoEventController.empty)
-        .patch(kotoEventController.empty)
-        .delete(kotoEventController.empty)
-        .purge(kotoEventController.empty);
-
-    api_router.route('/kotinode/event/:kotoevent_id')
-        .get(kotoEventController.empty)
-        .put(kotoEventController.empty)
-        .delete(kotoEventController.empty);
-
-// ----------------------------------------------------
-// GALLERY
-// ----------------------------------------------------
-
-    api_router.route('/kotinode/gallery')
-        .get(function (req, res, next) {
-            kotoGalleryController.getGallerySummary(req, res);
-        })
-        .post(kotoGalleryController.empty)
-        .put(kotoGalleryController.empty)
-        .patch(kotoGalleryController.empty)
-        .delete(kotoGalleryController.empty)
-        .purge(kotoGalleryController.empty);
-
-    api_router.route('/kotinode/gallery/:galleryName')
-        .get(function (req, res, next) {
-            kotoGalleryController.getGallery(req, res);
-        })
-        .post(kotoGalleryController.empty)
-        .put(kotoGalleryController.empty)
-        .patch(kotoGalleryController.empty)
-        .delete(kotoGalleryController.empty)
-        .purge(kotoGalleryController.empty);
-
-
-    api_router.route('/kotinode/gallery/fixed')
-        .get(kotoGalleryController.getGalleryFixed)
-        .post(kotoGalleryController.empty)
-        .put(kotoGalleryController.empty)
-        .patch(kotoGalleryController.empty)
-        .delete(kotoGalleryController.empty)
-        .purge(kotoGalleryController.empty);
-
-// ----------------------------------------------------
-// DB SHOWCASE - CLASS
-// ----------------------------------------------------
-    api_router.route('/dbshowcase/class')
-        .get(function (req, res, next) {
-            showcaseController.getShowcaseClassFixed(req, res);
-        })
-        .post(showcaseController.empty)
-        .put(showcaseController.empty)
-        .patch(showcaseController.empty)
-        .delete(showcaseController.empty)
-        .purge(showcaseController.empty);
-
-// ----------------------------------------------------
-// DB SHOWCASE - STUDENT
-// ----------------------------------------------------
-    api_router.route('/dbshowcase/student')
-        .get(function (req, res, next) {
-            showcaseController.getShowcaseStudentFixed(req, res);
-        })
-        .post(showcaseController.empty)
-        .put(showcaseController.empty)
-        .patch(showcaseController.empty)
-        .delete(showcaseController.empty)
-        .purge(showcaseController.empty);
-
-// ----------------------------------------------------
-// DB SHOWCASE - STUDENT
-// ----------------------------------------------------
-    api_router.route('/dbshowcase/teacher')
-        .get(function (req, res, next) {
-            showcaseController.getShowcaseTeacherFixed(req, res);
-        })
-        .post(showcaseController.empty)
-        .put(showcaseController.empty)
-        .patch(showcaseController.empty)
-        .delete(showcaseController.empty)
-        .purge(showcaseController.empty);
-
-
-// ----------------------------------------------------
-// SECURITY SHOWCASE - SIMPLE AUTH
-// ----------------------------------------------------
-
-    api_router.route('/securityshowcase/login')
-        .get(showcaseController.empty)
-        .post(function (req, res, next) {
-            showcaseController.postShowcaseSecurityLogin(req, res);
-        })
-        .put(showcaseController.empty)
-        .patch(showcaseController.empty)
-        .delete(showcaseController.empty)
-        .purge(showcaseController.empty);
-
 
 // REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-    app.use('/', web_router);
-    app.use('/api', api_router);
+    // configure app to use bodyParser()
+    // this will let us get the data from a POST
+    app.use(bodyParser.urlencoded({extended: true}));
+    app.use(bodyParser.json());
+
+    //serve all public content as public (//http://localhost:8080/public/gallery/low/2013-05-28-Otmice/00_otmice.webp)
+    app.use('/public', express.static(__dirname + "/public"));
+
+    app.use('/', express.static('public/kotipoint-web'));
+
+    app.use('/api', apiRouter.getApiRouter());
+    app.use('/', webRouter.getWebRouter());
+    app.use((req, res) => {
+        res.status(404).send('PAGE DOES NOT EXISTS')
+    });
 
 
 // START THE SERVER
