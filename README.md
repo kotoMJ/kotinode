@@ -4,11 +4,27 @@ KoTiNode is a web client & server as a basic communication platform for small mu
 
 ##Release
 
-1.0.0 (01.04.2016)
+####1.0.0 (01.04.2016)
 First stable release available on https://kotopeky.cz / https://tihava.cz
 
-2.0.0 (n/a)
-Project rewritten to react technology/stack with client/server code & providing signIn/signUp for users.
+
+###Realease plan
+####2.x.x 
+Main point of release 2.x is support for web administration from https://kotopeky.cz
+
+####2.1.x KoTiNode USER ADMINISTRATION  
+- ADMIN & EDITOR roles administration
+
+####2.2.x KoTiNode NEWS ADMINISTRATION
+- Ability to add/remove/edit/export news
+- Synchronize news with [https://mega.nz/#developers]
+
+
+
+
+
+
+
 
 ## Infrastructure overview
 
