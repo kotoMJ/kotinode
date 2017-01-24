@@ -45,8 +45,11 @@ exports.getShowcaseTeacherFixed = function (req, res) {
 exports.postShowcaseSecurityLogin = function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
+    if ((username === undefined) || (password === undefined)) {
+        res.status(401).json({"message": "Missing or incomplete authorization parameters"})
+    }
     if ((username === "SecurityShowcaseUser") && (password === "passW0rd1234")) {
-        res.json({
+        res.status(200).json({
             "dataValue": {
                 "username": username,
                 "userId": "1",
@@ -55,7 +58,7 @@ exports.postShowcaseSecurityLogin = function (req, res) {
             }
         })
     } else {
-        res.json({
+        res.status(403).json({
             "dataValue": {
                 "username": username,
                 "userId": "1",
