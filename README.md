@@ -16,8 +16,12 @@ Main point of release 2.x is support for web administration from https://kotopek
 - ADMIN & EDITOR roles administration
 
 ####2.2.x KoTiNode NEWS ADMINISTRATION
-- Ability to add/remove/edit/export news
-- Synchronize news with 
+- Ability to add/remove/edit news 
+    - https://github.com/ship-components/ship-components-texteditor
+    - https://github.com/prolificinteractive/node-html-to-json
+    - https://github.com/frozzare/json-to-html
+- Ability to export as PDF/DOCX https://github.com/dolanmiu/docx
+- Synchronize news with cloud storage 
     - https://mega.nz/#developers
     - https://www.programmableweb.com/api/mega]
     - https://www.programmableweb.com/sdk/mega-node.js-sdk-t%C3%B5nis-tiigi
