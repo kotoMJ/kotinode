@@ -2,15 +2,6 @@ var fs = require('fs');
 var logger = require('../utils/logger.js');
 
 
-//----------------------------------------------------
-//  DEFAULT response
-//----------------------------------------------------
-
-exports.empty = function (req, res) {
-    logger.log(req, 'Not implemented!');
-    res.json({message: 'empty'});
-}
-
 // ----------------------------------------------------
 // CRUD FOR LIST of CLASS
 // http://url:port/api/dbshowcase/class
@@ -54,8 +45,11 @@ exports.getShowcaseTeacherFixed = function (req, res) {
 exports.postShowcaseSecurityLogin = function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
+    if ((username === undefined) || (password === undefined)) {
+        res.status(401).json({"message": "Missing or incomplete authorization parameters"})
+    }
     if ((username === "SecurityShowcaseUser") && (password === "passW0rd1234")) {
-        res.json({
+        res.status(200).json({
             "dataValue": {
                 "username": username,
                 "userId": "1",
@@ -64,7 +58,7 @@ exports.postShowcaseSecurityLogin = function (req, res) {
             }
         })
     } else {
-        res.json({
+        res.status(403).json({
             "dataValue": {
                 "username": username,
                 "userId": "1",

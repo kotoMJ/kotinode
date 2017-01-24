@@ -3,16 +3,6 @@ var jwt = require('jsonwebtoken');
 var logger = require('../utils/logger.js');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 
-//----------------------------------------------------
-//  DEFAULT response
-//----------------------------------------------------
-
-exports.empty = function (req, res) {
-    logger.log(req, 'Not implemented!');
-    res.json({message: 'empty'});
-}
-
-
 exports.preflight = function (req, res) {
     logger.log(req, 'Preflight...');
     res.status(200).json({});

@@ -245,12 +245,3 @@ exports.sortEvent = function(req,res){
 
     res.json({message: 'sort done!'});
 }
-
-//----------------------------------------------------
-//  DEFAULT response
-//----------------------------------------------------
-
-exports.empty = function(req,res){
-    logger.log(req,'Not implemented!');
-    res.json({message: 'empty'});
-}
