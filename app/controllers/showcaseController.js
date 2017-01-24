@@ -2,15 +2,6 @@ var fs = require('fs');
 var logger = require('../utils/logger.js');
 
 
-//----------------------------------------------------
-//  DEFAULT response
-//----------------------------------------------------
-
-exports.empty = function (req, res) {
-    logger.log(req, 'Not implemented!');
-    res.json({message: 'empty'});
-}
-
 // ----------------------------------------------------
 // CRUD FOR LIST of CLASS
 // http://url:port/api/dbshowcase/class

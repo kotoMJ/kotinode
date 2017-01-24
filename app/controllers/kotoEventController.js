@@ -5,14 +5,6 @@ var kotiConfig = require('config.json')('./app/config/config.json', process.env.
 var logger = require('../utils/logger.js');
 
 
-//----------------------------------------------------
-//  DEFAULT response
-//----------------------------------------------------
-
-exports.empty = function(req,res){
-    logger.log(req,'Not implemented!');
-    res.json({message: 'empty'});
-}
 
 // ----------------------------------------------------
 // CRUD FOR LIST of EVENTS

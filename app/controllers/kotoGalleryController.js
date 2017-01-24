@@ -4,15 +4,6 @@ var KotoGallerySummaryModel     = require('../models/kotoGallerySummaryModel');
 var logger = require('../utils/logger.js');
 
 
-//----------------------------------------------------
-//  DEFAULT response
-//----------------------------------------------------
-
-exports.empty = function(req,res){
-    logger.log(req,'Not implemented!');
-    res.json({message: 'empty'});
-}
-
 // ----------------------------------------------------
 // CRUD FOR LIST of EVENTS
 // http://url:port/api/kotinode/event

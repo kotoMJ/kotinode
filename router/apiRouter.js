@@ -38,54 +38,37 @@ exports.getApiRouter = function () {
         .options(kotoUserController.preflight);
 
     api_router.route('/kotinode/login')
-        .get(kotoUserController.empty)
         .post(function (req, res, next) {
             kotoUserController.postKotoLogin(req, res);
         })
-        .put(kotoUserController.empty)
-        .patch(kotoUserController.empty)
-        .delete(kotoUserController.empty)
-        .purge(kotoUserController.empty)
         .options(kotoUserController.preflight);
 // ----------------------------------------------------
 // ADMIN
 // ----------------------------------------------------
     api_router.route('/kotinode/admin')
-        .get(kotoAdminController.empty)
-        .post(kotoAdminController.empty)
-        .put(kotoAdminController.empty)
-        .patch(kotoAdminController.empty)
         .delete(kotoAdminController.drop)
-        .purge(kotoAdminController.drop)
+        .purge(kotoAdminController.drop);
 
     api_router.route('/kotinode/admin/event')
-        .get(kotoAdminController.empty)
-        .post(kotoAdminController.empty)
-        .put(kotoAdminController.empty)
         .patch(kotoAdminController.sortEvent)
         .delete(kotoAdminController.reset_event)
-        .purge(kotoAdminController.reset_event)
+        .purge(kotoAdminController.reset_event);
 
     api_router.route('/kotinode/admin/gallery')
-        .get(kotoAdminController.empty)
-        .post(kotoAdminController.empty)
-        .put(kotoAdminController.empty)
         .patch(kotoAdminController.sortGallerySummary)
         .delete(kotoAdminController.reset_gallery)
-        .purge(kotoAdminController.reset_gallery)
+        .purge(kotoAdminController.reset_gallery);
 
 // ----------------------------------------------------
 // DEMO ACCOUNT
 // ----------------------------------------------------
 
     api_router.route('/kotinode/account')
-
-        .get(demoTransparentAccount.getAccounts)
+        .get(demoTransparentAccount.getAccounts);
 
 
     api_router.route('/kotinode/transaction')
-
-        .get(demoTransparentAccount.getTransactions)
+        .get(demoTransparentAccount.getTransactions);
 
 // ----------------------------------------------------
 // KOTOEVENT
@@ -93,25 +76,15 @@ exports.getApiRouter = function () {
     api_router.route('/kotinode/event')
         .get(function (req, res, next) {
             kotoEventController.getEvents(req, res);
-        })
-        .post(kotoEventController.empty)
-        .put(kotoEventController.empty)
-        .patch(kotoEventController.empty)
-        .delete(kotoEventController.empty)
-        .purge(kotoEventController.empty);
+        });
 
     api_router.route('/kotinode/event/fixed')
-        .get(kotoEventController.getEventsFixed)
-        .post(kotoEventController.empty)
-        .put(kotoEventController.empty)
-        .patch(kotoEventController.empty)
-        .delete(kotoEventController.empty)
-        .purge(kotoEventController.empty);
+        .get(kotoEventController.getEventsFixed);
 
-    api_router.route('/kotinode/event/:kotoevent_id')
-        .get(kotoEventController.empty)
-        .put(kotoEventController.empty)
-        .delete(kotoEventController.empty);
+    // api_router.route('/kotinode/event/:kotoevent_id')
+    //     .get(kotoEventController.empty)
+    //     .put(kotoEventController.empty)
+    //     .delete(kotoEventController.empty);
 
 // ----------------------------------------------------
 // GALLERY
@@ -120,31 +93,16 @@ exports.getApiRouter = function () {
     api_router.route('/kotinode/gallery')
         .get(function (req, res, next) {
             kotoGalleryController.getGallerySummary(req, res);
-        })
-        .post(kotoGalleryController.empty)
-        .put(kotoGalleryController.empty)
-        .patch(kotoGalleryController.empty)
-        .delete(kotoGalleryController.empty)
-        .purge(kotoGalleryController.empty);
+        });
 
     api_router.route('/kotinode/gallery/:galleryName')
         .get(function (req, res, next) {
             kotoGalleryController.getGallery(req, res);
-        })
-        .post(kotoGalleryController.empty)
-        .put(kotoGalleryController.empty)
-        .patch(kotoGalleryController.empty)
-        .delete(kotoGalleryController.empty)
-        .purge(kotoGalleryController.empty);
+        });
 
 
     api_router.route('/kotinode/gallery/fixed')
-        .get(kotoGalleryController.getGalleryFixed)
-        .post(kotoGalleryController.empty)
-        .put(kotoGalleryController.empty)
-        .patch(kotoGalleryController.empty)
-        .delete(kotoGalleryController.empty)
-        .purge(kotoGalleryController.empty);
+        .get(kotoGalleryController.getGalleryFixed);
 
 // ----------------------------------------------------
 // DB SHOWCASE - CLASS
@@ -152,12 +110,7 @@ exports.getApiRouter = function () {
     api_router.route('/dbshowcase/class')
         .get(function (req, res, next) {
             showcaseController.getShowcaseClassFixed(req, res);
-        })
-        .post(showcaseController.empty)
-        .put(showcaseController.empty)
-        .patch(showcaseController.empty)
-        .delete(showcaseController.empty)
-        .purge(showcaseController.empty);
+        });
 
 // ----------------------------------------------------
 // DB SHOWCASE - STUDENT
@@ -165,12 +118,7 @@ exports.getApiRouter = function () {
     api_router.route('/dbshowcase/student')
         .get(function (req, res, next) {
             showcaseController.getShowcaseStudentFixed(req, res);
-        })
-        .post(showcaseController.empty)
-        .put(showcaseController.empty)
-        .patch(showcaseController.empty)
-        .delete(showcaseController.empty)
-        .purge(showcaseController.empty);
+        });
 
 // ----------------------------------------------------
 // DB SHOWCASE - STUDENT
@@ -178,27 +126,16 @@ exports.getApiRouter = function () {
     api_router.route('/dbshowcase/teacher')
         .get(function (req, res, next) {
             showcaseController.getShowcaseTeacherFixed(req, res);
-        })
-        .post(showcaseController.empty)
-        .put(showcaseController.empty)
-        .patch(showcaseController.empty)
-        .delete(showcaseController.empty)
-        .purge(showcaseController.empty);
-
+        });
 
 // ----------------------------------------------------
 // SECURITY SHOWCASE - SIMPLE AUTH
 // ----------------------------------------------------
 
     api_router.route('/securityshowcase/login')
-        .get(showcaseController.empty)
         .post(function (req, res, next) {
             showcaseController.postShowcaseSecurityLogin(req, res);
-        })
-        .put(showcaseController.empty)
-        .patch(showcaseController.empty)
-        .delete(showcaseController.empty)
-        .purge(showcaseController.empty);
+        });
 
 
     return api_router;
