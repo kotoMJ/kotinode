@@ -17,7 +17,11 @@ Main point of release 2.x is support for web administration from https://kotopek
 
 ####2.2.x KoTiNode NEWS ADMINISTRATION
 - Ability to add/remove/edit/export news
-- Synchronize news with [https://mega.nz/#developers]
+- Synchronize news with 
+    - https://mega.nz/#developers
+    - https://www.programmableweb.com/api/mega]
+    - https://www.programmableweb.com/sdk/mega-node.js-sdk-t%C3%B5nis-tiigi
+    - https://github.com/tonistiigi/mega  
 
 
 
