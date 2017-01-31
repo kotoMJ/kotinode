@@ -15,7 +15,7 @@ Main point of release 2.x is support for web administration from https://kotopek
 ####2.1.x KoTiNode USER ADMINISTRATION  
 - ADMIN & EDITOR roles administration
 
-####2.2.x KoTiNode NEWS ADMINISTRATION
+####2.x.y KoTiNode NEWS ADMINISTRATION
 - Ability to add/remove/edit news 
     - https://github.com/ship-components/ship-components-texteditor
     - https://github.com/prolificinteractive/node-html-to-json
@@ -26,7 +26,9 @@ Main point of release 2.x is support for web administration from https://kotopek
     - https://www.programmableweb.com/api/mega]
     - https://www.programmableweb.com/sdk/mega-node.js-sdk-t%C3%B5nis-tiigi
     - https://github.com/tonistiigi/mega  
-
+- Send sms
+    - https://www.twilio.com/sms
+    - https://www.twilio.com/docs/api/rest/sending-messages
 
 
 
