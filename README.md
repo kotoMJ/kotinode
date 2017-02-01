@@ -14,6 +14,14 @@ Main point of release 2.x is support for web administration from https://kotopek
 
 ####2.1.x KoTiNode USER ADMINISTRATION  
 - ADMIN & EDITOR roles administration
+    https://github.com/yabwe/medium-editor/blob/master/API.md#serialize
+    https://github.com/yabwe/medium-editor
+    https://www.npmjs.com/package/medium-editor
+    
+    OR
+    https://www.npmjs.com/package/react-rte-gc
+    +
+    https://www.npmjs.com/package/html-to-article-json
 
 ####2.x.y KoTiNode NEWS ADMINISTRATION
 - Ability to add/remove/edit news 

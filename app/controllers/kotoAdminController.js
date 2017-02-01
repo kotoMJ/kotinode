@@ -153,7 +153,7 @@ exports.reset_event = function(req,res){
 
         //EVENT
         //var KotoEventList = mongoose.model('KotoEvent', KotoEvent);
-        var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
+        var fixedEvents = JSON.parse(fs.readFileSync('app/data/event-new.list.json', 'utf8'));
         logger.log(req,"Ready to drop DB...")
         KotoEventModel.remove({},function(err, result) {
             if (err == null){

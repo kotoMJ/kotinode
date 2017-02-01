@@ -13,7 +13,7 @@ var logger = require('../utils/logger.js');
 
 // get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
 exports.getEventsFixed = function(req,res) {
-    var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
+    var fixedEvents = JSON.parse(fs.readFileSync('app/data/event-new.list.json', 'utf8'));
     // follow date format with ISO-8601
     res.json(fixedEvents)
 };
@@ -21,16 +21,19 @@ exports.getEventsFixed = function(req,res) {
 // GET http://localhost:8080/api/kotinode/event/?offset=1&limit=1&delay=2000
 exports.getEvents = function(req,res) {
     logger.logMem(req,"Start exports.getEvents>>")
-    var offset = isNaN(parseInt(req.query.offset))?0:parseInt(req.query.offset);
-    var limit = isNaN(parseInt(req.query.limit))?0:parseInt(req.query.limit);
+    // var offset = isNaN(parseInt(req.query.offset))?0:parseInt(req.query.offset);
+    // var limit = isNaN(parseInt(req.query.limit))?0:parseInt(req.query.limit);
     var delay = isNaN(parseInt(req.query.delay))?0:parseInt(req.query.delay);
 
     setTimeout(function () {
         // Currently the sorting is given by sortId order (kotoAdminController.sortEvent()).
-        KotoEventModel.find().
-            where('sortId').gte(offset).limit(limit).sort({sortId: 1}).exec(function (err, event) {
-                res.json(event);
-            });
+        // KotoEventModel.find().
+        //     where('sortId').gte(offset).limit(limit).sort({sortId: 1}).exec(function (err, event) {
+        //         res.json(event);
+        //     });
+        KotoEventModel.find().exec(function (err, event) {
+            res.json(event);
+        });
         logger.logMem(req,"Finish exports.getEvents>>")
     }, delay);// delay to simulate slow connection!
 
@@ -72,36 +75,36 @@ exports.deleteEvents = function(req, res) {
 // http://url:port/api/kotinode/event/:kotoevent_id
 // ----------------------------------------------------
 
-exports.putEvenet = function(req,res){
-    // use our bear model to find the bear we want
-    KotoEventModel.findById(req.params.kotoevent_id, function(err, kotoevent) {
+// exports.putEvenet = function(req,res){
+//     // use our event model to find the event we want
+//     KotoEventModel.findById(req.params.kotoevent_id, function(err, kotoevent) {
+//
+//         if (err)
+//             res.send(err);
+//
+//         kotoevent.name = req.body.name;  // update the kotinode info
+//         kotoevent.date = req.body.date;
+//         kotoevent.note = req.body.note;
+//         kotoevent.description = req.body.description;
+//
+//         // save the bear
+//         kotoevent.save(function(err) {
+//             if (err)
+//                 res.send(err);
+//
+//             res.json({ message: 'KotoEvent updated!' });
+//         });
+//
+//     });
+// };
 
-        if (err)
-            res.send(err);
-
-        kotoevent.name = req.body.name;  // update the kotinode info
-        kotoevent.date = req.body.date;
-        kotoevent.note = req.body.note;
-        kotoevent.description = req.body.description;
-
-        // save the bear
-        kotoevent.save(function(err) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'KotoEvent updated!' });
-        });
-
-    });
-};
-
-exports.deleteEvent = function(req,res){
-    KotoEventModel.remove({
-        _id: req.params.kotoevent_id
-    }, function(err, bear) {
-        if (err)
-            res.send(err);
-
-        res.json({ message: 'KotoEvent deleted' });
-    });
-};
+// exports.deleteEvent = function(req,res){
+//     KotoEventModel.remove({
+//         _id: req.params.kotoevent_id
+//     }, function(err, bear) {
+//         if (err)
+//             res.send(err);
+//
+//         res.json({ message: 'KotoEvent deleted' });
+//     });
+// };
