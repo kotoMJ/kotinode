@@ -1,0 +1,25 @@
+{
+  "headline": "POSTMANs topic",
+  "description": "Just the testing set",
+  "imageResource": null,
+  "category": [
+    {
+      "name": "dvelopment"
+    }
+  ],
+  "date": "2017-02-2T00:00:00.000Z",
+  "location": [
+    {
+      "name": ""
+    }
+  ],
+  "batch": [
+    {
+      "name": "Release 02/2017"
+    }
+  ],
+  "text": [
+    "Message testing to set the new event via the new API",
+    "New API should respect WEB/Android/Export form of news."
+  ]
+}

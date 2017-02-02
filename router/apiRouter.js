@@ -15,7 +15,9 @@ exports.getApiRouter = function () {
     api_router.use(function (req, res, next) {
         //init api request id to header
         var rid = Math.floor((Math.random() * 1000000000000) + 1);
+        console.log('rid:' + rid);
         req.headers['rid'] = rid;
+        logger.log(req, 'rid test');
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Credentials", "true");
         res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
@@ -75,11 +77,16 @@ exports.getApiRouter = function () {
 // ----------------------------------------------------
     api_router.route('/kotinode/event')
         .get(function (req, res, next) {
-            kotoEventController.getEvents(req, res);
+            kotoEventController.getEvent(req, res);
+        });
+
+    api_router.route('/kotinode/event')
+        .post(function (req, res, next) {
+            kotoEventController.setEvent(req, res);
         });
 
     api_router.route('/kotinode/event/fixed')
-        .get(kotoEventController.getEventsFixed);
+        .get(kotoEventController.getEventFixed);
 
     // api_router.route('/kotinode/event/:kotoevent_id')
     //     .get(kotoEventController.empty)

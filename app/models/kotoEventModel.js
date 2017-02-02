@@ -4,8 +4,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-//https://github.com/Automattic/mongoose/issues/4356
-
 var EventSchema = new Schema({
     headline: {type: String, required: true},
     description: String,
@@ -13,9 +11,9 @@ var EventSchema = new Schema({
     category: [{
         name: {type: String, required: true}
     }],
-    date: {type: Date, required: true},//30.09.2015 01Z
+    date: {type: Date, required: true},
     location: [{
-        name: {type: String, required: true}
+        name: {type: String}
     }],
     batch: [{
         name: {type: String, required: true}
@@ -23,24 +21,26 @@ var EventSchema = new Schema({
     text: [{type: String, required: true}],
 });
 
-var EventText = new Schema({
-    text: {type: String, required: true},
-})
+//https://github.com/Automattic/mongoose/issues/4356
 
-var EventBatch = new Schema({
-    //id: {type: String, required: true, unique: true},
-    date: {type: Date, required: true},
-    description: {type: String, required: true}
-})
-
-var EventCategory = new Schema({
-    //id: {type: String, required: true, unique: true},
-    name: {type: String, required: true}
-})
-
-var EventLocation = new Schema({
-    //id: {type: String, required: true, unique: true},
-    name: {type: String, required: true}
-})
+// var EventText = new Schema({
+//     text: {type: String, required: true},
+// })
+//
+// var EventBatch = new Schema({
+//     //id: {type: String, required: true, unique: true},
+//     date: {type: Date, required: true},
+//     description: {type: String, required: true}
+// })
+//
+// var EventCategory = new Schema({
+//     //id: {type: String, required: true, unique: true},
+//     name: {type: String, required: true}
+// })
+//
+// var EventLocation = new Schema({
+//     //id: {type: String, required: true, unique: true},
+//     name: {type: String, required: true}
+// })
 
 module.exports = mongoose.model('KotoEvent', EventSchema);
