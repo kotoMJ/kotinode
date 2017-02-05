@@ -55,6 +55,9 @@ mongoose.connection.once('open', function () {
     // Wait for the database connection to establish, then start the app.
 
 
+    express.response.jsonWrapped = function (obj) {
+        return this.json({result: obj});
+    };
 
 // REGISTER OUR ROUTES -------------------------------
     // configure app to use bodyParser()

@@ -14,7 +14,7 @@ var logger = require('../utils/logger.js');
 exports.getEventFixed = function (req, res) {
     var fixedEvents = JSON.parse(fs.readFileSync('app/data/event-new.list.json', 'utf8'));
     // follow date format with ISO-8601
-    res.json(fixedEvents)
+    res.jsonWrapped(fixedEvents)
 };
 
 // GET http://localhost:8080/api/kotinode/event/?offset=1&limit=1&delay=2000
@@ -31,7 +31,7 @@ exports.getEvent = function (req, res) {
         //         res.json(event);
         //     });
         KotoEventModel.find().exec(function (err, event) {
-            res.json(event);
+            res.jsonWrapped(event);
         });
     }, delay);// delay to simulate slow connection!
 
