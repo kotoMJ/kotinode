@@ -97,13 +97,13 @@ exports.putEvenet = function (req, res) {
 
 };
 
-// exports.deleteEvent = function(req,res){
-//     KotoEventModel.remove({
-//         _id: req.params.kotoevent_id
-//     }, function(err, bear) {
-//         if (err)
-//             res.send(err);
-//
-//         res.json({ message: 'KotoEventBatch deleted' });
-//     });
-// };
+exports.deleteEventBatch = function (req, res) {
+    KotoEventModel.remove({
+        _id: req.params.batch_id
+    }, function (err, bear) {
+        if (err)
+            res.send(err);
+
+        res.json({message: 'KotoEventBatch deleted'});
+    });
+};

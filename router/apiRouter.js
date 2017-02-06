@@ -77,9 +77,8 @@ exports.getApiRouter = function () {
 // ----------------------------------------------------
 
     api_router.route('/kotinode/event/:batch_id')
-        .put(function (req, res, next) {
-            kotoEventController.putEvenet(req, res);
-        });
+        .put(kotoEventController.putEvenet)
+        .delete(kotoEventController.deleteEventBatch);
 
     api_router.route('/kotinode/event/fixed')
         .get(kotoEventController.getEventFixed);
