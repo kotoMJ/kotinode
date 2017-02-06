@@ -87,7 +87,7 @@ exports.deleteEvent = function (req, res) {
 //             if (err)
 //                 res.send(err);
 //
-//             res.json({ message: 'KotoEvent updated!' });
+//             res.json({ message: 'KotoEventBatch updated!' });
 //         });
 //
 //     });
@@ -100,6 +100,6 @@ exports.deleteEvent = function (req, res) {
 //         if (err)
 //             res.send(err);
 //
-//         res.json({ message: 'KotoEvent deleted' });
+//         res.json({ message: 'KotoEventBatch deleted' });
 //     });
 // };

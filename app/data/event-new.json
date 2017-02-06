@@ -13,11 +13,6 @@
       "name": ""
     }
   ],
-  "batch": [
-    {
-      "name": "Release 02/2017"
-    }
-  ],
   "text": [
     "Message testing to set the new event via the new API",
     "New API should respect WEB/Android/Export form of news."

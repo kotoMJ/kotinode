@@ -4,21 +4,22 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var EventSchema = new Schema({
-    headline: {type: String, required: true},
-    description: String,
-    imageResource: String,
-    category: [{
-        name: {type: String, required: true}
-    }],
+var EventBatchSchema = new Schema({
+    name: {type: String, required: true},
     date: {type: Date, required: true},
-    location: [{
-        name: {type: String}
-    }],
-    batch: [{
-        name: {type: String, required: true}
-    }],
-    text: [{type: String, required: true}],
+    eventList: [{
+        headline: {type: String, required: true},
+        description: String,
+        imageResource: String,
+        category: [{
+            name: {type: String, required: true}
+        }],
+        date: {type: Date, required: true},
+        location: [{
+            name: {type: String}
+        }],
+        text: [{type: String, required: true}]
+    }]
 });
 
 //https://github.com/Automattic/mongoose/issues/4356
@@ -43,4 +44,4 @@ var EventSchema = new Schema({
 //     name: {type: String, required: true}
 // })
 
-module.exports = mongoose.model('KotoEvent', EventSchema);
+module.exports = mongoose.model('KotoEventBatch', EventBatchSchema);

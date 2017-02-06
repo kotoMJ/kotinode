@@ -1,105 +1,107 @@
 [
   {
-    "headline": "Tvoření pro dospělé",
-    "description": "",
-    "imageResource": null,
-    "category": [
+    "name": "Listopad 2015",
+    "date": "2015-11-01T00:00:00.000Z",
+    "eventList": [
       {
-        "name": "hobby"
-      }
-    ],
-    "date": "2015-11-08T00:00:00.000Z",
-    "location": [
-      {
-        "name": "Kotopeky OU"
-      }
-    ],
-    "batch": [
-      {
-        "name": "Listopad 2015"
-      }
-    ],
-    "text": [
-      "Tentokrát budeme dělat ozdobnou krabičku na papírové kapesníky. Dno a víko bude z keramiky, stěny vypletené z pedigu."
-    ]
-  },
-  {
-    "headline": "Keramika pro děti",
-    "description": "Každé liché pondělí od 16:00.",
-    "imageResource": null,
-    "category": [
-      {
-        "name": "hobby"
-      }
-    ],
-    "date": "2015-11-24T00:00:00.000Z",
-    "location": [
-      {
-        "name": "Kotopeky OU"
-      }
-    ],
-    "batch": [
-      {
-        "name": "Listopad 2015"
-      }
-    ],
-    "text": [
-      "Od 16:00 v podkroví OÚ Kotopeky. První informativní schůzka se koná 19.10. Kurzovné: 80,-Kč/hodinu."
-    ]
-  },
-  {
-    "headline": "Pozemky pod silnicí Hořovice-Žebrák",
-    "description": "",
-    "imageResource": null,
-    "category": [
-      {
-        "name": "zastupitelstvo"
-      }
-    ],
-    "date": "2015-11-08T00:00:00.000Z",
-    "location": [
-      {
-        "name": "Kotopeky OU"
-      }
-    ],
-    "batch": [
-      {
-        "name": "Zastupitelstvo 11/2015"
-      }
-    ],
-    "text": [
-      "Předložen návrh firmy EXIT 34 na odkup obecních pozemků pod silnicí Hořovice-Žebrák za cenu 50 Kč/m2.",
-      "OZ návrh zamítlo z důvodu neadekvátně nízké ceny"
-    ]
-  },
-  {
-    "headline": "Chodníky v obci",
-    "description": "",
-    "imageResource": null,
-    "category": [
-      {
-        "name": "zastupitelstvo"
-      }
-    ],
-    "date": "2015-11-08T00:00:00.000Z",
-    "location": [
-      {
-        "name": "Kotopeky OU"
+        "headline": "Tvoření pro dospělé",
+        "description": "",
+        "imageResource": null,
+        "category": [
+          {
+            "name": "hobby"
+          }
+        ],
+        "date": "2015-11-08T00:00:00.000Z",
+        "location": [
+          {
+            "name": "Kotopeky OU"
+          }
+        ],
+        "batch": [
+          {
+            "name": "Listopad 2015"
+          }
+        ],
+        "text": [
+          "Tentokrát budeme dělat ozdobnou krabičku na papírové kapesníky. Dno a víko bude z keramiky, stěny vypletené z pedigu."
+        ]
       },
       {
-        "name": "Kotopeky"
+        "headline": "Keramika pro děti",
+        "description": "Každé liché pondělí od 16:00.",
+        "imageResource": null,
+        "category": [
+          {
+            "name": "hobby"
+          }
+        ],
+        "date": "2015-11-24T00:00:00.000Z",
+        "location": [
+          {
+            "name": "Kotopeky OU"
+          }
+        ],
+        "batch": [
+          {
+            "name": "Listopad 2015"
+          }
+        ],
+        "text": [
+          "Od 16:00 v podkroví OÚ Kotopeky. První informativní schůzka se koná 19.10. Kurzovné: 80,-Kč/hodinu."
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Zastupitelstvo 11/2015",
+    "date": "2015-11-08T00:00:00.000Z",
+    "eventList": [
+      {
+        "headline": "Pozemky pod silnicí Hořovice-Žebrák",
+        "description": "",
+        "imageResource": null,
+        "category": [
+          {
+            "name": "zastupitelstvo"
+          }
+        ],
+        "date": "2015-11-08T00:00:00.000Z",
+        "location": [
+          {
+            "name": "Kotopeky OU"
+          }
+        ],
+        "text": [
+          "Předložen návrh firmy EXIT 34 na odkup obecních pozemků pod silnicí Hořovice-Žebrák za cenu 50 Kč/m2.",
+          "OZ návrh zamítlo z důvodu neadekvátně nízké ceny"
+        ]
       },
       {
-        "name": "Tihava"
+        "headline": "Chodníky v obci",
+        "description": "",
+        "imageResource": null,
+        "category": [
+          {
+            "name": "zastupitelstvo"
+          }
+        ],
+        "date": "2015-11-08T00:00:00.000Z",
+        "location": [
+          {
+            "name": "Kotopeky OU"
+          },
+          {
+            "name": "Kotopeky"
+          },
+          {
+            "name": "Tihava"
+          }
+        ],
+        "text": [
+          "OZ se usneslo nechat zpracovat projekt na opravu stávajícího chodníku na Tihavě a případnou výstavbu nových chodníků v naší obci."
+        ]
       }
-    ],
-    "batch": [
-      {
-        "name": "Zastupitelstvo 11/2015"
-      }
-    ],
-    "text": [
-      "OZ se usneslo nechat zpracovat projekt na opravu stávajícího chodníku na Tihavě a případnou výstavbu nových chodníků v naší obci."
     ]
   }
 ]
