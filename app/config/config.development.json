@@ -3,5 +3,7 @@
     "mongoUser": "",
     "mongoPass": "",
     "port" : 8080,
-    "api_key": "x3c4ku3s7g"
+    "api_key": "x3c4ku3s7g",
+    "adminUser": "a@a.cz",
+    "adminPassword": "1234"
 }
