@@ -50,33 +50,6 @@ exports.createEventBatch = function (req, res) {
 };
 
 
-exports.addEventToBatch = function (req, res) {
-
-    // KotoEventModel.findById(req.params.batch_id, function (err, kotoEventBatch) {
-    //
-    //     logger.log(req, 'found:'+kotoEventBatch);
-    // });
-    var apiKey = req.headers['apikey'];
-    if (apiKey === undefined) {
-        res.status(401).json({"message": "Missing or incomplete authentication parameters"})
-    } else if (kotiConfig.api_key === apiKey) {
-        var payload = JSON.parse(JSON.stringify(req.body));
-        payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
-        KotoEventModel.update({_id: req.params.batch_id}, {$push: {eventList: payload}}, {upsert: false}, function (err, raw) {
-            if (err) {
-                logger.log(req, 'Error!');
-                res.json({message: err});
-            } else {
-                logger.log(req, 'Noerror!');
-                res.status(302).json({message: raw});
-            }
-        });
-    } else {
-        res.status(403).json({"message": "Missing permissions!"})
-    }
-
-};
-
 exports.deleteEventBatch = function (req, res) {
     KotoEventModel.remove({
         _id: req.params.batch_id
@@ -96,4 +69,55 @@ exports.cleanupEventBatchAll = function (req, res) {
         else
             res.json({message: 'All KotoEvents deleted'});
     });
+};
+
+exports.addEventToBatch = function (req, res) {
+
+    // KotoEventModel.findById(req.params.batch_id, function (err, kotoEventBatch) {
+    //
+    //     logger.log(req, 'found:'+kotoEventBatch);
+    // });
+    var apiKey = req.headers['apikey'];
+    if (apiKey === undefined) {
+        res.status(401).json({"message": "Missing or incomplete authentication parameters"})
+    } else if (kotiConfig.api_key === apiKey) {
+        var payload = JSON.parse(JSON.stringify(req.body));
+        payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
+        KotoEventModel.update({_id: req.params.batch_id}, {$push: {eventList: payload}}, {upsert: false}, function (err, raw) {
+            if (err) {
+                logger.log(req, 'Error!');
+                res.status(302).json({message: err});
+            } else {
+                logger.log(req, 'Noerror!');
+                res.status(200).json({message: raw});
+            }
+        });
+    } else {
+        res.status(403).json({"message": "Missing permissions!"})
+    }
+
+};
+
+exports.deleteEventFromBatch = function (req, res) {
+
+
+    var apiKey = req.headers['apikey'];
+    if (apiKey === undefined) {
+        res.status(401).json({"message": "Missing or incomplete authentication parameters"})
+    } else if (kotiConfig.api_key === apiKey) {
+        if (req.params.batch_id === undefined) res.status(302).json({message: 'Missing batch_id parameter'});
+        if (req.params.event_id === undefined) res.status(302).json({message: 'Missing event_id parameter'});
+        KotoEventModel.update({_id: req.params.batch_id}, {$pull: {'eventList': {_id: req.params.event_id}}}, {upsert: false}, function (err, raw) {
+            if (err) {
+                logger.log(req, 'Error!');
+                res.status(302).json({message: err});
+            } else {
+                logger.log(req, 'Noerror!');
+                res.status(200).json({message: raw});
+            }
+        });
+    } else {
+        res.status(403).json({"message": "Missing permissions!"})
+    }
+
 };
