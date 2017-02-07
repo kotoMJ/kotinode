@@ -3,16 +3,12 @@ var KotoEventModel = require('../models/kotoEventModel');
 var moment = require('moment');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var logger = require('../utils/logger.js');
-
-
-// ----------------------------------------------------
-// CRUD FOR LIST of EVENTS
-// http://url:port/api/kotinode/event
-// ----------------------------------------------------
+var DESC_SORT_ORDER = -1
+var ASC_SORT_ORDER = 1
 
 // get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
 exports.getEventFixed = function (req, res) {
-    var fixedEvents = JSON.parse(fs.readFileSync('app/data/event-new.list.json', 'utf8'));
+    var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
     // follow date format with ISO-8601
     res.jsonWrapped(fixedEvents)
 };
@@ -30,15 +26,14 @@ exports.getEvent = function (req, res) {
         //     where('sortId').gte(offset).limit(limit).sort({sortId: 1}).exec(function (err, event) {
         //         res.json(event);
         //     });
-        KotoEventModel.find().exec(function (err, event) {
+        KotoEventModel.find().sort({date: DESC_SORT_ORDER}).exec(function (err, event) {
             res.jsonWrapped(event);
         });
     }, delay);// delay to simulate slow connection!
 
 };
 
-// create kotievent accessed at POST http://url:port/api/kotinode/event
-exports.setEvent = function (req, res) {
+exports.createEventBatch = function (req, res) {
     logger.log(req, "exports.setEvent");
     logger.log(req, JSON.stringify(req.body))
     var payload = JSON.parse(JSON.stringify(req.body))
@@ -54,23 +49,8 @@ exports.setEvent = function (req, res) {
     });
 };
 
-// delete all kotinode (accessed at DELETE http://url:port/api/kotinode/event)
-exports.deleteEvent = function (req, res) {
-    KotoEventModel.remove({}, function (err, bear) {
-        if (err)
-            res.send(err);
-        else
-            res.json({message: 'All KotoEvents deleted'});
-    });
-};
 
-
-// ----------------------------------------------------
-// CRUD for ONE EVENT
-// http://url:port/api/kotinode/event/:batch_id
-// ----------------------------------------------------
-
-exports.putEvenet = function (req, res) {
+exports.addEventToBatch = function (req, res) {
 
     // KotoEventModel.findById(req.params.batch_id, function (err, kotoEventBatch) {
     //
@@ -105,5 +85,15 @@ exports.deleteEventBatch = function (req, res) {
             res.send(err);
 
         res.json({message: 'KotoEventBatch deleted'});
+    });
+};
+
+
+exports.cleanupEventBatchAll = function (req, res) {
+    KotoEventModel.remove({}, function (err, bear) {
+        if (err)
+            res.send(err);
+        else
+            res.json({message: 'All KotoEvents deleted'});
     });
 };

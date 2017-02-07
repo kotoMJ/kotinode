@@ -77,25 +77,17 @@ exports.getApiRouter = function () {
 // ----------------------------------------------------
 
     api_router.route('/kotinode/event/batch/:batch_id')
-        .put(kotoEventController.putEvenet)
+        .put(kotoEventController.addEventToBatch)
         .delete(kotoEventController.deleteEventBatch);
 
-    api_router.route('/kotinode/event/fixed')
+    api_router.route('/kotinode/event/batch/fixed')
         .get(kotoEventController.getEventFixed);
 
-    api_router.route('/kotinode/event')
-        .get(function (req, res, next) {
-            kotoEventController.getEvent(req, res);
-        })
-        .post(function (req, res, next) {
-            kotoEventController.setEvent(req, res);
-        });
+    api_router.route('/kotinode/event/batch')
+        .get(kotoEventController.getEvent)
+        .post(kotoEventController.createEventBatch);
 
 
-    // api_router.route('/kotinode/event/:kotoevent_id')
-    //     .get(kotoEventController.empty)
-    //     .put(kotoEventController.empty)
-    //     .delete(kotoEventController.empty);
 
 // ----------------------------------------------------
 // GALLERY
