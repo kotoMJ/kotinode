@@ -14,7 +14,8 @@ var EventBatchSchema = new Schema({
         category: [{
             name: {type: String, required: true}
         }],
-        date: {type: Date, required: true},
+        date: {type: Date},
+        time: {type: Date},
         location: [{
             name: {type: String}
         }],
