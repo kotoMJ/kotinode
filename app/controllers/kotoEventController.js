@@ -81,7 +81,7 @@ exports.addEventToBatch = function (req, res) {
     if (apiKey === undefined) {
         res.status(401).json({"message": "Missing or incomplete authentication parameters"})
     } else if (kotiConfig.api_key === apiKey) {
-        var payload = JSON.parse(JSON.stringify(req.body));
+        var payload = req.body//JSON.parse(JSON.stringify(req.body));
         payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
         KotoEventModel.update({_id: req.params.batch_id}, {$push: {eventList: payload}}, {upsert: false}, function (err, raw) {
             if (err) {
@@ -117,6 +117,7 @@ exports.deleteEventFromBatch = function (req, res) {
             }
         });
     } else {
+        logger.err(req, 'Incomming apiKey===' + apiKey + ' but by config is defined===' + kotiConfig.api_key);
         res.status(403).json({"message": "Missing permissions!"})
     }
 
