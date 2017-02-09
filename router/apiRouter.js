@@ -76,8 +76,9 @@ exports.getApiRouter = function () {
 // KOTOEVENT
 // ----------------------------------------------------
 
-    api_router.route('/kotinode/bundle')
-        .get(kotoEventController.getBundleList);
+    api_router.route('/kotinode/event/bundle')
+        .get(kotoEventController.getBundleList)
+        .post(kotoEventController.createEventBundle);
 
     api_router.route('/kotinode/event/bundle/:bundle_id')
         .put(kotoEventController.addEventToBundle)
@@ -87,8 +88,8 @@ exports.getApiRouter = function () {
         .get(kotoEventController.getEventFixed);
 
     api_router.route('/kotinode/event')
-        .get(kotoEventController.getEventList)
-        .post(kotoEventController.createEventBundle);
+        .get(kotoEventController.getEventList);
+
 
     api_router.route('/kotinode/event/:event_id/bundle/:bundle_id')
         .delete(kotoEventController.deleteEventFromBundle);
