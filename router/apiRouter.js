@@ -76,19 +76,22 @@ exports.getApiRouter = function () {
 // KOTOEVENT
 // ----------------------------------------------------
 
-    api_router.route('/kotinode/event/batch/:batch_id')
-        .put(kotoEventController.addEventToBatch)
-        .delete(kotoEventController.deleteEventBatch);
+    api_router.route('/kotinode/bundle')
+        .get(kotoEventController.getBundleList);
 
-    api_router.route('/kotinode/event/batch/fixed')
+    api_router.route('/kotinode/event/bundle/:bundle_id')
+        .put(kotoEventController.addEventToBundle)
+        .delete(kotoEventController.deleteEventBundle);
+
+    api_router.route('/kotinode/event/fixed')
         .get(kotoEventController.getEventFixed);
 
-    api_router.route('/kotinode/event/batch')
-        .get(kotoEventController.getEvent)
-        .post(kotoEventController.createEventBatch);
+    api_router.route('/kotinode/event')
+        .get(kotoEventController.getEventList)
+        .post(kotoEventController.createEventBundle);
 
-    api_router.route('/kotinode/event/:event_id/batch/:batch_id')
-        .delete(kotoEventController.deleteEventFromBatch);
+    api_router.route('/kotinode/event/:event_id/bundle/:bundle_id')
+        .delete(kotoEventController.deleteEventFromBundle);
 
 
 

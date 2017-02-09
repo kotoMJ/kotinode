@@ -10,7 +10,7 @@
 		{
 			"name": "event",
 			"request": {
-				"url": "{{url}}/kotinode/event/batch?delay=0",
+				"url": "{{url}}/kotinode/event?delay=0",
 				"method": "GET",
 				"header": [
 					{
@@ -25,9 +25,26 @@
 			"response": []
 		},
 		{
-			"name": "create event batch",
+			"name": "bundle",
 			"request": {
-				"url": "{{url}}/kotinode/event/batch",
+				"url": "{{url}}/kotinode/bundle?delay=0",
+				"method": "GET",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "{{api_key}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "create event bundle",
+			"request": {
+				"url": "{{url}}/kotinode/event/bundle",
 				"method": "POST",
 				"header": [
 					{
@@ -128,7 +145,7 @@
 		{
 			"name": "put event",
 			"request": {
-				"url": "{{url}}/kotinode/event/batch/589ae190d97aef2366eddddd",
+				"url": "{{url}}/kotinode/event/bundle/589ae190d97aef2366eddddd",
 				"method": "PUT",
 				"header": [
 					{
@@ -151,9 +168,9 @@
 			"response": []
 		},
 		{
-			"name": "delete batch",
+			"name": "delete bundle",
 			"request": {
-				"url": "{{url}}/kotinode/event/batch/58988e78b31e41841f62e7c6",
+				"url": "{{url}}/kotinode/event/bundle/58988e78b31e41841f62e7c6",
 				"method": "DELETE",
 				"header": [
 					{
@@ -178,7 +195,7 @@
 		{
 			"name": "delete event",
 			"request": {
-				"url": "{{url}}/kotinode/event/batch/58995667589da9282cee4153",
+				"url": "{{url}}/kotinode/event/bundle/58995667589da9282cee4153",
 				"method": "DELETE",
 				"header": [
 					{
