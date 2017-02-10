@@ -1,199 +1,115 @@
 [
   {
-    "headline": "Tvoření pro dospělé",
-    "label": null,
-    "eventDate": "2015-11-8T00:00:00.000Z",
-    "eventLocation": [
-      "Kotopeky"
-    ],
-    "textCapital": ["Od 13:00 v podkroví OÚ"],
-    "text": ["Tentokrát budeme dělat ozdobnou krabičku na papírové kapesníky. Dno a víko bude z keramiky, stěny vypletené z pedigu."],
-    "imageResource": null
+    "name": "Listopad 2015",
+    "date": "2015-11-01T00:00:00.000Z",
+    "eventList": [
+      {
+        "_id": "784787468273468237468",
+        "headline": "Tvoření pro dospělé",
+        "description": "",
+        "imageResource": null,
+        "category": [
+          {
+            "name": "hobby"
+          }
+        ],
+        "date": "2015-11-08T00:00:00.000Z",
+        "time": "1970-01-01T16:00:00.000Z",
+        "location": [
+          {
+            "name": "Kotopeky OU"
+          }
+        ],
+        "batch": [
+          {
+            "name": "Listopad 2015"
+          }
+        ],
+        "text": [
+          "Tentokrát budeme dělat ozdobnou krabičku na papírové kapesníky. Dno a víko bude z keramiky, stěny vypletené z pedigu."
+        ]
+      },
+      {
+        "_id": "19485029481029348710293",
+        "headline": "Keramika pro děti",
+        "description": "Každé liché pondělí od 16:00.",
+        "imageResource": null,
+        "category": [
+          {
+            "name": "hobby"
+          }
+        ],
+        "date": "2015-11-24T00:00:00.000Z",
+        "time": "1970-01-01T16:00:00.000Z",
+        "location": [
+          {
+            "name": "Kotopeky OU"
+          }
+        ],
+        "batch": [
+          {
+            "name": "Listopad 2015"
+          }
+        ],
+        "text": [
+          "Od 16:00 v podkroví OÚ Kotopeky. První informativní schůzka se koná 19.10. Kurzovné: 80,-Kč/hodinu."
+        ]
+      }
+    ]
   },
   {
-    "headline": "Keramika pro děti",
-    "label": null,
-    "eventDate": "2015-10-19T00:00:00.000Z",
-    "eventLocation": [
-      "Kotopeky"
-    ],
-    "textCapital": ["Každé liché pondělí."],
-    "text": ["Od 16:00 v podkroví OÚ Kotopeky. První informativní schůzka se koná 19.10. Kurzovné: 80,-Kč/hodinu."],
-    "imageResource": null
-  },
-  {
-    "headline": "Bazárek v Praskolesích",
-    "label": null,
-    "eventDate": "2015-10-31T00:00:00.000Z",
-    "eventLocation": [
-      "Praskolesy"
-    ],
-    "textCapital": ["Chcete nabídnout nepotřebné věci?"],
-    "text": ["Kulturní dům Jitřenka 8:00, prodejní poplatek za stůl je 20,-"],
-    "imageResource": null
-  },
-  {
-    "headline": "Nohejbalový turnaj v Praskolesích",
-    "label": null,
-    "eventDate": "2015-10-28T00:00:00.000Z",
-    "eventLocation": [
-      "Praskolesy"
-    ],
-    "textCapital": [ "Víceúčelové hřiště Praskolesy" ],
-    "text": [
-      "Prezentace(8:45-9:00)",
-      "Start(9:30)",
-      "Startovné (150,- včetně občerstvení)",
-      "Registrace tel. 774 316 757"
-    ],
-    "imageResource": null
-  },
-  {
-    "headline": "Pozemky pod silnicí Hořovice-Žebrák",
-    "label": [
-      "zastupitelstvo"
-    ],
-    "eventDate": "2015-09-07T00:00:00.000Z",
-    "eventLocation": [
-      "Kotopeky"
-    ],
-    "textCapital": null,
-    "text": [
-      "Předložen návrh firmy EXIT 34 na odkup obecních pozemků pod silnicí Hořovice-Žebrák za cenu 50 Kč/m2.",
-      "OZ návrh zamítlo z důvodu neadekvátně nízké ceny"
-    ],
-    "imageResource": null
-  },
-  {
-    "headline": "Chodníky v obci",
-    "label": ["zastupitelstvo"],
-    "eventDate": "2015-09-06T00:00:00.000Z",
-    "eventLocation": [
-      "Kotopeky",
-      "Tíhava"
-    ],
-    "textCapital": null,
-    "text": ["OZ se usneslo nechat zpracovat projekt na opravu stávajícího chodníku na Tihavě a případnou výstavbu nových chodníků v naší obci."],
-    "imageResource": null
-  },
-  {
-    "headline": "Nebezpečný odpad",
-    "label": null,
-    "eventDate": "2015-10-23T00:00:00.000Z",
-    "eventLocation": [
-      "Kotopeky"
-    ],
-    "textCapital": null,
-    "text": ["Svoz nebezpečného odpadu a elketrozařízení na zpětný odběr 16:00-18:00 Budova OÚ a Hasičská zbrojnice."],
-    "imageResource": null
-  },
-  {
-    "headline": "Kurz pletení košíků",
-    "label": null,
-    "eventDate": "2015-10-11T00:00:00.000Z",
-    "eventLocation": [
-      "Kotopeky"
-    ],
-    "textCapital": null,
-    "text": [
-      "Pletení košíků od 13:00 v podkroví budovy OÚ",
-      "Kurzovné 250,-."
-    ],
-    "imageResource": null
-  },
-  {
-    "headline": "Ze zasedání obecního zastupitelstva",
-    "label": ["zastupitelstvo"],
-    "eventDate": "2016-01-25T00:00:00.000Z",
-    "eventLocation": [
-      "Kotopeky"
-    ],
-    "textCapital": null,
-    "text": [
-      "OZ Schvaluje  plán společných zařízení v rámci pozemkových úprav v naší obci.",
-      "Příprava žádostí o dotaci na opravu kapličky sv. Jana Nepomuckého na Tihavě a dovybavení zásahové jednotky hasičů obce z fondů Středočeského kraje.",
-      "Podpis darovací smlouvy na nabytí kapličky sv. Václava v Kotopekách od Římsko-katolické farnosti v Hořovicích.",
-      "Vypsáno výběrové řízení na zakázku malého rozsahu na opravu kapličky sv. Jana Nepomuckého na Tihavě"
-    ],
-    "imageResource": null
-  },
-  {
-    "headline": "Poplatek za svoz TKO",
-    "label": null,
-    "eventDate": "2016-01-25T00:00:00.000Z",
-    "eventLocation": [
-      "Kotopeky","Tihava"
-    ],
-    "textCapital": [
-      "Dospělí s trvalým bydlištěm v obci 800,-",
-      "Dítě do 18-ti let 600,-",
-      "Rekreační objekt 800,-"
-    ],
-    "text": [
-      "Splatnost poplatku je do 30.06.2016 a je možné jej uhradit v úředních hodinách Obecního úřadu",
-      "V případě platby na účet Obce Kotopeky použijte jako v.s. 1337+01 (Kotopeky) nebo +02 (Tihava) + č.p.",
-      "Příklad: Kotopeky 7 - 13370107.",
-      "Číslo účtu je 9929131/0100",
-      "Je možné se též domluvit na splátkovém kalendáři"
-    ],
-    "imageResource": null
-  },
-  {
-    "headline": "Poplatek za psy",
-    "label": null,
-    "eventDate": "2016-01-25T00:00:00.000Z",
-    "eventLocation": [
-      "Kotopeky","Tihava"
-    ],
-    "textCapital": null,
-    "text": [
-      "Poplatek za psa je stanoven ve výši 50,- za 1. psa / rok.",
-      "Druhý a další pes je zpoplatněn částkou 75,- / rok"
-    ],
-    "imageResource": null
-  },
-  {
-    "headline": "Dětský maškarní bál",
-    "label": null,
-    "eventDate": "2016-02-21T00:00:00.000Z",
-    "eventLocation": [
-      "Kotopeky"
-    ],
-    "textCapital": [
-      "Sál obecní budovy OÚ 14:00"
-    ],
-    "text": [
-      "Pohostinství Na Rychtě pořádá dne 21.02.2016 od 14:00 na sále budovy OÚ dětský maškarní karneval"
-    ],
-    "imageResource": null
-  },
-  {
-    "headline": "Keramika pro dospělé",
-    "label": null,
-    "eventDate": "2016-02-28T00:00:00.000Z",
-    "eventLocation": [
-      "Kotopeky"
-    ],
-    "textCapital": null,
-    "text": [
-      "Dne 28.02.2016 od 13:00 v podkroví budovy OÚ"
-    ],
-    "imageResource": null
-  },
-  {
-  "headline": "Muzikálové představení",
-  "label": null,
-  "eventDate": "2016-03-26T00:00:00.000Z",
-  "eventLocation": [
-    "Praha"
-  ],
-  "textCapital": ["Hello Dolly"],
-  "text": [
-    "Studio Dva, dne 26.03.2016, odjezd od hasičské zbrojnice ve 12:00.",
-    "Cena 350,-",
-    "Lístky nutno rezervovat na OÚ."
-  ],
-  "imageResource": null
-}
-
+    "name": "Zastupitelstvo 11/2015",
+    "date": "2015-11-08T00:00:00.000Z",
+    "eventList": [
+      {
+        "_id": "92038402948029348029348",
+        "headline": "Pozemky pod silnicí Hořovice-Žebrák",
+        "description": "",
+        "imageResource": null,
+        "category": [
+          {
+            "name": "zastupitelstvo"
+          }
+        ],
+        "date": "2015-11-08T00:00:00.000Z",
+        "time": null,
+        "location": [
+          {
+            "name": "Kotopeky OU"
+          }
+        ],
+        "text": [
+          "Předložen návrh firmy EXIT 34 na odkup obecních pozemků pod silnicí Hořovice-Žebrák za cenu 50 Kč/m2.",
+          "OZ návrh zamítlo z důvodu neadekvátně nízké ceny"
+        ]
+      },
+      {
+        "_id": "92038402948029348029348",
+        "headline": "Chodníky v obci",
+        "description": "",
+        "imageResource": null,
+        "category": [
+          {
+            "name": "zastupitelstvo"
+          }
+        ],
+        "date": "2015-11-08T00:00:00.000Z",
+        "time": null,
+        "location": [
+          {
+            "name": "Kotopeky OU"
+          },
+          {
+            "name": "Kotopeky"
+          },
+          {
+            "name": "Tihava"
+          }
+        ],
+        "text": [
+          "OZ se usneslo nechat zpracovat projekt na opravu stávajícího chodníku na Tihavě a případnou výstavbu nových chodníků v naší obci."
+        ]
+      }
+    ]
+  }
 ]

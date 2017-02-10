@@ -15,12 +15,11 @@ exports.preflight = function (req, res) {
 exports.postKotoLogin = function (req, res) {
     const credentials = req.body;
     logger.log(req, "postKotoLogin");
-    // TODO create schema for Mongo after Web will be successfully connected
-    if (credentials.user === 'a@a.cz' && credentials.password === '1234') {
+    if (credentials.user === kotiConfig.adminUser && credentials.password === kotiConfig.adminPassword) {
         logger.log(req, "in...");
         // Once authenticated, the user profiles is signed and the jwt token is returned as response to the client.
         // It's expected the jwt token will be included in the subsequent client requests.
-        const profile = {'user': credentials.user, 'role': 'ADMIN'};
+        const profile = {'user': credentials.user, 'role': 'ADMIN', 'apiKey': kotiConfig.api_key};
         const jwtToken = jwt.sign(profile, kotiConfig.api_key, {'expiresIn': 20 * 60});  // expires in 1200 sec (20 min)
         res.status(200).json({
             id_token: jwtToken

@@ -15,11 +15,13 @@ exports.getApiRouter = function () {
     api_router.use(function (req, res, next) {
         //init api request id to header
         var rid = Math.floor((Math.random() * 1000000000000) + 1);
+        console.log('rid:' + rid);
         req.headers['rid'] = rid;
+        logger.log(req, 'rid test');
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Credentials", "true");
-        res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-        res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers,Access-Control-Allow-Origin, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept");
+        res.header("Access-Control-Allow-Methods", "DELETE,GET,HEAD,OPTIONS,POST,PUT");
+        res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers,Access-Control-Allow-Origin, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, ApiKey");
 
         //log basic incomming params
         logger.log(req, 'params:' + JSON.stringify(req.params));
@@ -73,18 +75,26 @@ exports.getApiRouter = function () {
 // ----------------------------------------------------
 // KOTOEVENT
 // ----------------------------------------------------
-    api_router.route('/kotinode/event')
-        .get(function (req, res, next) {
-            kotoEventController.getEvents(req, res);
-        });
+
+    api_router.route('/kotinode/event/bundle')
+        .get(kotoEventController.getBundleList)
+        .post(kotoEventController.createEventBundle);
+
+    api_router.route('/kotinode/event/bundle/:bundle_id')
+        .put(kotoEventController.addEventToBundle)
+        .delete(kotoEventController.deleteEventBundle);
 
     api_router.route('/kotinode/event/fixed')
-        .get(kotoEventController.getEventsFixed);
+        .get(kotoEventController.getEventFixed);
 
-    // api_router.route('/kotinode/event/:kotoevent_id')
-    //     .get(kotoEventController.empty)
-    //     .put(kotoEventController.empty)
-    //     .delete(kotoEventController.empty);
+    api_router.route('/kotinode/event')
+        .get(kotoEventController.getEventList);
+
+
+    api_router.route('/kotinode/event/:event_id/bundle/:bundle_id')
+        .delete(kotoEventController.deleteEventFromBundle);
+
+
 
 // ----------------------------------------------------
 // GALLERY

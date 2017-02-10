@@ -152,8 +152,7 @@ exports.reset_event = function(req,res){
     if (kotiConfig.api_key===apiKey) {
 
         //EVENT
-        //var KotoEventList = mongoose.model('KotoEvent', KotoEvent);
-        var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
+        var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.empty.json', 'utf8'));
         logger.log(req,"Ready to drop DB...")
         KotoEventModel.remove({},function(err, result) {
             if (err == null){
@@ -167,7 +166,7 @@ exports.reset_event = function(req,res){
             /**
              * Read data from local json file.
              */
-            mongoose.model('KotoEvent', KotoEventModel).collection.insert(fixedEvents, function (err, r) {
+            mongoose.model('KotoEventBatch', KotoEventModel).collection.insert(fixedEvents, function (err, r) {
             });
 
 
@@ -186,7 +185,7 @@ exports.reset_event = function(req,res){
                     });
 
                 for (i = startIndex; i < (startIndex+dummyCount); i++) {
-                    mongoose.model('KotoEvent', KotoEventModel).collection.insert({
+                    mongoose.model('KotoEventBatch', KotoEventModel).collection.insert({
                         "headline": Math.random().toString(36).substring(7),
                         "label": null,
                         "eventDate": "2015-01-01T00:00:00.000Z",
@@ -224,7 +223,7 @@ exports.sortEvent = function(req,res){
             var index=0;
             eventList.forEach(function(record){
                 console.log("ToUpdate:"+record);
-                mongoose.model('KotoEvent', KotoEventModel).collection.findAndModify(
+                mongoose.model('KotoEventBatch', KotoEventModel).collection.findAndModify(
                     {sortId:record.sortId},//query
                     [['eventDate','asc']],//sort order
                     {$set: {sortId:index++}},//replacement, replaces only the field "id"
