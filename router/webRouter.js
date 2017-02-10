@@ -15,7 +15,7 @@ exports.getWebRouter = function () {
 
     // ===== ROUTE to WEB ========
 
-    const allowedPaths = [
+    var allowedPaths = [
         '/news',
         '/projects',
         '/contact',
@@ -26,7 +26,7 @@ exports.getWebRouter = function () {
 
     web_router.get('*', (req, res, next) => {
         //const isAllowed = allowedPaths.includes(req.originalUrl) //TypeError: allowedPaths.includes is not a function
-        const isAllowed = allowedPaths.indexOf(req.originalUrl) >= 0
+        var isAllowed = allowedPaths.indexOf(req.originalUrl) >= 0
         if (!isAllowed) {
             return next()
         }

@@ -13,10 +13,10 @@ exports.preflight = function (req, res) {
 // ----------------------------------------------------
 
 exports.postKotoLogin = function (req, res) {
-    const credentials = req.body;
+    var credentials = req.body;
     logger.log(req, "postKotoLogin");
     logger.log(req, JSON.stringify(kotiConfig.userList));
-    const userList = JSON.parse(JSON.stringify(kotiConfig.userList));
+    var userList = JSON.parse(JSON.stringify(kotiConfig.userList));
     var currentUser = null;
     for (var i in userList) {
         logger.log(req, JSON.stringify(userList[i]));
@@ -30,8 +30,8 @@ exports.postKotoLogin = function (req, res) {
         logger.log(req, "in...");
         // Once authenticated, the user profiles is signed and the jwt token is returned as response to the client.
         // It's expected the jwt token will be included in the subsequent client requests.
-        const profile = {'user': currentUser.email, 'role': currentUser.role, 'apiKey': kotiConfig.api_key};
-        const jwtToken = jwt.sign(profile, kotiConfig.api_key, {'expiresIn': 10 * 60});  // expires in 600 sec (10 min)
+        var profile = {'user': currentUser.email, 'role': currentUser.role, 'apiKey': kotiConfig.api_key};
+        var jwtToken = jwt.sign(profile, kotiConfig.api_key, {'expiresIn': 10 * 60});  // expires in 600 sec (10 min)
         res.status(200).json({
             id_token: jwtToken
         });
