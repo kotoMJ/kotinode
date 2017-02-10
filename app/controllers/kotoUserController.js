@@ -17,7 +17,7 @@ exports.postKotoLogin = function (req, res) {
     logger.log(req, "postKotoLogin");
     logger.log(req, JSON.stringify(kotiConfig.userList));
     const userList = JSON.parse(JSON.stringify(kotiConfig.userList));
-    let currentUser = null;
+    var currentUser = null;
     for (var i in userList) {
         logger.log(req, JSON.stringify(userList[i]));
         if (userList[i].email === credentials.user) {
