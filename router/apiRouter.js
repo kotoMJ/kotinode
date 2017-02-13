@@ -4,6 +4,7 @@ var kotoEventController = require('../app/controllers/kotoEventController');
 var kotoGalleryController = require('../app/controllers/kotoGalleryController');
 var kotoAdminController = require('../app/controllers/kotoAdminController');
 var kotoUserController = require('../app/controllers/kotoUserController');
+var kotoNotifyController = require('../app/controllers/kotoNotifyController');
 var showcaseController = require('../app/controllers/showcaseController');
 var demoTransparentAccount = require('../app/controllers/demoaccounts');
 var logger = require('../app/utils/logger.js');
@@ -34,7 +35,7 @@ exports.getApiRouter = function () {
 
     // ===== ROUTE to SERVER API ========
 // ----------------------------------------------------
-// LOGIN - JWT AUTH
+// KOTO LOGIN - JWT AUTH
 // ----------------------------------------------------
     api_router.route('/')
         .options(kotoUserController.preflight);
@@ -45,7 +46,7 @@ exports.getApiRouter = function () {
         })
         .options(kotoUserController.preflight);
 // ----------------------------------------------------
-// ADMIN
+// KOTO ADMIN
 // ----------------------------------------------------
     api_router.route('/kotinode/admin')
         .delete(kotoAdminController.drop)
@@ -94,10 +95,15 @@ exports.getApiRouter = function () {
     api_router.route('/kotinode/event/:event_id/bundle/:bundle_id')
         .delete(kotoEventController.deleteEventFromBundle);
 
+// ----------------------------------------------------
+// KOTO NOTIFY
+// ----------------------------------------------------
 
+    api_router.route('/kotinode/notify/email')
+        .post(kotoNotifyController.notifyEmail);
 
 // ----------------------------------------------------
-// GALLERY
+// KOTO GALLERY
 // ----------------------------------------------------
 
     api_router.route('/kotinode/gallery')

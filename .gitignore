@@ -4,3 +4,6 @@
 /app/config/config.production.json
 /npm-debug.log
 /public/gallery_full/**/*
+/app/config/config.email.json
+/public/gallery/high/
+/public/gallery/original/
