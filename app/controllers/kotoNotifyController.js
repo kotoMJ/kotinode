@@ -3,7 +3,8 @@ var kotiConfig = require('config.json')('./app/config/config.json', process.env.
 var nconf = require('nconf');
 var logger = require('../utils/logger.js');
 var nodemailer = require('nodemailer');
-
+var request = require('request');
+var crypto = require('crypto');
 
 /**
  * https://docs.rosti.cz/emails/
@@ -16,7 +17,7 @@ var nodemailer = require('nodemailer');
  */
 exports.notifyEmail = function (req, res) {
     logger.log(req, "exports.sendNotification");
-    nconf.file('mail', './app/config/config.notify.json');
+    nconf.file('email', './app/config/config.notify.json');
     var apiKey = req.headers['apikey'];
     if (nconf.get('email') === undefined) {
         res.status(500).json({"message": "Email config is missing!"})
@@ -74,3 +75,63 @@ exports.notifyEmail = function (req, res) {
     }
 
 };
+
+/**
+ * http://smsmanager.cz/api/http/
+ * http://smsmanager.cz/api/codes/#errors
+ * http://www.smsmanager.cz/rozesilani-sms/lowcost
+ * https://www.smsmanager.cz/rozesilani-sms/ceny/
+ * @param req
+ * @param res
+ */
+exports.notifySms = function (req, res) {
+    logger.log(req, "exports.notifySms");
+    nconf.file('sms', './app/config/config.notify.json');
+    var apiKey = req.headers['apikey'];
+    if (nconf.get('sms') === undefined) {
+        res.status(500).json({"message": "Email config is missing!"})
+    } else if (apiKey === undefined) {
+        res.status(401).json({"message": "Missing or incomplete authentication parameters"})
+    } else if (kotiConfig.api_key === apiKey) {
+        var sendUrl = nconf.get('sms').smsmanager.apiSend;
+        var username = nconf.get('sms').smsmanager.username;
+        var hashBase = nconf.get('sms').smsmanager.hashFix;
+
+        var payload = req.body
+        if (payload.number !== undefined
+            && payload.message !== undefined) {
+            var finalHash = crypto.createHash('sha1').update(hashBase + payload.message).digest('hex');
+            logger.log(req, payload.message)
+            var gateway = (payload.quality === undefined || payload.quality === false || payload.quality === 'false') ? 'lowcost' : 'high';
+            request({
+                url: sendUrl,
+                qs: {
+                    'username': username,
+                    //'password': nconf.get('sms').smsmanager.passwordSha1,
+                    'password': crypto.createHash('sha1').update(nconf.get('sms').smsmanager.password).digest('hex'),
+                    //'hash' : finalHash,
+                    'number': payload.number,
+                    'message': payload.message,
+                    'gateway': gateway,
+                }
+
+            }, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    logger.log(req, body) // Print the google web page.
+                    res.status(200).json({"message": response.body, "gateway": gateway});
+                } else {
+                    res.status(500).json({"message": response.body});
+                }
+            });
+        }
+        else {
+            res.status(401).json({"message": "Missing or incomplete message parameters in body!"})
+        }
+
+    }
+    else {
+        res.status(403).json({"message": "Missing permissions!"})
+    }
+
+}
+;
