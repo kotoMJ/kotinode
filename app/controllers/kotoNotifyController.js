@@ -10,6 +10,7 @@ var nodemailer = require('nodemailer');
  * https://nodemailer.com/about/
  * https://nodemailer.com/smtp/
  * http://wiki.rosti.cz/e-maily
+ * http://blog.rosti.cz/novy-smtp-server/
  * @param req
  * @param res
  */
@@ -26,11 +27,12 @@ exports.notifyEmail = function (req, res) {
         var transporter = nodemailer.createTransport({
             host: nconf.get('rosti').smtp.host,
             port: nconf.get('rosti').smtp.port,
-            secure: false, // use TLS
+            requireTLS: true,
             auth: {
                 user: nconf.get('rosti').smtp.user,
                 pass: nconf.get('rosti').smtp.pass
-            }
+            },
+            debug: process.env.NODE_ENV == 'dev',
         });
 
         var text = 'Koto test. \n\n It\'s working!';
