@@ -101,13 +101,12 @@ exports.notifySms = function (req, res) {
         if (payload.number !== undefined
             && payload.message !== undefined) {
             var finalHash = crypto.createHash('sha1').update(hashBase + payload.message).digest('hex');
-            logger.log(req, payload.message)
+            logger.log(req, 'Sending message:' + payload.message);
             var gateway = (payload.quality === undefined || payload.quality === false || payload.quality === 'false') ? 'lowcost' : 'high';
             request({
                 url: sendUrl,
                 qs: {
                     'username': username,
-                    //'password': nconf.get('sms').smsmanager.passwordSha1,
                     'password': crypto.createHash('sha1').update(nconf.get('sms').smsmanager.password).digest('hex'),
                     //'hash' : finalHash,
                     'number': payload.number,
