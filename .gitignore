@@ -2,8 +2,8 @@
 /node_modules
 /app/config/mongo.production.notes
 /app/config/config.production.json
+/app/config/config.notify.json
 /npm-debug.log
-/public/gallery_full/**/*
-/app/config/config.email.json
 /public/gallery/high/
 /public/gallery/original/
+
