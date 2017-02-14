@@ -16,21 +16,21 @@ var nodemailer = require('nodemailer');
  */
 exports.notifyEmail = function (req, res) {
     logger.log(req, "exports.sendNotification");
-    nconf.file('mail', './app/config/config.email.json');
+    nconf.file('mail', './app/config/config.notify.json');
     var apiKey = req.headers['apikey'];
-    if (nconf.get('rosti') === undefined) {
+    if (nconf.get('email') === undefined) {
         res.status(500).json({"message": "Email config is missing!"})
     } else if (apiKey === undefined) {
         res.status(401).json({"message": "Missing or incomplete authentication parameters"})
     } else if (kotiConfig.api_key === apiKey) {
 
         var transporter = nodemailer.createTransport({
-            host: nconf.get('rosti').smtp.host,
-            port: nconf.get('rosti').smtp.port,
+            host: nconf.get('email').rosti.smtp.host,
+            port: nconf.get('email').rosti.smtp.port,
             requireTLS: true,
             auth: {
-                user: nconf.get('rosti').smtp.user,
-                pass: nconf.get('rosti').smtp.pass
+                user: nconf.get('email').rosti.smtp.user,
+                pass: nconf.get('email').rosti.smtp.pass
             },
             debug: process.env.NODE_ENV == 'dev',
         });
@@ -40,7 +40,7 @@ exports.notifyEmail = function (req, res) {
             && payload.subject !== undefined
             && (payload.text !== undefined /*|| payload.html!==undefined*/)) {
             var mailOptions = {
-                from: nconf.get('rosti').smtp.sender, // sender address
+                from: nconf.get('email').rosti.smtp.sender, // sender address
                 to: payload.to, // list of receivers
                 subject: payload.subject, // Subject line
                 text: payload.text //, // plaintext body
