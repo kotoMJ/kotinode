@@ -35,12 +35,12 @@ exports.notifyEmail = function (req, res) {
             debug: process.env.NODE_ENV == 'dev',
         });
 
-        var text = 'Koto test. \n\n It\'s working!';
-
         var payload = req.body
-        if (payload.to !== undefined && payload.subject !== undefined && (payload.text !== undefined /*|| payload.html!==undefined*/)) {
+        if (payload.to !== undefined
+            && payload.subject !== undefined
+            && (payload.text !== undefined /*|| payload.html!==undefined*/)) {
             var mailOptions = {
-                from: 'admin@kotopeky.cz', // sender address
+                from: nconf.get('rosti').smtp.sender, // sender address
                 to: payload.to, // list of receivers
                 subject: payload.subject, // Subject line
                 text: payload.text //, // plaintext body
