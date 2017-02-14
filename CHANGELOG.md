@@ -1,4 +1,11 @@
 ## Release notes for KoTiPoint ecosystem.
+
+###2.0.2
+**Bugfixes:**
+* Fix web-client with version 1.0.2
+###2.0.1
+**Bugfixes:**
+* Fix web-client with version 1.0.1
 ###2.0.0 (Released 10.02.2017)
 First release with bundled new web client (including administration)<br/>
 **Features:** 
