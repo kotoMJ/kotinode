@@ -16,7 +16,7 @@
     "socket.io": "^1.7.2"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node --harmony-async-await server.js"
   },
   "engines": {
     "node": "~7.5.0",
