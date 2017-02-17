@@ -62,6 +62,9 @@ exports.getApiRouter = function () {
         .delete(kotoAdminController.reset_gallery)
         .purge(kotoAdminController.reset_gallery);
 
+    api_router.route('/kotinode/admin/user')
+        .purge(kotoAdminController.reset_user);
+
 // ----------------------------------------------------
 // DEMO ACCOUNT
 // ----------------------------------------------------
@@ -101,6 +104,9 @@ exports.getApiRouter = function () {
 
     api_router.route('/kotinode/notify/email')
         .post(kotoNotifyController.notifyEmail);
+
+    api_router.route('/kotinode/notify/sms')
+        .post(kotoNotifyController.notifySms);
 
 // ----------------------------------------------------
 // KOTO GALLERY

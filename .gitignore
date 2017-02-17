@@ -6,4 +6,4 @@
 /npm-debug.log
 /public/gallery/high/
 /public/gallery/original/
-
+/app/data/user.list.json
