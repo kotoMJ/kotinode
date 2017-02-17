@@ -2,6 +2,10 @@ var fs = require('fs');
 var jwt = require('jsonwebtoken');
 var logger = require('../utils/logger.js');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
+var KotoUserModel = require('../models/kotoUserModel');
+
+var DESC_SORT_ORDER = -1
+var ASC_SORT_ORDER = 1
 
 exports.preflight = function (req, res) {
     logger.log(req, 'Preflight...');
@@ -50,3 +54,19 @@ function alertClients(type, msg) {
     console.log("SocketIO alerting clients: ", msg);
     koTio.sockets.emit('alert', {message: msg, time: new Date(), type});
 }
+
+exports.getUserList = function (req, res) {
+    logger.logMem(req, "exports.getUserList")
+    var delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
+
+    setTimeout(function () {
+        KotoUserModel.find().sort({date: DESC_SORT_ORDER}).exec(function (err, userList) {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.jsonWrapped(userList);
+            }
+        });
+    }, delay);// delay to simulate slow connection!
+
+};

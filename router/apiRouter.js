@@ -127,6 +127,12 @@ exports.getApiRouter = function () {
         .get(kotoGalleryController.getGalleryFixed);
 
 // ----------------------------------------------------
+// KOTOUSER
+// ----------------------------------------------------
+    api_router.route('/kotinode/user')
+        .get(kotoUserController.getUserList);
+
+// ----------------------------------------------------
 // DB SHOWCASE - CLASS
 // ----------------------------------------------------
     api_router.route('/dbshowcase/class')

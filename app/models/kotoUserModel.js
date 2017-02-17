@@ -7,11 +7,12 @@ var UserItemSchema = new Schema({
     surname: {type: String, required: true},
     phone: [{value: {type: Number, required: false}, type: {type: String, required: true}}],
     email: [{value: {type: String, required: false}, type: {type: String, required: true}}],
-    address: {
-        municipality: {value: String, required: true},
-        houseNumber: {value: Number, required: true},
-        zip: {value: Number, required: true}
-    },
+    address: [{
+        municipality: {type: String, required: true},
+        houseNumber: {type: Number, required: true},
+        zip: {type: Number, required: true},
+        permanent: {type: Boolean, required: true}
+    }],
     passwordHash: {
         type: String, required: false
     }
