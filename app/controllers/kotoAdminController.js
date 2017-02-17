@@ -270,7 +270,7 @@ exports.reset_user = function (req, res) {
             /**
              * Read data from local json file.
              */
-            mongoose.model('KotoUserItem', KotoUserModel).collection.insert(fixedEvents, onInsertUser());
+            mongoose.model('KotoUserItem', KotoUserModel).collection.insert(fixedUsers, onInsertUser());
 
             function onInsertUser(err, docs) {
                 if (err) {
@@ -278,7 +278,7 @@ exports.reset_user = function (req, res) {
                     res.status(500).json({message: err});
                 } else {
                     console.log(docs);
-                    res.status(200).json({message: 'Event model reinitialized successfully.'});
+                    res.status(200).json({message: 'User model reinitialized successfully.'});
                 }
             };
         });
