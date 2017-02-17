@@ -130,8 +130,14 @@ exports.getApiRouter = function () {
 // KOTOUSER
 // ----------------------------------------------------
     api_router.route('/kotinode/user')
-        .get(kotoUserController.getUserList);
+        .get(kotoUserController.getUserList)
+        .post(kotoUserController.createUser)
+        .delete(kotoUserController.deleteUsers)
+        .purge(kotoUserController.deleteUsers);
 
+    api_router.route('/kotinode/user/:user_id')
+        .get(kotoUserController.getUserById)
+        .delete(kotoUserController.deleteUserById);
 // ----------------------------------------------------
 // DB SHOWCASE - CLASS
 // ----------------------------------------------------
