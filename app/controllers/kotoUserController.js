@@ -4,8 +4,8 @@ var logger = require('../utils/logger.js');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var KotoUserModel = require('../models/kotoUserModel');
 
-var DESC_SORT_ORDER = -1
-var ASC_SORT_ORDER = 1
+const DESC_SORT_ORDER = -1
+const ASC_SORT_ORDER = 1
 
 exports.preflight = function (req, res) {
     logger.log(req, 'Preflight...');
@@ -17,7 +17,7 @@ exports.preflight = function (req, res) {
 // ----------------------------------------------------
 
 exports.postKotoLogin = function (req, res) {
-    var credentials = req.body;
+    const credentials = req.body;
     logger.log(req, "postKotoLogin");
     logger.log(req, JSON.stringify(kotiConfig.userList));
     var userList = JSON.parse(JSON.stringify(kotiConfig.userList));
@@ -60,8 +60,8 @@ function alertClients(type, msg) {
 }
 
 exports.getUserList = function (req, res) {
-    logger.log(req, 'getUserList')
-    var delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
+    logger.log(req, 'getUserList');
+    const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
 
     setTimeout(function () {
         KotoUserModel.find().sort({date: DESC_SORT_ORDER}).exec(function (err, userList) {
@@ -75,9 +75,9 @@ exports.getUserList = function (req, res) {
 };
 
 exports.getUserById = function (req, res) {
-    var id = req.params.user_id;
-    var delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
-    logger.log(req, 'getUserById:' + id)
+    const id = req.params.user_id;
+    const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
+    logger.log(req, 'getUserById:' + id);
     setTimeout(function () {
         KotoUserModel.find().where('_id').equals(id).exec(function (err, userList) {
             if (err) {
@@ -111,9 +111,9 @@ exports.deleteUsers = function (req, res) {
 };
 
 exports.createUser = function (req, res) {
-    logger.log(req, JSON.stringify(req.body))
-    var payload = JSON.parse(JSON.stringify(req.body))
-    var kotoUser = new KotoUserModel(payload);
+    logger.log(req, JSON.stringify(req.body));
+    const payload = JSON.parse(JSON.stringify(req.body));
+    const kotoUser = new KotoUserModel(payload);
 
     kotoUser.save(function (err, result) {
         if (err)
