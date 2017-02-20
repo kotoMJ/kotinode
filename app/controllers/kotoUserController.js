@@ -39,7 +39,7 @@ exports.postKotoLogin = function (req, res) {
             'role': currentUser.role,
             'apiKey': kotiConfig.api_key
         };
-        var jwtToken = jwt.sign(profile, kotiConfig.api_key, {'expiresIn': 10 * 60});  // expires in 600 sec (10 min)
+        var jwtToken = jwt.sign(profile, kotiConfig.api_key, {'expiresIn': 20 * 60});  // expires in 1200 sec (20 min)
         res.status(200).json({
             id_token: jwtToken
         });
