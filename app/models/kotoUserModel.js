@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var UserItemSchema = new Schema({
     role: {type: String, required: true},
     name: [{value: {type: String, required: true}, primary: {type: Boolean, required: true}}],
-    surname: {type: String, required: true},
+    surname: [{value: {type: String, required: true}, primary: {type: Boolean, required: true}}],
     phone: [{
         value: {type: Number, required: false},
         type: {type: String, required: true},
