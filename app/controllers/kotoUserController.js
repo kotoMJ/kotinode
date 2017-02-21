@@ -122,3 +122,26 @@ exports.createUser = function (req, res) {
             res.status(200).json({message: 'KotoUser created: ' + result._id});
     });
 };
+
+
+/**
+ * Get unique list of all tags (collected over all users).
+ * @param req
+ * @param res
+ */
+exports.getAllTags = function (req, res) {
+    logger.log(req, "tagging a...");
+    KotoUserModel.find().exec(function (err, userList) {
+        if (err) {
+            res.status(500).send(err)
+        } else {
+            logger.log(req, "tagging b...");
+            let tagList = []
+            for (var index in userList) {
+                tagList = tagList.concat(userList[index].tagList)
+            }
+            logger.log(req, "list:" + tagList);
+            res.status(200).jsonWrapped(Array.from(new Set(tagList)));
+        }
+    });
+}

@@ -88,12 +88,11 @@ exports.getApiRouter = function () {
         .put(kotoEventController.addEventToBundle)
         .delete(kotoEventController.deleteEventBundle);
 
-    api_router.route('/kotinode/event/fixed')
-        .get(kotoEventController.getEventFixed);
-
     api_router.route('/kotinode/event')
         .get(kotoEventController.getEventList);
 
+    api_router.route('/kotinode/event/fixed')
+        .get(kotoEventController.getEventFixed);
 
     api_router.route('/kotinode/event/:event_id/bundle/:bundle_id')
         .delete(kotoEventController.deleteEventFromBundle);
@@ -117,14 +116,13 @@ exports.getApiRouter = function () {
             kotoGalleryController.getGallerySummary(req, res);
         });
 
+    api_router.route('/kotinode/gallery/fixed')
+        .get(kotoGalleryController.getGalleryFixed);
+
     api_router.route('/kotinode/gallery/:galleryName')
         .get(function (req, res, next) {
             kotoGalleryController.getGallery(req, res);
         });
-
-
-    api_router.route('/kotinode/gallery/fixed')
-        .get(kotoGalleryController.getGalleryFixed);
 
 // ----------------------------------------------------
 // KOTOUSER
@@ -135,9 +133,13 @@ exports.getApiRouter = function () {
         .delete(kotoUserController.deleteUsers)
         .purge(kotoUserController.deleteUsers);
 
+    api_router.route('/kotinode/user/tag')
+        .get(kotoUserController.getAllTags);
+
     api_router.route('/kotinode/user/:user_id')
         .get(kotoUserController.getUserById)
         .delete(kotoUserController.deleteUserById);
+
 // ----------------------------------------------------
 // DB SHOWCASE - CLASS
 // ----------------------------------------------------
