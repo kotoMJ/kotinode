@@ -22,6 +22,10 @@ First stable release available on https://kotopeky.cz / https://tihava.cz
 ### Rich text for news
 
     http://json2html.com/  
+    http://codepen.io/silkine/pen/jldif
+    WITH
+    https://www.npmjs.com/package/html-pdf
+    https://www.npmjs.com/package/phantom-html2pdf
     ---- OR -----
     https://github.com/yabwe/medium-editor/blob/master/API.md#serialize
     https://github.com/yabwe/medium-editor
