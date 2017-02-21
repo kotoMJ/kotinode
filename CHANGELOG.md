@@ -20,7 +20,9 @@ First stable release available on https://kotopeky.cz / https://tihava.cz
 
 ## Not released yet
 ### Rich text for news
-    
+
+    http://json2html.com/  
+    ---- OR -----
     https://github.com/yabwe/medium-editor/blob/master/API.md#serialize
     https://github.com/yabwe/medium-editor
     https://www.npmjs.com/package/medium-editor
