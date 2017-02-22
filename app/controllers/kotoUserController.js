@@ -7,6 +7,19 @@ var KotoUserModel = require('../models/kotoUserModel');
 const DESC_SORT_ORDER = -1
 const ASC_SORT_ORDER = 1
 
+function verifyToken(req, res) {
+    var apiKey = req.headers['apikey'];
+    if (apiKey === undefined) {
+        res.status(401).json({"message": "Missing or incomplete authentication parameters"})
+        return false
+    } else if (kotiConfig.api_key !== apiKey) {
+        res.status(403).json({"message": "Missing permissions!"})
+        return false
+    } else
+        return true
+
+}
+
 exports.preflight = function (req, res) {
     logger.log(req, 'Preflight...');
     res.status(200).json({});
@@ -89,41 +102,6 @@ exports.getUserById = function (req, res) {
     }, delay);// delay to simulate slow connection!
 };
 
-exports.deleteUserById = function (req, res) {
-    KotoUserModel.remove({
-        _id: req.params.user_id
-    }, function (err, deletedUser) {
-        if (err)
-            res.status(500).send(err);
-
-        res.status(200).json({message: 'KotoUser ' + deletedUser + ' deleted'});
-    });
-};
-
-
-exports.deleteUsers = function (req, res) {
-    KotoUserModel.remove({}, function (err) {
-        if (err)
-            res.status(500).send(err);
-        else
-            res.status(200).json({message: 'All KotoUser deleted'});
-    });
-};
-
-exports.createUser = function (req, res) {
-    logger.log(req, JSON.stringify(req.body));
-    const payload = JSON.parse(JSON.stringify(req.body));
-    const kotoUser = new KotoUserModel(payload);
-
-    kotoUser.save(function (err, result) {
-        if (err)
-            res.status(500).send(err);
-        else
-            res.status(200).json({message: 'KotoUser created: ' + result._id});
-    });
-};
-
-
 /**
  * Get unique list of all tags (collected over all users).
  * @param req
@@ -145,3 +123,43 @@ exports.getAllTags = function (req, res) {
         }
     });
 }
+
+exports.deleteUserById = function (req, res) {
+    if (verifyToken(req, res)) {
+        KotoUserModel.remove({
+            _id: req.params.user_id
+        }, function (err, deletedUser) {
+            if (err)
+                res.status(500).send(err);
+
+            res.status(200).json({message: 'KotoUser ' + deletedUser + ' deleted'});
+        });
+    }
+};
+
+
+exports.deleteUsers = function (req, res) {
+    if (verifyToken(req, res)) {
+        KotoUserModel.remove({}, function (err) {
+            if (err)
+                res.status(500).send(err);
+            else
+                res.status(200).json({message: 'All KotoUser deleted'});
+        });
+    }
+};
+
+exports.createUser = function (req, res) {
+    if (verifyToken(req, res)) {
+        logger.log(req, JSON.stringify(req.body));
+        const payload = JSON.parse(JSON.stringify(req.body));
+        const kotoUser = new KotoUserModel(payload);
+
+        kotoUser.save(function (err, result) {
+            if (err)
+                res.status(500).send(err);
+            else
+                res.status(200).json({message: 'KotoUser created: ' + result._id});
+        });
+    }
+};
