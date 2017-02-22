@@ -6,6 +6,19 @@ var logger = require('../utils/logger.js');
 var DESC_SORT_ORDER = -1
 var ASC_SORT_ORDER = 1
 
+function verifyToken(req, res) {
+    var apiKey = req.headers['apikey'];
+    if (apiKey === undefined) {
+        res.status(401).json({"message": "Missing or incomplete authentication parameters"})
+        return false
+    } else if (kotiConfig.api_key !== apiKey) {
+        res.status(403).json({"message": "Missing permissions!"})
+        return false
+    } else
+        return true
+
+}
+
 // get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
 exports.getEventFixed = function (req, res) {
     var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.json', 'utf8'));
@@ -53,40 +66,46 @@ exports.getBundleList = function (req, res) {
 };
 exports.createEventBundle = function (req, res) {
     logger.log(req, "exports.setEvent");
-    logger.log(req, JSON.stringify(req.body))
-    var payload = JSON.parse(JSON.stringify(req.body))
-    payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
-    var kotoevent = new KotoEventModel(payload);
+    if (verifyToken(req, res)) {
+        logger.log(req, JSON.stringify(req.body))
+        var payload = JSON.parse(JSON.stringify(req.body))
+        payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
+        var kotoevent = new KotoEventModel(payload);
 
-    // save the bear and check for errors
-    kotoevent.save(function (err) {
-        if (err)
-            res.send(err)
-        else
-            res.json({message: 'KotoEvent created!'});
-    });
+        // save the bear and check for errors
+        kotoevent.save(function (err) {
+            if (err)
+                res.send(err)
+            else
+                res.json({message: 'KotoEvent created!'});
+        });
+    }
 };
 
 
 exports.deleteEventBundle = function (req, res) {
-    KotoEventModel.remove({
-        _id: req.params.bundle_id
-    }, function (err, bear) {
-        if (err)
-            res.status(500).send(err);
+    if (verifyToken(req, res)) {
+        KotoEventModel.remove({
+            _id: req.params.bundle_id
+        }, function (err, bear) {
+            if (err)
+                res.status(500).send(err);
 
-        res.json({message: 'KotoEventBundle deleted'});
-    });
+            res.json({message: 'KotoEventBundle deleted'});
+        });
+    }
 };
 
 
 exports.cleanupEventBundleAll = function (req, res) {
-    KotoEventModel.remove({}, function (err, bear) {
-        if (err)
-            res.status(500).send(err);
-        else
-            res.json({message: 'All KotoEvents deleted'});
-    });
+    if (verifyToken(req, res)) {
+        KotoEventModel.remove({}, function (err, bear) {
+            if (err)
+                res.status(500).send(err);
+            else
+                res.json({message: 'All KotoEvents deleted'});
+        });
+    }
 };
 
 exports.addEventToBundle = function (req, res) {
@@ -95,10 +114,7 @@ exports.addEventToBundle = function (req, res) {
     //
     //     logger.log(req, 'found:'+kotoEventBundle);
     // });
-    var apiKey = req.headers['apikey'];
-    if (apiKey === undefined) {
-        res.status(401).json({"message": "Missing or incomplete authentication parameters"})
-    } else if (kotiConfig.api_key === apiKey) {
+    if (verifyToken(req, res)) {
         var payload = req.body//JSON.parse(JSON.stringify(req.body));
         payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
         KotoEventModel.update({_id: req.params.bundle_id}, {$push: {eventList: payload}}, {upsert: false}, function (err, raw) {
@@ -110,19 +126,13 @@ exports.addEventToBundle = function (req, res) {
                 res.status(200).json({message: raw});
             }
         });
-    } else {
-        res.status(403).json({"message": "Missing permissions!"})
     }
 
 };
 
 exports.deleteEventFromBundle = function (req, res) {
 
-
-    var apiKey = req.headers['apikey'];
-    if (apiKey === undefined) {
-        res.status(401).json({"message": "Missing or incomplete authentication parameters"})
-    } else if (kotiConfig.api_key === apiKey) {
+    if (verifyToken(req, res)) {
         if (req.params.bundle_id === undefined) res.status(302).json({message: 'Missing bundle_id parameter'});
         if (req.params.event_id === undefined) res.status(302).json({message: 'Missing event_id parameter'});
         KotoEventModel.update({_id: req.params.bundle_id}, {$pull: {'eventList': {_id: req.params.event_id}}}, {upsert: false}, function (err, raw) {
@@ -134,9 +144,5 @@ exports.deleteEventFromBundle = function (req, res) {
                 res.status(200).json({message: raw});
             }
         });
-    } else {
-        logger.err(req, 'Incomming apiKey===' + apiKey + ' but by config is defined===' + kotiConfig.api_key);
-        res.status(403).json({"message": "Missing permissions!"})
     }
-
 };
