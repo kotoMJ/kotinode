@@ -11,6 +11,7 @@ var logger = require('../utils/logger.js');
 
 // get all the kotinode items (accessed at GET http://url:port/api/gallery/event
 exports.getGalleryFixed = function(req,res) {
+    logger.logMem(req, "getGallery GALLERY FIXED");
     var fixedEvents = JSON.parse(fs.readFileSync('app/data/gallery.list.json', 'utf8'));
     // follow date format with ISO-8601
     res.json(fixedEvents)
@@ -18,7 +19,7 @@ exports.getGalleryFixed = function(req,res) {
 
 // GET http://url:port/api/kotinode/gallery/?offset=1&limit=1&delay=2000
 exports.getGallery = function(req,res) {
-    logger.logMem(req,"Start exports.getGallery>>");
+    logger.logMem(req, "getGallery GALLERY NAME");
     var offset = isNaN(parseInt(req.query.offset))?0:parseInt(req.query.offset);
     var limit = isNaN(parseInt(req.query.limit))?0:parseInt(req.query.limit);
     var delay = isNaN(parseInt(req.query.delay))?0:parseInt(req.query.delay);
