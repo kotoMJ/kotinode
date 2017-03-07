@@ -163,3 +163,30 @@ exports.createUser = function (req, res) {
         });
     }
 };
+
+exports.replaceUserById = function (req, res) {
+    if (verifyToken(req, res)) {
+        const id = req.params.user_id;
+        const payload = JSON.parse(JSON.stringify(req.body));
+
+        KotoUserModel.update({_id: id}, payload, {runValidators: true}, function (err, result) {
+            if (err)
+                res.status(500).send(err);
+            else
+                logger.log(req, JSON.stringify(result))
+            res.status(200).json({message: 'KotoUser updated: ' + id});
+        });
+
+        // mongoose.Promise = require('q').Promise;
+        //
+        // var promise = KotoUserModel.update({_id:id}, payload, {runValidators:true }).exec();
+        // promise.then(function(user){
+        //     res.status(200).json({message: 'KotoUser updated: ' + user._id});
+        // }).then(function (user) {
+        //     logger.log('KotoUser updated: ' + id)
+        // }).catch(function (err) {
+        //     logger.err('KotoUser update failed for id: ' + id)
+        //     res.status(500).send(err);
+        // })
+    }
+};

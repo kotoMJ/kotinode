@@ -138,7 +138,9 @@ exports.getApiRouter = function () {
 
     api_router.route('/kotinode/user/:user_id')
         .get(kotoUserController.getUserById)
-        .delete(kotoUserController.deleteUserById);
+        .delete(kotoUserController.deleteUserById)
+        .put(kotoUserController.replaceUserById);
+
 
 // ----------------------------------------------------
 // DB SHOWCASE - CLASS
