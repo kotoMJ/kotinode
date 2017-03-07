@@ -17,3 +17,5 @@ for file in *.png; do convert $file -resize 1500 $file; done
 NPM PROXY
 npm config set proxy http://localhost:3128
 npm config set https-proxy http://localhost:3128
+
+http://www.restapitutorial.com/lessons/httpmethods.html
