@@ -172,9 +172,10 @@ exports.replaceUserById = function (req, res) {
         KotoUserModel.update({_id: id}, payload, {runValidators: true}, function (err, result) {
             if (err)
                 res.status(500).send(err);
-            else
+            else {
                 logger.log(req, JSON.stringify(result))
-            res.status(200).json({message: 'KotoUser updated: ' + id});
+                res.status(200).json({ message: 'KotoUser updated: ' + id });
+            }
         });
 
         // mongoose.Promise = require('q').Promise;
