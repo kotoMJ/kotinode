@@ -1,4 +1,7 @@
 ## Release notes for KoTiPoint ecosystem.
+###2.3.0
+* Complete user endpoint
+* Update with web-client version 1.2.0 - full user support
 ###2.2.0
 * Add user update endpoint
 ###2.1.0
