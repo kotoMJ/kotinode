@@ -20,12 +20,9 @@ exports.notifyEmail = function (req, res) {
     if (apiKeyUtils.verifyToken(req, res)) {
         logger.log(req, "exports.notifyEmail");
         nconf.file('email', './app/config/config.notify.json');
-        var apiKey = req.headers['apikey'];
         if (nconf.get('email') === undefined) {
-            res.status(500).json({ "message": "Email config is missing!" })
-        } else if (apiKey === undefined) {
-            res.status(401).json({ "message": "Missing or incomplete authentication parameters" })
-        } else if (kotiConfig.api_key === apiKey) {
+            res.status(500).json({ "message": "Email config is missing on the server!" })
+        } else {
 
             var transporter = nodemailer.createTransport({
                 host: nconf.get('email').rosti.smtp.host,
@@ -72,8 +69,6 @@ exports.notifyEmail = function (req, res) {
             } else {
                 res.status(401).json({ "message": "Missing or incomplete message parameters in body!" })
             }
-        } else {
-            res.status(403).json({ "message": "Missing permissions!" })
         }
     }
 };
@@ -90,12 +85,9 @@ exports.notifySms = function (req, res) {
     if (apiKeyUtils.verifyToken(req, res)) {
         logger.log(req, "exports.notifySms");
         nconf.file('sms', './app/config/config.notify.json');
-        var apiKey = req.headers['apikey'];
         if (nconf.get('sms') === undefined) {
-            res.status(500).json({ "message": "Email config is missing!" })
-        } else if (apiKey === undefined) {
-            res.status(401).json({ "message": "Missing or incomplete authentication parameters" })
-        } else if (kotiConfig.api_key === apiKey) {
+            res.status(500).json({ "message": "Email config is missing on the server!" })
+        } else {
             var sendUrl = nconf.get('sms').smsmanager.apiSend;
             var username = nconf.get('sms').smsmanager.username;
             var hashBase = nconf.get('sms').smsmanager.hashFix;
@@ -129,11 +121,15 @@ exports.notifySms = function (req, res) {
             else {
                 res.status(401).json({ "message": "Missing or incomplete message parameters in body!" })
             }
-
-        }
-        else {
-            res.status(403).json({ "message": "Missing permissions!" })
         }
     }
+};
+
+
+exports.notify = function (req, res) {
+    if (apiKeyUtils.verifyToken(req, res)) {
+        logger.log(req, "exports.notifySms");
+
+
+    }
 }
-;
