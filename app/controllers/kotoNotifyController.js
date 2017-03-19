@@ -157,32 +157,36 @@ exports.notify = function (req, res) {
 }
 
 exports.getNotificationList = function (req, res) {
-    logger.log(req, 'getUserList');
-    const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
-    setTimeout(function () {
-        KotoNotifyModel.find().sort({ date: constants.DESC_SORT_ORDER }).exec(function (err, notificationList) {
-            if (err) {
-                res.status(500).send(err)
-            } else {
-                res.status(200).jsonWrapped(notificationList);
-            }
-        });
-    }, delay);// delay to simulate slow connection!
+    if (apiKeyUtils.verifyToken(req, res)) {
+        logger.log(req, 'getUserList');
+        const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
+        setTimeout(function () {
+            KotoNotifyModel.find().sort({ date: constants.DESC_SORT_ORDER }).exec(function (err, notificationList) {
+                if (err) {
+                    res.status(500).send(err)
+                } else {
+                    res.status(200).jsonWrapped(notificationList);
+                }
+            });
+        }, delay);// delay to simulate slow connection!
+    }
 };
 
 
 exports.getSmsCredit = function (req, res) {
-    logger.log(req, 'getUserList');
-    setTimeout(function () {
-        notifyUtils.checkSmsStatus((responseBody) => {
-                if (responseBody.indexOf("|") > -1) {
-                    res.status(200).jsonWrapped(responseBody.split("|")[0])
-                } else {
-                    res.status(200).jsonWrapped(responseBody)
-                }
-            },
-            (err) => {
-                res.status(500).send(err)
-            })
-    }, 0);
+    if (apiKeyUtils.verifyToken(req, res)) {
+        logger.log(req, 'getUserList');
+        setTimeout(function () {
+            notifyUtils.checkSmsStatus((responseBody) => {
+                    if (responseBody.indexOf("|") > -1) {
+                        res.status(200).jsonWrapped(responseBody.split("|")[0])
+                    } else {
+                        res.status(200).jsonWrapped(responseBody)
+                    }
+                },
+                (err) => {
+                    res.status(500).send(err)
+                })
+        }, 0);
+    }
 };
