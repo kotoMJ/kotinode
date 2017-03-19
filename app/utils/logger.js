@@ -10,7 +10,7 @@ plainLog = function (req,msg){
 plainErrorLog = function (req,msg){
     var rid = req.headers['rid'];
     var stamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-    console.log('['+stamp+'|'+rid+'] '+msg);
+    console.log('[' + stamp + '|' + rid + '] ERROR! ' + msg);
 }
 
 exports.log = plainLog;
