@@ -71,7 +71,7 @@ exports.notify = function (req, res) {
             } else {
                 let kotoNotify = new KotoNotifyModel(payload);
                 kotoNotify.messageArriveDateTime = new Date()
-                kotoNotify.apiKey = req.headers['apikey']
+                kotoNotify.sender = 'N/A'//req.headers['apikey']
                 if (payload.tagList === undefined) throw Error('Missing tagList parameter!')
                 if (payload.notificationType === undefined) throw Error('Missing notificationType parameter!')
                 if (payload.messageSubject === undefined) throw Error('Missing messageSubject parameter!')
