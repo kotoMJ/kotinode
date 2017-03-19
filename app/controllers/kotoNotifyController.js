@@ -85,7 +85,6 @@ exports.notify = function (req, res) {
                     userList.forEach(function (user, index) {
                         logger.log(req, "USER:" + JSON.stringify(user))
                         logger.log(req, "INDEX:" + index)
-                        kotoNotify.messageProcessDateTime = new Date()
                         //logger.log(req, JSON.stringify(kotoNotify))
 
                         /**
@@ -95,18 +94,20 @@ exports.notify = function (req, res) {
                             notifyUtils.notifySms('' + user.phone[0].countryCode + user.phone[0].value,
                                 payload.messageSubject + ' ' + payload.messageBody, gateway,
                                 () => {
-                                    kotoNotify.save(function (err, result) {
-                                        if (err)
-                                            throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
-                                        else {
-                                            logger.log(req, "sms userListSize:" + userListSize)
-                                            if ((index + 1) === userListSize) { //check sms for last user
-                                                notificationSentGroup = notificationSentGroup + 1
-                                                if (notificationTypeRange == notificationSentGroup) //check if other groups (email) is done
+                                    if ((index + 1) === userListSize) { //check sms for last user
+                                        notificationSentGroup = notificationSentGroup + 1
+                                        if (notificationTypeRange == notificationSentGroup) {//check if other groups (email) is done
+                                            kotoNotify.messageProcessDateTime = new Date()
+                                            kotoNotify.save(function (err, result) {
+                                                if (err)
+                                                    throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
+                                                else {
+                                                    logger.log(req, "sms userListSize:" + userListSize)
                                                     res.status(200).json({ "message": `${userListSize} users notified via: ${kotoNotify.notificationType} ` })
-                                            }
+                                                }
+                                            })
                                         }
-                                    });
+                                    }
                                 },
                                 () => {
                                     throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
@@ -120,22 +121,26 @@ exports.notify = function (req, res) {
                             notifyUtils.notifyEmail('' + user.email[0].value,
                                 payload.messageSubject, payload.messageBody,
                                 () => {
-                                    kotoNotify.save(function (err, result) {
-                                        logger.log(req, "email userListSize:" + userListSize)
-                                        if (err)
-                                            throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
-                                        else {
-                                            if ((index + 1) === userListSize) {//check sms for last user
-                                                notificationSentGroup = notificationSentGroup + 1
-                                                if (notificationTypeRange == notificationSentGroup)//check if other groups (email) is done
+                                    if ((index + 1) === userListSize) {//check sms for last user
+                                        notificationSentGroup = notificationSentGroup + 1
+                                        if (notificationTypeRange == notificationSentGroup) {//check if other groups (email) is done
+                                            kotoNotify.messageProcessDateTime = new Date()
+                                            kotoNotify.save(function (err, result) {
+                                                logger.log(req, "email userListSize:" + userListSize)
+                                                if (err)
+                                                    throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
+                                                else {
                                                     res.status(200).json({ "message": `${userListSize} users notified via: ${kotoNotify.notificationType} ` })
-                                            }
+                                                }
+                                            })
                                         }
-                                    });
+
+                                    }
                                 },
                                 () => {
                                     throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
-                                })
+                                }
+                            )
                         }
 
                     });
