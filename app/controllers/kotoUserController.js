@@ -1,24 +1,10 @@
 var fs = require('fs');
 var jwt = require('jsonwebtoken');
 var logger = require('../utils/logger.js');
+var apiKeyUtils = require('../utils/apiKeyUtils')
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var KotoUserModel = require('../models/kotoUserModel');
-
-const DESC_SORT_ORDER = -1
-const ASC_SORT_ORDER = 1
-
-function verifyToken(req, res) {
-    var apiKey = req.headers['apikey'];
-    if (apiKey === undefined) {
-        res.status(401).json({"message": "Missing or incomplete authentication parameters"})
-        return false
-    } else if (kotiConfig.api_key !== apiKey) {
-        res.status(403).json({"message": "Missing permissions!"})
-        return false
-    } else
-        return true
-
-}
+var constants = require('../utils/const')
 
 exports.preflight = function (req, res) {
     logger.log(req, 'Preflight...');
@@ -52,7 +38,7 @@ exports.postKotoLogin = function (req, res) {
             'role': currentUser.role,
             'apiKey': kotiConfig.api_key
         };
-        var jwtToken = jwt.sign(profile, kotiConfig.api_key, {'expiresIn': 20 * 60});  // expires in 1200 sec (20 min)
+        var jwtToken = jwt.sign(profile, kotiConfig.api_key, { 'expiresIn': 20 * 60 });  // expires in 1200 sec (20 min)
         res.status(200).json({
             id_token: jwtToken
         });
@@ -60,7 +46,7 @@ exports.postKotoLogin = function (req, res) {
         alertClients('info', `User '${credentials.user}' just logged in`);
     } else {
         logger.log(req, "bad...");
-        res.status(401).json({'message': 'Invalid user/password'});
+        res.status(401).json({ 'message': 'Invalid user/password' });
 
         alertClients('error', `User '${credentials.user}' just failed to login`);
     }
@@ -69,7 +55,7 @@ exports.postKotoLogin = function (req, res) {
 // Alerts all clients via socket io.
 function alertClients(type, msg) {
     console.log("SocketIO alerting clients: ", msg);
-    koTio.sockets.emit('alert', {message: msg, time: new Date(), type});
+    koTio.sockets.emit('alert', { message: msg, time: new Date(), type });
 }
 
 exports.getUserList = function (req, res) {
@@ -77,7 +63,7 @@ exports.getUserList = function (req, res) {
     const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
 
     setTimeout(function () {
-        KotoUserModel.find().sort({date: DESC_SORT_ORDER}).exec(function (err, userList) {
+        KotoUserModel.find().sort({ date: constants.DESC_SORT_ORDER }).exec(function (err, userList) {
             if (err) {
                 res.status(500).send(err)
             } else {
@@ -85,6 +71,18 @@ exports.getUserList = function (req, res) {
             }
         });
     }, delay);// delay to simulate slow connection!
+};
+
+exports.getInternalUserListByTag = function (tagListCondition, callback) {
+    setTimeout(function () {
+        KotoUserModel.find({ tagList: { "$in": tagListCondition } }).sort({ date: constants.DESC_SORT_ORDER }).exec(function (err, userList) {
+            if (err) {
+                return callback([])
+            } else {
+                return callback(userList)
+            }
+        });
+    }, 0);
 };
 
 exports.getUserById = function (req, res) {
@@ -125,32 +123,32 @@ exports.getAllTags = function (req, res) {
 }
 
 exports.deleteUserById = function (req, res) {
-    if (verifyToken(req, res)) {
+    if (apiKeyUtils.verifyToken(req, res)) {
         KotoUserModel.remove({
             _id: req.params.user_id
         }, function (err, deletedUser) {
             if (err)
                 res.status(500).send(err);
 
-            res.status(200).json({message: 'KotoUser ' + deletedUser + ' deleted'});
+            res.status(200).json({ message: 'KotoUser ' + deletedUser + ' deleted' });
         });
     }
 };
 
 
 exports.deleteUsers = function (req, res) {
-    if (verifyToken(req, res)) {
+    if (apiKeyUtils.verifyToken(req, res)) {
         KotoUserModel.remove({}, function (err) {
             if (err)
                 res.status(500).send(err);
             else
-                res.status(200).json({message: 'All KotoUser deleted'});
+                res.status(200).json({ message: 'All KotoUser deleted' });
         });
     }
 };
 
 exports.createUser = function (req, res) {
-    if (verifyToken(req, res)) {
+    if (apiKeyUtils.verifyToken(req, res)) {
         logger.log(req, JSON.stringify(req.body));
         const payload = JSON.parse(JSON.stringify(req.body));
         const kotoUser = new KotoUserModel(payload);
@@ -159,17 +157,17 @@ exports.createUser = function (req, res) {
             if (err)
                 res.status(500).send(err);
             else
-                res.status(200).json({message: 'KotoUser created: ' + result._id});
+                res.status(200).json({ message: 'KotoUser created: ' + result._id });
         });
     }
 };
 
 exports.replaceUserById = function (req, res) {
-    if (verifyToken(req, res)) {
+    if (apiKeyUtils.verifyToken(req, res)) {
         const id = req.params.user_id;
         const payload = JSON.parse(JSON.stringify(req.body));
 
-        KotoUserModel.update({_id: id}, payload, {runValidators: true}, function (err, result) {
+        KotoUserModel.update({ _id: id }, payload, { runValidators: true }, function (err, result) {
             if (err)
                 res.status(500).send(err);
             else {

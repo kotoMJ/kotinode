@@ -3,8 +3,7 @@ var KotoEventModel = require('../models/kotoEventModel');
 var moment = require('moment');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var logger = require('../utils/logger.js');
-var DESC_SORT_ORDER = -1
-var ASC_SORT_ORDER = 1
+const constants = require('../utils/const')
 
 function verifyToken(req, res) {
     var apiKey = req.headers['apikey'];
@@ -39,7 +38,7 @@ exports.getEventList = function (req, res) {
         //     where('sortId').gte(offset).limit(limit).sort({sortId: 1}).exec(function (err, event) {
         //         res.json(event);
         //     });
-        KotoEventModel.find().sort({date: DESC_SORT_ORDER}).exec(function (err, event) {
+        KotoEventModel.find().sort({ date: constants.DESC_SORT_ORDER }).exec(function (err, event) {
             res.jsonWrapped(event);
         });
     }, delay);// delay to simulate slow connection!
@@ -51,7 +50,7 @@ exports.getBundleList = function (req, res) {
     var delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
 
     setTimeout(function () {
-        KotoEventModel.find().sort({date: DESC_SORT_ORDER}).exec(function (err, bundle) {
+        KotoEventModel.find().sort({ date: constants.DESC_SORT_ORDER }).exec(function (err, bundle) {
             if (err) {
                 res.status(500).send(err)
             } else {
