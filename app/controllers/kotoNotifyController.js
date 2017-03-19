@@ -73,19 +73,72 @@ exports.notify = function (req, res) {
                 kotoNotify.messageArriveDateTime = new Date()
                 kotoNotify.apiKey = req.headers['apikey']
                 if (payload.tagList === undefined) throw Error('Missing tagList parameter!')
+                if (payload.notificationType === undefined) throw Error('Missing notificationType parameter!')
+                if (payload.messageSubject === undefined) throw Error('Missing messageSubject parameter!')
+                if (payload.messageBody === undefined) throw Error('Missing messageBody parameter!')
+
+                var gateway = (payload.urgent === undefined || payload.urgent === false || payload.urgent === 'false') ? 'lowcost' : 'high';
                 kotoUserController.getInternalUserListByTag(payload.tagList, (userList) => {
-                    userList.forEach(function (user) {
+                    const userListSize = userList.length
+                    const notificationTypeRange = payload.notificationType.length
+                    let notificationSentGroup = 0
+                    userList.forEach(function (user, index) {
                         logger.log(req, "USER:" + JSON.stringify(user))
+                        logger.log(req, "INDEX:" + index)
                         kotoNotify.messageProcessDateTime = new Date()
                         //logger.log(req, JSON.stringify(kotoNotify))
 
+                        /**
+                         *  SMS
+                         */
+                        if (payload.notificationType.indexOf("sms") > -1) {
+                            notifyUtils.notifySms('' + user.phone[0].countryCode + user.phone[0].value,
+                                payload.messageSubject + ' ' + payload.messageBody, gateway,
+                                () => {
+                                    kotoNotify.save(function (err, result) {
+                                        if (err)
+                                            throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
+                                        else {
+                                            logger.log(req, "sms userListSize:" + userListSize)
+                                            if ((index + 1) === userListSize) { //check sms for last user
+                                                notificationSentGroup = notificationSentGroup + 1
+                                                if (notificationTypeRange == notificationSentGroup) //check if other groups (email) is done
+                                                    res.status(200).json({ "message": `${userListSize} users notified via: ${kotoNotify.notificationType} ` })
+                                            }
+                                        }
+                                    });
+                                },
+                                () => {
+                                    throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
+                                })
+                        }
 
-                        kotoNotify.save(function (err, result) {
-                            if (err)
-                                throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
-                        });
+                        /**
+                         *  EMAIL
+                         */
+                        if (payload.notificationType.indexOf("email") > -1) {
+                            notifyUtils.notifyEmail('' + user.email[0].value,
+                                payload.messageSubject, payload.messageBody,
+                                () => {
+                                    kotoNotify.save(function (err, result) {
+                                        logger.log(req, "email userListSize:" + userListSize)
+                                        if (err)
+                                            throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
+                                        else {
+                                            if ((index + 1) === userListSize) {//check sms for last user
+                                                notificationSentGroup = notificationSentGroup + 1
+                                                if (notificationTypeRange == notificationSentGroup)//check if other groups (email) is done
+                                                    res.status(200).json({ "message": `${userListSize} users notified via: ${kotoNotify.notificationType} ` })
+                                            }
+                                        }
+                                    });
+                                },
+                                () => {
+                                    throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
+                                })
+                        }
+
                     });
-                    res.status(200).json({ "message": `${userList.length} users notified via: ${kotoNotify.notificationType} ` })
                 })
             }
         } catch (payloadException) {
