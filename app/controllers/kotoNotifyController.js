@@ -1,6 +1,7 @@
 var logger = require('../utils/logger.js');
 var apiKeyUtils = require('../utils/apiKeyUtils')
 var notifyUtils = require('../utils/notifyUtils')
+var kotoUserController = require('../controllers/kotoUserController')
 var KotoNotifyModel = require('../models/kotoNotifyModel');
 /**
  * @param req
@@ -67,13 +68,23 @@ exports.notify = function (req, res) {
                 throw new Error('Missing payload in body!');
             } else {
                 let kotoNotify = new KotoNotifyModel(payload);
-                kotoNotify.date = new Date()
+                kotoNotify.messageArriveDateTime = new Date()
+                kotoNotify.apiKey = req.headers['apikey']
+                if (payload.tagList === undefined) throw Error('Missing tagList parameter!')
+                kotoUserController.getInternalUserListByTag(payload.tagList, (userList) => {
+                    userList.forEach(function (user) {
+                        logger.log(req, "USER:" + JSON.stringify(user))
+                        kotoNotify.messageProcessDateTime = new Date()
+                        logger.log(req, JSON.stringify(kotoNotify))
+                    });
+                    res.status(200).json({ "message": `${userList.length} users notified via: ${kotoNotify.notificationType} ` })
+                })
             }
         } catch (payloadException) {
             if (payloadException.message === undefined) {
                 res.status(500).json({ "message": payloadException })
             } else {
-                res.status(401).json({ "message": payloadException.message })
+                res.status(403).json({ "message": payloadException.message })
             }
         }
     }
