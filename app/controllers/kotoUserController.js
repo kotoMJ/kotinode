@@ -1,24 +1,12 @@
 var fs = require('fs');
 var jwt = require('jsonwebtoken');
 var logger = require('../utils/logger.js');
+var apiKeyUtils = require('../utils/apiKeyUtils')
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var KotoUserModel = require('../models/kotoUserModel');
 
 const DESC_SORT_ORDER = -1
 const ASC_SORT_ORDER = 1
-
-function verifyToken(req, res) {
-    var apiKey = req.headers['apikey'];
-    if (apiKey === undefined) {
-        res.status(401).json({"message": "Missing or incomplete authentication parameters"})
-        return false
-    } else if (kotiConfig.api_key !== apiKey) {
-        res.status(403).json({"message": "Missing permissions!"})
-        return false
-    } else
-        return true
-
-}
 
 exports.preflight = function (req, res) {
     logger.log(req, 'Preflight...');
@@ -125,7 +113,7 @@ exports.getAllTags = function (req, res) {
 }
 
 exports.deleteUserById = function (req, res) {
-    if (verifyToken(req, res)) {
+    if (apiKeyUtils.verifyToken(req, res)) {
         KotoUserModel.remove({
             _id: req.params.user_id
         }, function (err, deletedUser) {
@@ -139,7 +127,7 @@ exports.deleteUserById = function (req, res) {
 
 
 exports.deleteUsers = function (req, res) {
-    if (verifyToken(req, res)) {
+    if (apiKeyUtils.verifyToken(req, res)) {
         KotoUserModel.remove({}, function (err) {
             if (err)
                 res.status(500).send(err);
@@ -150,7 +138,7 @@ exports.deleteUsers = function (req, res) {
 };
 
 exports.createUser = function (req, res) {
-    if (verifyToken(req, res)) {
+    if (apiKeyUtils.verifyToken(req, res)) {
         logger.log(req, JSON.stringify(req.body));
         const payload = JSON.parse(JSON.stringify(req.body));
         const kotoUser = new KotoUserModel(payload);
@@ -165,7 +153,7 @@ exports.createUser = function (req, res) {
 };
 
 exports.replaceUserById = function (req, res) {
-    if (verifyToken(req, res)) {
+    if (apiKeyUtils.verifyToken(req, res)) {
         const id = req.params.user_id;
         const payload = JSON.parse(JSON.stringify(req.body));
 
