@@ -3,11 +3,6 @@ var apiKeyUtils = require('../utils/apiKeyUtils')
 var notifyUtils = require('../utils/notifyUtils')
 var KotoNotifyModel = require('../models/kotoNotifyModel');
 /**
- * https://docs.rosti.cz/emails/
- * https://nodemailer.com/about/
- * https://nodemailer.com/smtp/
- * http://wiki.rosti.cz/e-maily
- * http://blog.rosti.cz/novy-smtp-server/
  * @param req
  * @param res
  */
@@ -34,10 +29,6 @@ exports.notifyEmail = function (req, res) {
 };
 
 /**
- * http://smsmanager.cz/api/http/
- * http://smsmanager.cz/api/codes/#errors
- * http://www.smsmanager.cz/rozesilani-sms/lowcost
- * https://www.smsmanager.cz/rozesilani-sms/ceny/
  * @param req
  * @param res
  */

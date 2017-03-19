@@ -6,6 +6,13 @@ var nconf = require('nconf');
 var logger = require('../utils/logger.js');
 
 /**
+ *
+ * https://docs.rosti.cz/emails/
+ * https://nodemailer.com/about/
+ * https://nodemailer.com/smtp/
+ * http://wiki.rosti.cz/e-maily
+ * http://blog.rosti.cz/novy-smtp-server/
+ *
  * SuccessCallback starts with message code: http://www.serversmtp.com/en/smtp-error
  *
  * @param emailTo
@@ -65,6 +72,11 @@ exports.notifyEmail = function (emailTo, emailSubject, emailText, successCallbac
 }
 
 /**
+ *
+ * http://smsmanager.cz/api/http/
+ * http://smsmanager.cz/api/codes/#errors
+ * http://www.smsmanager.cz/rozesilani-sms/lowcost
+ * https://www.smsmanager.cz/rozesilani-sms/ceny/
  *
  * @param phoneNumber
  * @param message
