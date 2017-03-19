@@ -4,9 +4,7 @@ var logger = require('../utils/logger.js');
 var apiKeyUtils = require('../utils/apiKeyUtils')
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var KotoUserModel = require('../models/kotoUserModel');
-
-const DESC_SORT_ORDER = -1
-const ASC_SORT_ORDER = 1
+var constants = require('../utils/const')
 
 exports.preflight = function (req, res) {
     logger.log(req, 'Preflight...');
@@ -65,7 +63,7 @@ exports.getUserList = function (req, res) {
     const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
 
     setTimeout(function () {
-        KotoUserModel.find().sort({ date: DESC_SORT_ORDER }).exec(function (err, userList) {
+        KotoUserModel.find().sort({ date: constants.DESC_SORT_ORDER }).exec(function (err, userList) {
             if (err) {
                 res.status(500).send(err)
             } else {
@@ -77,7 +75,7 @@ exports.getUserList = function (req, res) {
 
 exports.getInternalUserListByTag = function (tagListCondition, callback) {
     setTimeout(function () {
-        KotoUserModel.find({ tagList: { "$in": tagListCondition } }).sort({ date: DESC_SORT_ORDER }).exec(function (err, userList) {
+        KotoUserModel.find({ tagList: { "$in": tagListCondition } }).sort({ date: constants.DESC_SORT_ORDER }).exec(function (err, userList) {
             if (err) {
                 return callback([])
             } else {

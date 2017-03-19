@@ -108,7 +108,10 @@ exports.getApiRouter = function () {
         .post(kotoNotifyController.notifySms);
 
     api_router.route('/kotinode/notify')
-        .post(kotoNotifyController.notify);
+        .post(kotoNotifyController.notify)
+        .get(kotoNotifyController.getNotificationList);
+
+
 
 // ----------------------------------------------------
 // KOTO GALLERY
