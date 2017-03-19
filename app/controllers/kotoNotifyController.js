@@ -164,3 +164,20 @@ exports.getNotificationList = function (req, res) {
         });
     }, delay);// delay to simulate slow connection!
 };
+
+
+exports.getSmsCredit = function (req, res) {
+    logger.log(req, 'getUserList');
+    setTimeout(function () {
+        notifyUtils.checkSmsStatus((responseBody) => {
+                if (responseBody.indexOf("|") > -1) {
+                    res.status(200).jsonWrapped(responseBody.split("|")[0])
+                } else {
+                    res.status(200).jsonWrapped(responseBody)
+                }
+            },
+            (err) => {
+                res.status(500).send(err)
+            })
+    }, 0);
+};

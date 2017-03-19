@@ -119,3 +119,42 @@ exports.notifySms = function (phoneNumber, message, gateway, successCallback, fa
         });
     }
 }
+
+/**
+ *
+ * http://smsmanager.cz/api/http/
+ * http://smsmanager.cz/api/codes/#errors
+ * http://www.smsmanager.cz/rozesilani-sms/lowcost
+ * https://www.smsmanager.cz/rozesilani-sms/ceny/
+ *
+ */
+exports.checkSmsStatus = function (successCallback, failureCallback) {
+    //var finalHash = crypto.createHash('sha1').update(hashBase + message).digest('hex');
+    nconf.file('sms', './app/config/config.notify.json');
+    if (nconf.get('sms') === undefined) {
+        failureCallback({ body: 'SMS config is missing on the kotoServer!' })
+    } else {
+        console.log(JSON.stringify(nconf.get('sms')))
+        var sendUrl = nconf.get('sms').smsmanager.apiStatus;
+        var username = nconf.get('sms').smsmanager.username;
+        var hashBase = nconf.get('sms').smsmanager.hashFix;
+
+        request({
+            url: sendUrl,
+            qs: {
+                'username': username,
+                'password': crypto.createHash('sha1').update(nconf.get('sms').smsmanager.password).digest('hex'),
+            }
+
+        }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                //logger.log(req, body) // Print the google web page.
+                //res.status(200).json({ "message": response.body, "gateway": gateway });
+                successCallback(response.body)
+            } else {
+                //res.status(500).json({ "message": response.body });
+                failureCallback(response)
+            }
+        });
+    }
+}
