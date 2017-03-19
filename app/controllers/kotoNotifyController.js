@@ -181,7 +181,8 @@ exports.getSmsCredit = function (req, res) {
                     if (responseBody.indexOf("|") > -1) {
                         res.status(200).jsonWrapped(responseBody.split("|")[0])
                     } else {
-                        res.status(200).jsonWrapped(responseBody)
+                        logger.err(req, 'SMS-STATUS:' + responseBody)
+                        res.status(200).jsonWrapped("N/A")
                     }
                 },
                 (err) => {
