@@ -1,4 +1,6 @@
 ## Release notes for KoTiPoint ecosystem.
+###2.3.2
+* Update with web-client version 1.3.1 - support for notification
 ###2.3.1
 * Update with web-client version 1.2.1 - support for user filtering
 ###2.3.0
