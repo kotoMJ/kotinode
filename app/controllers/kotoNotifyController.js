@@ -167,7 +167,7 @@ exports.getNotificationList = function (req, res) {
                 } else {
                     notifyUtils.checkSmsStatus((responseBody) => {
                             if (responseBody.indexOf("|") > -1) {
-                                logger.err(req, 'SMS-STATUS:' + responseBody + 'notifList:' + notificationList)
+                                logger.log(req, 'SMS-STATUS:' + responseBody + 'notifList:' + notificationList)
                                 res.status(200).jsonWrapped({
                                     "notifList": notificationList,
                                     "smsCredit": responseBody.split("|")[0]
