@@ -112,7 +112,8 @@ exports.getApiRouter = function () {
 
     api_router.route('/kotinode/notify')
         .post(kotoNotifyController.notify)
-        .get(kotoNotifyController.getNotificationList);
+        .get(kotoNotifyController.getNotificationList)
+        .purge(kotoNotifyController.deleteNotify);
 
 
 

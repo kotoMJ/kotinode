@@ -161,11 +161,33 @@ exports.getNotificationList = function (req, res) {
         logger.log(req, 'getUserList');
         const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
         setTimeout(function () {
-            KotoNotifyModel.find().sort({ date: constants.DESC_SORT_ORDER }).exec(function (err, notificationList) {
+            KotoNotifyModel.find().sort({ messageArriveDateTime: constants.DESC_SORT_ORDER }).exec(function (err, notificationList) {
                 if (err) {
                     res.status(500).send(err)
                 } else {
-                    res.status(200).jsonWrapped(notificationList);
+                    notifyUtils.checkSmsStatus((responseBody) => {
+                            if (responseBody.indexOf("|") > -1) {
+                                logger.err(req, 'SMS-STATUS:' + responseBody + 'notifList:' + notificationList)
+                                res.status(200).jsonWrapped({
+                                    "notifList": notificationList,
+                                    "smsCredit": responseBody.split("|")[0]
+                                });
+                            } else {
+                                logger.err(req, 'SMS-STATUS:' + responseBody)
+                                res.status(200).jsonWrapped({
+                                    "notifList": notificationList,
+                                    "smsCredit": "N/A"
+                                });
+                            }
+                        },
+                        (err) => {
+                            logger.err(req, 'SMS-STATUS:' + err)
+                            res.status(200).jsonWrapped({
+                                "notifList": notificationList,
+                                "smsCredit": "N/A"
+                            });
+                        })
+
                 }
             });
         }, delay);// delay to simulate slow connection!
@@ -175,7 +197,7 @@ exports.getNotificationList = function (req, res) {
 
 exports.getSmsCredit = function (req, res) {
     if (apiKeyUtils.verifyToken(req, res)) {
-        logger.log(req, 'getUserList');
+        logger.log(req, 'getSmsCredit');
         setTimeout(function () {
             notifyUtils.checkSmsStatus((responseBody) => {
                     if (responseBody.indexOf("|") > -1) {
@@ -189,5 +211,16 @@ exports.getSmsCredit = function (req, res) {
                     res.status(500).send(err)
                 })
         }, 0);
+    }
+};
+
+exports.deleteNotify = function (req, res) {
+    if (apiKeyUtils.verifyToken(req, res)) {
+        KotoNotifyModel.remove({}, function (err) {
+            if (err)
+                res.status(500).send(err);
+            else
+                res.status(200).json({ message: 'All KotoNotify deleted' });
+        });
     }
 };
