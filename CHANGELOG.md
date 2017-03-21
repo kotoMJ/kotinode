@@ -1,4 +1,7 @@
 ## Release notes for KoTiPoint ecosystem.
+###2.3.3
+* Add condition that email or phone number are uniques. Therefore can be only once in DB!
+ This shoud prevent sending multiplicated notifications to one email/phone.
 ###2.3.2
 * Update with web-client version 1.3.1 - support for notification
 ###2.3.1
