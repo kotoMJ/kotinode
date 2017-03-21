@@ -150,15 +150,11 @@ exports.deleteUsers = function (req, res) {
 exports.createUser = function (req, res) {
     if (apiKeyUtils.verifyToken(req, res)) {
         logger.log(req, JSON.stringify(req.body));
-        const payload = JSON.parse(JSON.stringify(req.body));
-        const kotoUser = new KotoUserModel(payload);
+        const kotoUser = new KotoUserModel(req.body);
         const newEmail = kotoUser.email[0].value
         const newPhone = kotoUser.phone[0].value
 
         KotoUserModel.find({ $or: [{ 'email.value': newEmail }, { 'phone.value': newPhone }] })
-        //.$where(function () {return this.email.value===kotoUser.email[0].value || this.phone.value===kotoUser.phone[0].value })
-        //.where('email.value').equals(kotoUser.email[0].value)
-        //.where('phone.value').equals(kotoUser.phone[0].value)
             .exec(function (err, userList) {
                 if (err) {
                     logger.err(req, 'save err ' + err)
@@ -191,28 +187,39 @@ exports.createUser = function (req, res) {
 exports.replaceUserById = function (req, res) {
     if (apiKeyUtils.verifyToken(req, res)) {
         const id = req.params.user_id;
-        const payload = JSON.parse(JSON.stringify(req.body));
+        const payload = req.body;
+        const kotoUser = new KotoUserModel(payload);
+        const newEmail = kotoUser.email[0].value
+        const newPhone = kotoUser.phone[0].value
 
-        KotoUserModel.update({ _id: id }, payload, { runValidators: true }, function (err, result) {
-            if (err)
-                res.status(500).send(err);
-            else {
-                logger.log(req, JSON.stringify(result))
-                res.status(200).json({ message: 'KotoUser updated: ' + id });
-            }
-        });
-
-        // mongoose.Promise = require('q').Promise;
-        //
-        // var promise = KotoUserModel.update({_id:id}, payload, {runValidators:true }).exec();
-        // promise.then(function(user){
-        //     res.status(200).json({message: 'KotoUser updated: ' + user._id});
-        // }).then(function (user) {
-        //     logger.log('KotoUser updated: ' + id)
-        // }).catch(function (err) {
-        //     logger.err('KotoUser update failed for id: ' + id)
-        //     res.status(500).send(err);
-        // })
+        KotoUserModel.find({ $or: [{ 'email.value': newEmail }, { 'phone.value': newPhone }] })
+            .exec(function (err, userList) {
+                if (err) {
+                    logger.err(req, 'save err ' + err)
+                    res.status(500).send(err)
+                } else {
+                    logger.log(req, 'save userList ' + userList.length)
+                    if (userList.length) {
+                        if (userList[0].email[0] && userList[0].email[0].value === newEmail) {
+                            res.status(500).send({ message: 'Contact with email ' + kotoUser.email[0].value + ' already exists!' })
+                        } else if (userList[0].phone[0] && userList[0].phone[0].value === newPhone) {
+                            res.status(500).send({ message: 'Contact with phone ' + kotoUser.phone[0].value + ' already exists!' })
+                        } else {
+                            res.status(500).send({ message: 'Contact already exists!' })
+                        }
+                    } else {
+                        logger.err(req, 'save - doing ...')
+                        KotoUserModel.update({ _id: id }, payload, { runValidators: true }, function (err, result) {
+                            if (err)
+                                res.status(500).send(err);
+                            else {
+                                logger.log(req, JSON.stringify(result))
+                                res.status(200).json({ message: 'KotoUser updated: ' + id });
+                            }
+                        });
+                    }
+                }
+            });
     }
 };
 
