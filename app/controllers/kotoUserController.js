@@ -153,8 +153,10 @@ exports.createUser = function (req, res) {
         const kotoUser = new KotoUserModel(req.body);
         const newEmail = kotoUser.email[0].value
         const newPhone = kotoUser.phone[0].value
-
-        KotoUserModel.find({ $or: [{ 'email.value': newEmail }, { 'phone.value': newPhone }] })
+        let findArray = []
+        if (newEmail !== null) findArray.push({ 'email.value': newEmail })
+        if (newPhone !== null) findArray.push({ 'phone.value': newPhone })
+        KotoUserModel.find({ $or: findArray })
             .exec(function (err, userList) {
                 if (err) {
                     logger.err(req, 'save err ' + err)
@@ -170,7 +172,7 @@ exports.createUser = function (req, res) {
                             res.status(500).send({ message: 'Contact already exists!' })
                         }
                     } else {
-                        logger.err(req, 'save - doing ...')
+                        logger.log(req, 'save - doing ...')
                         kotoUser.save(function (err, result) {
                             if (err)
                                 res.status(500).send(err);
@@ -188,11 +190,20 @@ exports.replaceUserById = function (req, res) {
     if (apiKeyUtils.verifyToken(req, res)) {
         const id = req.params.user_id;
         const payload = req.body;
+        if (payload.tagList.indexOf(null) != -1) {
+            logger.err(req, 'RESET tagList because of null content: ' + JSON.stringify(payload.tagList))
+            payload.tagList = ['fixit']
+        }
+        logger.log(req, 'replaceUserById: ' + JSON.stringify(payload))
         const kotoUser = new KotoUserModel(payload);
+
         const newEmail = kotoUser.email[0].value
         const newPhone = kotoUser.phone[0].value
-
-        KotoUserModel.find({ $or: [{ 'email.value': newEmail }, { 'phone.value': newPhone }] })
+        let findArray = []
+        if (newEmail !== null) findArray.push({ 'email.value': newEmail })
+        if (newPhone !== null) findArray.push({ 'phone.value': newPhone })
+        logger.log(req, 'findArray:' + JSON.stringify(findArray))
+        KotoUserModel.find({ $and: [{ $or: findArray }, { '_id': { $ne: id } }] })
             .exec(function (err, userList) {
                 if (err) {
                     logger.err(req, 'save err ' + err)
@@ -208,7 +219,7 @@ exports.replaceUserById = function (req, res) {
                             res.status(500).send({ message: 'Contact already exists!' })
                         }
                     } else {
-                        logger.err(req, 'save - doing ...')
+                        logger.log(req, 'saving: ' + JSON.stringify(payload))
                         KotoUserModel.update({ _id: id }, payload, { runValidators: true }, function (err, result) {
                             if (err)
                                 res.status(500).send(err);
