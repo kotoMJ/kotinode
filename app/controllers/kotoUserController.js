@@ -152,13 +152,39 @@ exports.createUser = function (req, res) {
         logger.log(req, JSON.stringify(req.body));
         const payload = JSON.parse(JSON.stringify(req.body));
         const kotoUser = new KotoUserModel(payload);
+        const newEmail = kotoUser.email[0].value
+        const newPhone = kotoUser.phone[0].value
 
-        kotoUser.save(function (err, result) {
-            if (err)
-                res.status(500).send(err);
-            else
-                res.status(200).json({ message: 'KotoUser created: ' + result._id });
-        });
+        KotoUserModel.find({ $or: [{ 'email.value': newEmail }, { 'phone.value': newPhone }] })
+        //.$where(function () {return this.email.value===kotoUser.email[0].value || this.phone.value===kotoUser.phone[0].value })
+        //.where('email.value').equals(kotoUser.email[0].value)
+        //.where('phone.value').equals(kotoUser.phone[0].value)
+            .exec(function (err, userList) {
+                if (err) {
+                    logger.err(req, 'save err ' + err)
+                    res.status(500).send(err)
+                } else {
+                    logger.log(req, 'save userList ' + userList.length)
+                    if (userList.length) {
+                        if (userList[0].email[0] && userList[0].email[0].value === newEmail) {
+                            res.status(500).send({ message: 'Contact with email ' + kotoUser.email[0].value + ' already exists!' })
+                        } else if (userList[0].phone[0] && userList[0].phone[0].value === newPhone) {
+                            res.status(500).send({ message: 'Contact with phone ' + kotoUser.phone[0].value + ' already exists!' })
+                        } else {
+                            res.status(500).send({ message: 'Contact already exists!' })
+                        }
+                    } else {
+                        logger.err(req, 'save - doing ...')
+                        kotoUser.save(function (err, result) {
+                            if (err)
+                                res.status(500).send(err);
+                            else
+                                res.status(200).json({ message: 'KotoUser created: ' + result._id });
+                        });
+                    }
+                }
+            });
+
     }
 };
 
@@ -189,3 +215,4 @@ exports.replaceUserById = function (req, res) {
         // })
     }
 };
+
