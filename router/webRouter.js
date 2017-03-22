@@ -23,7 +23,7 @@ exports.getWebRouter = function () {
         '/profile',
         '/login',
         '/users',
-        'notify'
+        '/notify'
     ];
 
     web_router.get('*', (req, res, next) => {
