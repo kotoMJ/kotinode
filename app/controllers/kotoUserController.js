@@ -166,9 +166,9 @@ exports.createUser = function (req, res) {
                     } else {
                         logger.log(req, 'userList:' + JSON.stringify(userList))
                         if (userList.length) {
-                            if (userList[0].email[0] && userList[0].email[0].value === newEmail) {
+                            if (newEmail && userList[0].email[0] && userList[0].email[0].value === newEmail) {
                                 res.status(422).send({ message: 'Contact with email ' + kotoUser.email[0].value + ' already exists!' })
-                            } else if (userList[0].phone[0] && userList[0].phone[0].value === newPhone) {
+                            } else if (newPhone && userList[0].phone[0] && userList[0].phone[0].value === newPhone) {
                                 res.status(422).send({ message: 'Contact with phone ' + kotoUser.phone[0].value + ' already exists!' })
                             } else {
                                 res.status(422).send({ message: 'Contact already exists!' })
@@ -221,11 +221,11 @@ exports.replaceUserById = function (req, res) {
                         logger.err(req, 'update err ' + err)
                         res.status(500).send(err)
                     } else {
-                        logger.log(req, 'update userList ' + userList.length)
+                        logger.log(req, 'userList:' + JSON.stringify(userList))
                         if (userList.length) {
-                            if (userList[0].email[0] && userList[0].email[0].value === newEmail) {
+                            if (newEmail && userList[0].email[0] && userList[0].email[0].value === newEmail) {
                                 res.status(422).send({ message: 'Contact with email ' + kotoUser.email[0].value + ' already exists!' })
-                            } else if (userList[0].phone[0] && userList[0].phone[0].value === newPhone) {
+                            } else if (newPhone && userList[0].phone[0] && userList[0].phone[0].value === newPhone) {
                                 res.status(422).send({ message: 'Contact with phone ' + kotoUser.phone[0].value + ' already exists!' })
                             } else {
                                 res.status(422).send({ message: 'Contact already exists!' })
