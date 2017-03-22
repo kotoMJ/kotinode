@@ -21,7 +21,9 @@ exports.getWebRouter = function () {
         '/contact',
         '/photos',
         '/profile',
-        '/login'
+        '/login',
+        '/users',
+        'notify'
     ];
 
     web_router.get('*', (req, res, next) => {
