@@ -154,34 +154,45 @@ exports.createUser = function (req, res) {
         const newEmail = kotoUser.email[0].value
         const newPhone = kotoUser.phone[0].value
         let findArray = []
-        if (newEmail !== null) findArray.push({ 'email.value': newEmail })
-        if (newPhone !== null) findArray.push({ 'phone.value': newPhone })
-        KotoUserModel.find({ $or: findArray })
-            .exec(function (err, userList) {
-                if (err) {
-                    logger.err(req, 'save err ' + err)
-                    res.status(500).send(err)
-                } else {
-                    logger.log(req, 'save userList ' + userList.length)
-                    if (userList.length) {
-                        if (userList[0].email[0] && userList[0].email[0].value === newEmail) {
-                            res.status(500).send({ message: 'Contact with email ' + kotoUser.email[0].value + ' already exists!' })
-                        } else if (userList[0].phone[0] && userList[0].phone[0].value === newPhone) {
-                            res.status(500).send({ message: 'Contact with phone ' + kotoUser.phone[0].value + ' already exists!' })
-                        } else {
-                            res.status(500).send({ message: 'Contact already exists!' })
-                        }
+        if (newEmail) findArray.push({ 'email.value': newEmail })
+        if (newPhone) findArray.push({ 'phone.value': newPhone })
+        logger.log(req, 'findArray:' + JSON.stringify(findArray))
+        if (findArray.length > 0) {
+            KotoUserModel.find({ $or: findArray })
+                .exec(function (err, userList) {
+                    if (err) {
+                        logger.err(req, 'save err ' + err)
+                        res.status(500).send(err)
                     } else {
-                        logger.log(req, 'save - doing ...')
-                        kotoUser.save(function (err, result) {
-                            if (err)
-                                res.status(500).send(err);
-                            else
-                                res.status(200).json({ message: 'KotoUser created: ' + result._id });
-                        });
+                        logger.log(req, 'userList:' + JSON.stringify(userList))
+                        if (userList.length) {
+                            if (userList[0].email[0] && userList[0].email[0].value === newEmail) {
+                                res.status(422).send({ message: 'Contact with email ' + kotoUser.email[0].value + ' already exists!' })
+                            } else if (userList[0].phone[0] && userList[0].phone[0].value === newPhone) {
+                                res.status(422).send({ message: 'Contact with phone ' + kotoUser.phone[0].value + ' already exists!' })
+                            } else {
+                                res.status(422).send({ message: 'Contact already exists!' })
+                            }
+                        } else {
+                            logger.log(req, 'save - doing ...')
+                            kotoUser.save(function (err, result) {
+                                if (err)
+                                    res.status(500).send(err);
+                                else
+                                    res.status(200).json({ message: 'KotoUser created: ' + result._id });
+                            });
+                        }
                     }
-                }
+                });
+        } else {
+            logger.log(req, 'save (no EMAIL nor PHONE) - doing ...')
+            kotoUser.save(function (err, result) {
+                if (err)
+                    res.status(500).send(err);
+                else
+                    res.status(200).json({ message: 'KotoUser created: ' + result._id });
             });
+        }
 
     }
 };
@@ -200,37 +211,49 @@ exports.replaceUserById = function (req, res) {
         const newEmail = kotoUser.email[0].value
         const newPhone = kotoUser.phone[0].value
         let findArray = []
-        if (newEmail !== null) findArray.push({ 'email.value': newEmail })
-        if (newPhone !== null) findArray.push({ 'phone.value': newPhone })
+        if (newEmail) findArray.push({ 'email.value': newEmail })
+        if (newPhone) findArray.push({ 'phone.value': newPhone })
         logger.log(req, 'findArray:' + JSON.stringify(findArray))
-        KotoUserModel.find({ $and: [{ $or: findArray }, { '_id': { $ne: id } }] })
-            .exec(function (err, userList) {
-                if (err) {
-                    logger.err(req, 'save err ' + err)
-                    res.status(500).send(err)
-                } else {
-                    logger.log(req, 'save userList ' + userList.length)
-                    if (userList.length) {
-                        if (userList[0].email[0] && userList[0].email[0].value === newEmail) {
-                            res.status(500).send({ message: 'Contact with email ' + kotoUser.email[0].value + ' already exists!' })
-                        } else if (userList[0].phone[0] && userList[0].phone[0].value === newPhone) {
-                            res.status(500).send({ message: 'Contact with phone ' + kotoUser.phone[0].value + ' already exists!' })
-                        } else {
-                            res.status(500).send({ message: 'Contact already exists!' })
-                        }
+        if (findArray.length > 0) {
+            KotoUserModel.find({ $and: [{ $or: findArray }, { '_id': { $ne: id } }] })
+                .exec(function (err, userList) {
+                    if (err) {
+                        logger.err(req, 'update err ' + err)
+                        res.status(500).send(err)
                     } else {
-                        logger.log(req, 'saving: ' + JSON.stringify(payload))
-                        KotoUserModel.update({ _id: id }, payload, { runValidators: true }, function (err, result) {
-                            if (err)
-                                res.status(500).send(err);
-                            else {
-                                logger.log(req, JSON.stringify(result))
-                                res.status(200).json({ message: 'KotoUser updated: ' + id });
+                        logger.log(req, 'update userList ' + userList.length)
+                        if (userList.length) {
+                            if (userList[0].email[0] && userList[0].email[0].value === newEmail) {
+                                res.status(422).send({ message: 'Contact with email ' + kotoUser.email[0].value + ' already exists!' })
+                            } else if (userList[0].phone[0] && userList[0].phone[0].value === newPhone) {
+                                res.status(422).send({ message: 'Contact with phone ' + kotoUser.phone[0].value + ' already exists!' })
+                            } else {
+                                res.status(422).send({ message: 'Contact already exists!' })
                             }
-                        });
+                        } else {
+                            logger.log(req, 'update - doing ...')
+                            KotoUserModel.update({ _id: id }, payload, { runValidators: true }, function (err, result) {
+                                if (err)
+                                    res.status(500).send(err);
+                                else {
+                                    logger.log(req, JSON.stringify(result))
+                                    res.status(200).json({ message: 'KotoUser updated: ' + id });
+                                }
+                            });
+                        }
                     }
+                });
+        } else {
+            logger.log(req, 'update (no EMAIL nor PHONE) - doing ...')
+            KotoUserModel.update({ _id: id }, payload, { runValidators: true }, function (err, result) {
+                if (err)
+                    res.status(500).send(err);
+                else {
+                    logger.log(req, JSON.stringify(result))
+                    res.status(200).json({ message: 'KotoUser updated: ' + id });
                 }
             });
+        }
     }
 };
 
