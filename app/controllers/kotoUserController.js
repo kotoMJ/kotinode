@@ -63,7 +63,10 @@ exports.getUserList = function (req, res) {
     const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
 
     setTimeout(function () {
-        KotoUserModel.find().sort({ date: constants.DESC_SORT_ORDER }).exec(function (err, userList) {
+        KotoUserModel.find().sort({
+            'address.municipality': constants.ASC_SORT_ORDER,
+            'address.houseNumber': constants.ASC_SORT_ORDER,
+        }).exec(function (err, userList) {
             if (err) {
                 res.status(500).send(err)
             } else {
@@ -116,8 +119,7 @@ exports.getAllTags = function (req, res) {
             for (var index in userList) {
                 tagList = tagList.concat(userList[index].tagList)
             }
-            logger.log(req, "list:" + tagList);
-            res.status(200).jsonWrapped(Array.from(new Set(tagList)));
+            res.status(200).jsonWrapped(Array.from(new Set(tagList)).sort());
         }
     });
 }
