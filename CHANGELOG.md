@@ -1,4 +1,6 @@
 ## Release notes for KoTiPoint ecosystem.
+###2.3.4
+* Add client with fixed bug: editing of the user loose users tags
 ###2.3.3
 * Add condition that email or phone number are uniques. Therefore can be only once in DB!
  This shoud prevent sending multiplicated notifications to one email/phone.
