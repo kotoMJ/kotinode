@@ -32,9 +32,8 @@ exports.postKotoLogin = function (req, res) {
         var profile = {
             'user': currentUser.email,
             'role': currentUser.role,
-            'apiKey': kotiConfig.api_key
         };
-        var jwtToken = jwt.sign(profile, kotiConfig.api_key, { 'expiresIn': 20 * 60 });  // expires in 1200 sec (20 min)
+        var jwtToken = jwt.sign(profile, kotiConfig.api_key, { 'expiresIn': kotiConfig.api_expire });  // expires in 1200 sec (20 min)
         res.status(200).json({
             id_token: jwtToken
         });
@@ -52,4 +51,28 @@ exports.postKotoLogin = function (req, res) {
 function alertClients(type, msg) {
     console.log("SocketIO alerting clients: ", msg);
     koTio.sockets.emit('alert', { message: msg, time: new Date(), type });
+}
+
+exports.verifyToken = function (req, res) {
+    try {
+        var apiToken = req.headers['apikToken'];
+        if (apiToken === undefined) {
+            res.status(401).json({ "message": "Missing or incomplete authentication parameters" })
+            return false
+        } else {
+            jwt.verify(token, cert, function (err, decoded) {
+                if (decoded) {
+                    logger.log(req, 'accessing USER:' + decoded.user + ' ROLE:' + decoded.role)
+                    return true
+                } else {
+                    logger.err(req, 'verify failed:' + err)
+                    res.status(403).json({ "message": "Missing permissions!" })
+                    return false
+                }
+            });
+        }
+    } catch (Exception) {
+        logger.err(req, Exception)
+        return false
+    }
 }

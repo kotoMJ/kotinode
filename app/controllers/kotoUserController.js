@@ -1,13 +1,7 @@
 var logger = require('../utils/logger.js');
-var apiKeyUtils = require('../utils/apiKeyUtils')
+var apiKeyUtils = require('./kotoAuthController')
 var KotoUserModel = require('../models/kotoUserModel');
 var constants = require('../utils/const')
-
-// Alerts all clients via socket io.
-function alertClients(type, msg) {
-    console.log("SocketIO alerting clients: ", msg);
-    koTio.sockets.emit('alert', { message: msg, time: new Date(), type });
-}
 
 exports.getUserList = function (req, res) {
     logger.log(req, 'getUserList');

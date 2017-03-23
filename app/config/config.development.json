@@ -4,6 +4,8 @@
     "mongoPass": "",
     "port" : 8080,
     "api_key": "x3c4ku3s7g",
+  "api_expire": 600,
+  //10*60: 10min
     "adminUser": "a@a.cz",
     "adminPassword": "1234",
     "userList": [
