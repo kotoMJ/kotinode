@@ -1,5 +1,6 @@
 var express = require('express');
 
+var kotoAuthController = require('../app/controllers/kotoAuthController');
 var kotoEventController = require('../app/controllers/kotoEventController');
 var kotoGalleryController = require('../app/controllers/kotoGalleryController');
 var kotoAdminController = require('../app/controllers/kotoAdminController');
@@ -38,13 +39,13 @@ exports.getApiRouter = function () {
 // KOTO LOGIN - JWT AUTH
 // ----------------------------------------------------
     api_router.route('/')
-        .options(kotoUserController.preflight);
+        .options(kotoAuthController.preflight);
 
     api_router.route('/kotinode/login')
         .post(function (req, res, next) {
-            kotoUserController.postKotoLogin(req, res);
+            kotoAuthController.postKotoLogin(req, res);
         })
-        .options(kotoUserController.preflight);
+        .options(kotoAuthController.preflight);
 // ----------------------------------------------------
 // KOTO ADMIN
 // ----------------------------------------------------
