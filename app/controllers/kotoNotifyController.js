@@ -1,5 +1,5 @@
 var logger = require('../utils/logger.js');
-var apiKeyUtils = require('../utils/apiKeyUtils')
+var apiKeyUtils = require('../controllers/kotoAuthController')
 var notifyUtils = require('../utils/notifyUtils')
 var kotoUserController = require('../controllers/kotoUserController')
 var KotoNotifyModel = require('../models/kotoNotifyModel');
@@ -71,7 +71,7 @@ exports.notify = function (req, res) {
             } else {
                 let kotoNotify = new KotoNotifyModel(payload);
                 kotoNotify.messageArriveDateTime = new Date()
-                kotoNotify.sender = 'N/A'//req.headers['apikey']
+                kotoNotify.sender = apiKeyUtils.getTokenPayload(req, res)
                 if (payload.tagList === undefined) throw Error('Missing tagList parameter!')
                 if (payload.notificationType === undefined) throw Error('Missing notificationType parameter!')
                 if (payload.messageSubject === undefined) throw Error('Missing messageSubject parameter!')

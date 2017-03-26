@@ -33,7 +33,7 @@ exports.postKotoLogin = function (req, res) {
             'user': currentUser.email,
             'role': currentUser.role,
         };
-        var jwtToken = jwt.sign(profile, kotiConfig.api_key, { 'expiresIn': kotiConfig.api_expire });  // expires in 1200 sec (20 min)
+        var jwtToken = jwt.sign(profile, kotiConfig.api_key, { 'expiresIn': kotiConfig.api_expire });  // 5*60: 5min
         res.status(200).json({
             id_token: jwtToken
         });
@@ -55,15 +55,21 @@ function alertClients(type, msg) {
 
 exports.verifyToken = function (req, res) {
     try {
-        var apiToken = req.headers['apikToken'];
+        var apiToken = req.headers['apitoken'];
         if (apiToken === undefined) {
             res.status(401).json({ "message": "Missing or incomplete authentication parameters" })
             return false
         } else {
-            jwt.verify(token, cert, function (err, decoded) {
+            jwt.verify(apiToken, kotiConfig.api_key, function (err, decoded) {
                 if (decoded) {
-                    logger.log(req, 'accessing USER:' + decoded.user + ' ROLE:' + decoded.role)
-                    return true
+                    const now = new Date().getTime() / 1000;
+                    if (now > userProfile.exp) {
+                        logger.log(req, 'Expired token for USER:' + decoded.user + ' ROLE:' + decoded.role)
+                        return false
+                    } else {
+                        logger.log(req, 'Valid token for USER:' + decoded.user + ' ROLE:' + decoded.role)
+                        return true
+                    }
                 } else {
                     logger.err(req, 'verify failed:' + err)
                     res.status(403).json({ "message": "Missing permissions!" })
@@ -74,5 +80,28 @@ exports.verifyToken = function (req, res) {
     } catch (Exception) {
         logger.err(req, Exception)
         return false
+    }
+}
+
+exports.getTokenPayload = function (req, res) {
+    try {
+        var apiToken = req.headers['apiToken'];
+        if (apiToken === undefined) {
+            return null
+        } else {
+            jwt.verify(apiToken, kotiConfig.api_key, function (err, decoded) {
+                if (decoded) {
+                    const now = new Date().getTime() / 1000;
+                    logger.log(req, 'Get payload for USER:' + decoded.user + ' ROLE:' + decoded.role)
+                    return decoded
+                } else {
+                    logger.err(req, 'verify failed:' + err)
+                    return null
+                }
+            });
+        }
+    } catch (Exception) {
+        logger.err(req, Exception)
+        return null
     }
 }
