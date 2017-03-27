@@ -22,7 +22,7 @@ exports.reset_gallery = function (req, res) {
     var galleryPath = 'public/gallery/' + resolutionType + '/'
 
     logger.log(req, "expected key:" + kotiConfig.api_key + ", obtained key:" + apiKey + ", match:" + (kotiConfig.api_key === apiKey));
-    if (kotiConfig.api_key === apiKey) {
+    apiKeyUtils.verifyToken(req, res, () => {
         KotoGallerySummaryModel.remove({}, function (err, result) {
             KotoGalleryItemModel.remove({}, function (err, result) {
                 if (err == null) {
@@ -91,9 +91,7 @@ exports.reset_gallery = function (req, res) {
                 res.json({message: 'Insert real done'});
             });
         });
-    } else {
-        res.json({message: 'admin'});
-    }
+    })
 }
 
 exports.sortGallerySummary = function (req, res) {
@@ -129,7 +127,7 @@ exports.drop = function (req, res) {
     var apiKey = req.headers['apikey'];
     var rid = req.headers['rid'];
     logger.log(req, "expected key:" + kotiConfig.api_key + ", obtained key:" + apiKey + ", match:" + (kotiConfig.api_key === apiKey));
-    if (kotiConfig.api_key === apiKey) {
+    apiKeyUtils.verifyToken(req, res, () => {
 
         //EVENT
         logger.log(req, "Ready to drop DB...")
@@ -143,16 +141,14 @@ exports.drop = function (req, res) {
             res.json({message: 'DB dropped and EVENT reinitialized'});
         });
 
-    } else {
-        res.json({message: 'admin'});
-    }
+    })
 }
 
 exports.reset_event = function (req, res) {
     var apiKey = req.headers['apikey'];
     var rid = req.headers['rid'];
     logger.log(req, "expected key:" + kotiConfig.api_key + ", obtained key:" + apiKey + ", match:" + (kotiConfig.api_key === apiKey));
-    if (kotiConfig.api_key === apiKey) {
+    apiKeyUtils.verifyToken(req, res, () => {
 
         //EVENT
         var fixedEvents = JSON.parse(fs.readFileSync('app/data/event.list.empty.json', 'utf8'));
@@ -214,9 +210,7 @@ exports.reset_event = function (req, res) {
         });
 
 
-    } else {
-        res.json({message: 'admin'});
-    }
+    })
 }
 
 exports.sortEvent = function (req, res) {
@@ -249,10 +243,7 @@ exports.sortEvent = function (req, res) {
 }
 
 exports.reset_user = function (req, res) {
-    var apiKey = req.headers['apikey'];
-    if (kotiConfig.api_key === undefined) {
-        res.status(401).json({"message": "Missing or incomplete authentication parameters"})
-    } else if (kotiConfig.api_key === apiKey) {
+    apiKeyUtils.verifyToken(req, res, () => {
 
         //USER INIT
         var fixedUsers = JSON.parse(fs.readFileSync('app/data/user.list.json', 'utf8'));
@@ -283,7 +274,5 @@ exports.reset_user = function (req, res) {
             };
         });
 
-    } else {
-        res.status(403).json({"message": "Missing permissions!"})
-    }
+    })
 }
