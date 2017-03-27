@@ -10,7 +10,7 @@ var constants = require('../utils/const')
  * @param res
  */
 exports.notifyEmail = function (req, res) {
-    if (apiKeyUtils.verifyToken(req, res)) {
+    apiKeyUtils.verifyToken(req, res, () => {
         logger.log(req, "exports.notifyEmail");
         var payload = req.body
         if (payload.to !== undefined
@@ -28,7 +28,7 @@ exports.notifyEmail = function (req, res) {
         } else {
             res.status(401).json({ "message": "Missing or incomplete message parameters in body!" })
         }
-    }
+    })
 };
 
 /**
@@ -36,7 +36,7 @@ exports.notifyEmail = function (req, res) {
  * @param res
  */
 exports.notifySms = function (req, res) {
-    if (apiKeyUtils.verifyToken(req, res)) {
+    apiKeyUtils.verifyToken(req, res, () => {
         logger.log(req, "exports.notifySms");
         var payload = req.body
         if (payload.number !== undefined
@@ -55,13 +55,14 @@ exports.notifySms = function (req, res) {
         else {
             res.status(401).json({ "message": "Missing or incomplete message parameters in body!" })
         }
-    }
+    })
 };
 
 
 exports.notify = function (req, res) {
-    if (apiKeyUtils.verifyToken(req, res)) {
+    apiKeyUtils.verifyToken(req, res, (tokenPayload) => {
         try {
+            logger.log(req, 'tokenPayload:' + tokenPayload)
             logger.log(req, "exports.notify");
             logger.log(req, JSON.stringify(req.body))
             const payload = req.body
@@ -71,7 +72,10 @@ exports.notify = function (req, res) {
             } else {
                 let kotoNotify = new KotoNotifyModel(payload);
                 kotoNotify.messageArriveDateTime = new Date()
-                kotoNotify.sender = apiKeyUtils.getTokenPayload(req, res)
+                kotoNotify.sender = 'N/A'
+                if (tokenPayload) {
+                    kotoNotify.sender = tokenPayload.user
+                }
                 if (payload.tagList === undefined) throw Error('Missing tagList parameter!')
                 if (payload.notificationType === undefined) throw Error('Missing notificationType parameter!')
                 if (payload.messageSubject === undefined) throw Error('Missing messageSubject parameter!')
@@ -85,8 +89,6 @@ exports.notify = function (req, res) {
                     userList.forEach(function (user, index) {
                         logger.log(req, "USER:" + JSON.stringify(user))
                         logger.log(req, "INDEX:" + index)
-                        //logger.log(req, JSON.stringify(kotoNotify))
-
                         /**
                          *  SMS
                          */
@@ -133,7 +135,7 @@ exports.notify = function (req, res) {
                                                 kotoNotify.save(function (err, result) {
                                                     logger.log(req, "email userListSize:" + userListSize)
                                                     if (err)
-                                                        throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
+                                                        throw Error(`Unable to save ${JSON.stringify(kotoNotify) + err}`)
                                                     else {
                                                         res.status(200).json({ "message": `${userListSize} users notified via: ${kotoNotify.notificationType} ` })
                                                     }
@@ -161,11 +163,11 @@ exports.notify = function (req, res) {
                 res.status(403).json({ "message": payloadException.message })
             }
         }
-    }
+    })
 }
 
 exports.getNotificationList = function (req, res) {
-    if (apiKeyUtils.verifyToken(req, res)) {
+    apiKeyUtils.verifyToken(req, res, () => {
         logger.log(req, 'getUserList');
         const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
         setTimeout(function () {
@@ -199,12 +201,12 @@ exports.getNotificationList = function (req, res) {
                 }
             });
         }, delay);// delay to simulate slow connection!
-    }
+    })
 };
 
 
 exports.getSmsCredit = function (req, res) {
-    if (apiKeyUtils.verifyToken(req, res)) {
+    apiKeyUtils.verifyToken(req, res, () => {
         logger.log(req, 'getSmsCredit');
         setTimeout(function () {
             notifyUtils.checkSmsStatus((responseBody) => {
@@ -219,16 +221,17 @@ exports.getSmsCredit = function (req, res) {
                     res.status(500).send(err)
                 })
         }, 0);
-    }
-};
+    })
+}
+
 
 exports.deleteNotify = function (req, res) {
-    if (apiKeyUtils.verifyToken(req, res)) {
+    apiKeyUtils.verifyToken(req, res, () => {
         KotoNotifyModel.remove({}, function (err) {
             if (err)
                 res.status(500).send(err);
             else
                 res.status(200).json({ message: 'All KotoNotify deleted' });
-        });
-    }
+        })
+    })
 };

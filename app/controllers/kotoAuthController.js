@@ -34,6 +34,7 @@ exports.postKotoLogin = function (req, res) {
             'role': currentUser.role,
         };
         var jwtToken = jwt.sign(profile, kotiConfig.api_key, { 'expiresIn': kotiConfig.api_expire });  // 5*60: 5min
+        logger.log(req, 'jwtOut:' + jwtToken)
         res.status(200).json({
             id_token: jwtToken
         });
@@ -53,55 +54,32 @@ function alertClients(type, msg) {
     koTio.sockets.emit('alert', { message: msg, time: new Date(), type });
 }
 
-exports.verifyToken = function (req, res) {
+
+exports.verifyToken = function (req, res, tokenVerifiedCallback) {
     try {
         var apiToken = req.headers['apitoken'];
+        logger.log(req, 'verifyToken.jwtIn:' + apiToken)
         if (apiToken === undefined) {
-            res.status(401).json({ "message": "Missing or incomplete authentication parameters" })
-            return false
+            res.status(403).json({ "message": "Missing or incomplete authentication parameters" })
         } else {
             jwt.verify(apiToken, kotiConfig.api_key, function (err, decoded) {
                 if (decoded) {
                     const now = new Date().getTime() / 1000;
-                    if (now > userProfile.exp) {
+                    if (now > apiToken.exp) {
                         logger.log(req, 'Expired token for USER:' + decoded.user + ' ROLE:' + decoded.role)
-                        return false
+                        res.status(401).json({ "message": "Authentication parameters expired!" })
                     } else {
                         logger.log(req, 'Valid token for USER:' + decoded.user + ' ROLE:' + decoded.role)
-                        return true
+                        tokenVerifiedCallback(decoded)
                     }
                 } else {
-                    logger.err(req, 'verify failed:' + err)
+                    logger.err(req, 'verifyToken.verify failed:' + err)
                     res.status(403).json({ "message": "Missing permissions!" })
-                    return false
                 }
             });
         }
     } catch (Exception) {
         logger.err(req, Exception)
-        return false
-    }
-}
-
-exports.getTokenPayload = function (req, res) {
-    try {
-        var apiToken = req.headers['apiToken'];
-        if (apiToken === undefined) {
-            return null
-        } else {
-            jwt.verify(apiToken, kotiConfig.api_key, function (err, decoded) {
-                if (decoded) {
-                    const now = new Date().getTime() / 1000;
-                    logger.log(req, 'Get payload for USER:' + decoded.user + ' ROLE:' + decoded.role)
-                    return decoded
-                } else {
-                    logger.err(req, 'verify failed:' + err)
-                    return null
-                }
-            });
-        }
-    } catch (Exception) {
-        logger.err(req, Exception)
-        return null
+        res.status(403).json({ "message": "Unexpected authentization error!" })
     }
 }

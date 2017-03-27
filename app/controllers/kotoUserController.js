@@ -70,32 +70,31 @@ exports.getAllTags = function (req, res) {
 }
 
 exports.deleteUserById = function (req, res) {
-    if (apiKeyUtils.verifyToken(req, res)) {
+    apiKeyUtils.verifyToken(req, res, () => {
         KotoUserModel.remove({
             _id: req.params.user_id
         }, function (err, deletedUser) {
             if (err)
                 res.status(500).send(err);
-
             res.status(200).json({ message: 'KotoUser ' + deletedUser + ' deleted' });
-        });
-    }
+        })
+    })
 };
 
 
 exports.deleteUsers = function (req, res) {
-    if (apiKeyUtils.verifyToken(req, res)) {
+    apiKeyUtils.verifyToken(req, res, () => {
         KotoUserModel.remove({}, function (err) {
             if (err)
                 res.status(500).send(err);
             else
                 res.status(200).json({ message: 'All KotoUser deleted' });
-        });
-    }
-};
+        })
+    })
+}
 
 exports.createUser = function (req, res) {
-    if (apiKeyUtils.verifyToken(req, res)) {
+    apiKeyUtils.verifyToken(req, res, () => {
         logger.log(req, JSON.stringify(req.body));
         const kotoUser = new KotoUserModel(req.body);
         const newEmail = kotoUser.email[0].value
@@ -140,12 +139,11 @@ exports.createUser = function (req, res) {
                     res.status(200).json({ message: 'KotoUser created: ' + result._id });
             });
         }
-
-    }
+    })
 };
 
 exports.replaceUserById = function (req, res) {
-    if (apiKeyUtils.verifyToken(req, res)) {
+    apiKeyUtils.verifyToken(req, res, () => {
         const id = req.params.user_id;
         const payload = req.body;
         if (payload.tagList.indexOf(null) != -1) {
@@ -201,6 +199,6 @@ exports.replaceUserById = function (req, res) {
                 }
             });
         }
-    }
+    })
 };
 
