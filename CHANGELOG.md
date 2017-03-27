@@ -1,4 +1,7 @@
 ## Release notes for KoTiPoint ecosystem.
+###2.4.0
+* Improve security by proper using JWT token.
+* Add web client 1.4.0 with JWT improvement
 ###2.3.4
 * Add client with fixed bug: editing of the user loose users tags
 ###2.3.3

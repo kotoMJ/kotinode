@@ -1,5 +1,6 @@
 var express = require('express');
 
+var kotoAuthController = require('../app/controllers/kotoAuthController');
 var kotoEventController = require('../app/controllers/kotoEventController');
 var kotoGalleryController = require('../app/controllers/kotoGalleryController');
 var kotoAdminController = require('../app/controllers/kotoAdminController');
@@ -22,7 +23,7 @@ exports.getApiRouter = function () {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Credentials", "true");
         res.header("Access-Control-Allow-Methods", "DELETE,GET,HEAD,OPTIONS,POST,PUT");
-        res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers,Access-Control-Allow-Origin, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, ApiKey");
+        res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers,Access-Control-Allow-Origin, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, ApiToken");
 
         //log basic incomming params
         logger.log(req, 'params:' + JSON.stringify(req.params));
@@ -38,13 +39,13 @@ exports.getApiRouter = function () {
 // KOTO LOGIN - JWT AUTH
 // ----------------------------------------------------
     api_router.route('/')
-        .options(kotoUserController.preflight);
+        .options(kotoAuthController.preflight);
 
     api_router.route('/kotinode/login')
         .post(function (req, res, next) {
-            kotoUserController.postKotoLogin(req, res);
+            kotoAuthController.postKotoLogin(req, res);
         })
-        .options(kotoUserController.preflight);
+        .options(kotoAuthController.preflight);
 // ----------------------------------------------------
 // KOTO ADMIN
 // ----------------------------------------------------

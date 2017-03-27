@@ -51,13 +51,13 @@ exports.notifyEmail = function (emailTo, emailSubject, emailText, successCallbac
             if (error) {
                 //logger.log(req, error);
                 //res.status(500).json({ "message": 'Email server is not ready to send email now.' });
-                failureCallback('Email server is not ready to send email now.')
+                failureCallback('Email server is not ready to send email now:' + error)
             } else {
                 transporter.sendMail(mailOptions, function (error, info) {
                     if (error) {
                         //console.log(error);
                         //res.status(500).json({ "message": 'Unexpected error when sending email' });
-                        failureCallback('Unexpected error when sending email')
+                        failureCallback('Unexpected error when sending email:' + error)
                     } else {
                         //console.log('Message sent: ' + info.response);
                         //res.status(200).json({ "message": info.response });
