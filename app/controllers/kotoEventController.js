@@ -54,11 +54,11 @@ exports.createEventBundle = function (req, res) {
         var kotoevent = new KotoEventModel(payload);
 
         // save the bear and check for errors
-        kotoevent.save(function (err) {
+        kotoevent.save(function (err, eventBundle) {
             if (err)
                 res.send(err)
             else
-                res.json({ message: 'KotoEvent created!' });
+                res.json({ message: eventBundle._id });
         });
     })
 
@@ -73,7 +73,7 @@ exports.deleteEventBundle = function (req, res) {
             if (err)
                 res.status(500).send(err);
 
-            res.json({ message: 'KotoEventBundle deleted' });
+            res.json({ message: req.params.bundle_id });
         });
     })
 };
@@ -93,10 +93,17 @@ exports.cleanupEventBundleAll = function (req, res) {
 exports.addEventToBundle = function (req, res) {
     apiKeyUtils.verifyToken(req, res, () => {
         var payload = req.body//JSON.parse(JSON.stringify(req.body));
-        payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
+        logger.log(req, JSON.stringify(req.body))
+        if (payload.date !== null) {
+            payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
+        }
+        if (payload.time !== null) {
+            payload.time = moment(payload.time, "HH:mm").toDate();
+        }
+
         KotoEventModel.update({ _id: req.params.bundle_id }, { $push: { eventList: payload } }, { upsert: false }, function (err, raw) {
             if (err) {
-                logger.log(req, 'Error!');
+                logger.err(req, err);
                 res.status(500).json({ message: err });
             } else {
                 logger.log(req, 'Noerror!');

@@ -1,4 +1,8 @@
 ## Release notes for KoTiPoint ecosystem.
+###2.5.0
+* Refactor internal work with the NEWS
+* Add missing date information to NEWS web-client
+
 ###2.4.0
 * Improve security by proper using JWT token.
 * Add web client 1.4.0 with JWT improvement

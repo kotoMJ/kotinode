@@ -53,11 +53,6 @@ exports.getApiRouter = function () {
         .delete(kotoAdminController.drop)
         .purge(kotoAdminController.drop);
 
-    api_router.route('/kotinode/admin/event')
-        .patch(kotoAdminController.sortEvent)
-        .delete(kotoAdminController.reset_event)
-        .purge(kotoAdminController.reset_event);
-
     api_router.route('/kotinode/admin/gallery')
         .patch(kotoAdminController.sortGallerySummary)
         .delete(kotoAdminController.reset_gallery)
@@ -83,20 +78,21 @@ exports.getApiRouter = function () {
 
     api_router.route('/kotinode/event/bundle')
         .get(kotoEventController.getBundleList)
-        .post(kotoEventController.createEventBundle);
+        .post(kotoEventController.createEventBundle)
 
     api_router.route('/kotinode/event/bundle/:bundle_id')
         .put(kotoEventController.addEventToBundle)
-        .delete(kotoEventController.deleteEventBundle);
+        .delete(kotoEventController.deleteEventBundle)
 
     api_router.route('/kotinode/event')
-        .get(kotoEventController.getEventList);
+        .get(kotoEventController.getEventList)
+        .purge(kotoEventController.cleanupEventBundleAll)
 
     api_router.route('/kotinode/event/fixed')
         .get(kotoEventController.getEventFixed);
 
     api_router.route('/kotinode/event/:event_id/bundle/:bundle_id')
-        .delete(kotoEventController.deleteEventFromBundle);
+        .delete(kotoEventController.deleteEventFromBundle)
 
 // ----------------------------------------------------
 // KOTO NOTIFY
