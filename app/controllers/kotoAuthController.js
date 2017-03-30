@@ -74,7 +74,11 @@ exports.verifyToken = function (req, res, tokenVerifiedCallback) {
                     }
                 } else {
                     logger.err(req, 'verifyToken.verify failed:' + err)
-                    res.status(403).json({ "message": "Missing permissions!" })
+                    if (err && err.name === 'TokenExpiredError') {
+                        res.status(401).json({ "message": "Authentication parameters expired!" })
+                    } else {
+                        res.status(403).json({ "message": "Missing permissions!" })
+                    }
                 }
             });
         }

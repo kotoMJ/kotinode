@@ -10,6 +10,7 @@ var PropertiesReader = require('properties-reader')
 var logger = require('../utils/logger.js');
 var fileUtils = require('../utils/fileUtils.js');
 var stringUtils = require('../utils/stringUtils.js');
+var apiKeyUtils = require('../controllers/kotoAuthController')
 var moment = require('moment');
 
 exports.reset_gallery = function (req, res) {

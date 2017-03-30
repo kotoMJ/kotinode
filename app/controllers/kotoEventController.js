@@ -54,11 +54,11 @@ exports.createEventBundle = function (req, res) {
         var kotoevent = new KotoEventModel(payload);
 
         // save the bear and check for errors
-        kotoevent.save(function (err) {
+        kotoevent.save(function (err, eventBundle) {
             if (err)
                 res.send(err)
             else
-                res.json({ message: 'KotoEvent created!' });
+                res.json({ message: eventBundle._id });
         });
     })
 
@@ -73,7 +73,7 @@ exports.deleteEventBundle = function (req, res) {
             if (err)
                 res.status(500).send(err);
 
-            res.json({ message: 'KotoEventBundle deleted' });
+            res.json({ message: req.params.bundle_id });
         });
     })
 };
