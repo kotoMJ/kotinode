@@ -97,6 +97,10 @@ exports.addEventToBundle = function (req, res) {
         if (payload.date !== null) {
             payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
         }
+        if (payload.time !== null) {
+            payload.time = moment(payload.time, "HH:mm").toDate();
+        }
+
         KotoEventModel.update({ _id: req.params.bundle_id }, { $push: { eventList: payload } }, { upsert: false }, function (err, raw) {
             if (err) {
                 logger.err(req, err);
