@@ -93,10 +93,13 @@ exports.cleanupEventBundleAll = function (req, res) {
 exports.addEventToBundle = function (req, res) {
     apiKeyUtils.verifyToken(req, res, () => {
         var payload = req.body//JSON.parse(JSON.stringify(req.body));
-        payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
+        logger.log(req, JSON.stringify(req.body))
+        if (payload.date !== null) {
+            payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
+        }
         KotoEventModel.update({ _id: req.params.bundle_id }, { $push: { eventList: payload } }, { upsert: false }, function (err, raw) {
             if (err) {
-                logger.log(req, 'Error!');
+                logger.err(req, err);
                 res.status(500).json({ message: err });
             } else {
                 logger.log(req, 'Noerror!');
