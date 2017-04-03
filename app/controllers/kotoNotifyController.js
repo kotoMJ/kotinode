@@ -103,7 +103,7 @@ exports.notify = function (req, res) {
                                                 kotoNotify.messageProcessDateTime = new Date()
                                                 kotoNotify.save(function (err, result) {
                                                     if (err)
-                                                        throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
+                                                        throw Error('Unable to save [sms]:' + JSON.stringify(kotoNotify))
                                                     else {
                                                         logger.log(req, "sms userListSize:" + userListSize)
                                                         res.status(200).json({ "message": `${userListSize} users notified via: ${kotoNotify.notificationType} ` })
@@ -113,7 +113,7 @@ exports.notify = function (req, res) {
                                         }
                                     },
                                     () => {
-                                        throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
+                                        throw Error('Unable to process sms notification:' + JSON.stringify(kotoNotify))
                                     })
                             } else {
                                 notificationSentGroup = notificationSentGroup + 1
@@ -134,18 +134,21 @@ exports.notify = function (req, res) {
                                                 kotoNotify.messageProcessDateTime = new Date()
                                                 kotoNotify.save(function (err, result) {
                                                     logger.log(req, "email userListSize:" + userListSize)
-                                                    if (err)
-                                                        throw Error(`Unable to save ${JSON.stringify(kotoNotify) + err}`)
+                                                    if (err) {
+                                                        logger.log(req, error)
+                                                        throw Error('Unable to save [email]:' + JSON.stringify(kotoNotify))
+                                                    }
                                                     else {
-                                                        res.status(200).json({ "message": `${userListSize} users notified via: ${kotoNotify.notificationType} ` })
+                                                        res.status(200).json({ "message": `${userListSize} users notified via: ${kotoNotify.notificationType}` })
                                                     }
                                                 })
                                             }
 
                                         }
                                     },
-                                    () => {
-                                        throw Error(`Unable to save ${JSON.stringify(kotoNotify)}`)
+                                    (error) => {
+                                        logger.err(req, error)
+                                        throw Error('Unable process email notification:' + JSON.stringify(kotoNotify))
                                     }
                                 )
                             } else {
