@@ -130,7 +130,7 @@ exports.notify = function (req, res) {
                                     () => {
                                         if ((index + 1) === userListSize) {//check sms for last user
                                             notificationSentGroup = notificationSentGroup + 1
-                                            if (notificationTypeRange == notificationSentGroup) {//check if other groups (email) is done
+                                            if (notificationTypeRange == notificationSentGroup) {//check if other groups (sms) is done
                                                 kotoNotify.messageProcessDateTime = new Date()
                                                 kotoNotify.save(function (err, result) {
                                                     logger.log(req, "email userListSize:" + userListSize)
@@ -148,7 +148,18 @@ exports.notify = function (req, res) {
                                     },
                                     (error) => {
                                         logger.err(req, error)
-                                        throw Error('Unable process email notification:' + JSON.stringify(kotoNotify))
+                                        //throw Error('Unable process email notification:' + JSON.stringify(kotoNotify))
+                                        kotoNotify.messageProcessDateTime = new Date()
+                                        kotoNotify.messageSubject = '[EMAIL FAILURE]' + kotoNotify.messageSubject
+                                        kotoNotify.save(function (err, result) {
+                                            if (err) {
+                                                logger.log(req, error)
+                                                throw Error('Unable to save [email]:' + JSON.stringify(kotoNotify))
+                                            }
+                                            else {
+                                                res.status(500).json({ "message": 'Email unexpected failure' })
+                                            }
+                                        })
                                     }
                                 )
                             } else {
