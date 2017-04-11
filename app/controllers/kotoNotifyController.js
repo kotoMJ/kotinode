@@ -94,7 +94,7 @@ exports.notify = function (req, res) {
                          *  SMS
                          */
                         if (payload.notificationType.indexOf("sms") > -1) {
-                            if ((user.phone[0].value !== undefined) && (user.phone[0].value !== null)) {
+                            if ((user.phone[0].value !== undefined) && (user.phone[0].value !== null) && (user.phone[0].value !== "")) {
                                 notifyUtils.notifySms(req, '' + user.phone[0].countryCode + user.phone[0].value,
                                     payload.messageSubject + ' ' + payload.messageBody, gateway,
                                     () => {
@@ -125,7 +125,7 @@ exports.notify = function (req, res) {
                          *  EMAIL
                          */
                         if (payload.notificationType.indexOf("email") > -1) {
-                            if ((user.email[0].value !== undefined) && (user.email[0].value !== null)) {
+                            if ((user.email[0].value !== undefined) && (user.email[0].value !== null) && (user.email[0].value !== "")) {
                                 notifyUtils.notifyEmail(req, transporter, '' + user.email[0].value,
                                     payload.messageSubject, payload.messageBody,
                                     () => {
