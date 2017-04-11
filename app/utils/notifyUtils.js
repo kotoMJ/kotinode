@@ -13,7 +13,7 @@ exports.getEmailTransport = function (failureCallback) {
     } else {
         return nodemailer.createTransport({
             pool: true,
-            maxConnections: 2,
+            maxConnections: 4,
             host: nconf.get('email').rosti.smtp.host,
             port: nconf.get('email').rosti.smtp.port,
             requireTLS: true,
@@ -43,7 +43,7 @@ exports.getEmailTransport = function (failureCallback) {
  * @param successCallback - for example "250 Message Queued"
  * @param failureCallback
  */
-exports.notifyEmail = function (req, transporter, emailTo, emailSubject, emailText, successCallback, failureCallback) {
+notifyEmailOne = function (req, transporter, emailTo, emailSubject, emailText, successCallback, failureCallback) {
     nconf.file('email', './app/config/config.notify.json');
     if (nconf.get('email') === undefined) {
         failureCallback('Email config is missing on the kotoServer!')
@@ -58,29 +58,34 @@ exports.notifyEmail = function (req, transporter, emailTo, emailSubject, emailTe
         };
 
 
-        // verify connection configuration
-        transporter.verify(function (error, success) {
-            if (error) {
-                logger.log(req, 'Failed to verify: ' + error);
-                //res.status(500).json({ "message": 'Email server is not ready to send email now.' });
-                failureCallback('Email server is not ready to send email now:' + error)
-            } else {
-                transporter.sendMail(mailOptions, function (error, info) {
-                    if (error) {
-                        logger.log(req, 'Failed to sendMail: ' + error);
-                        //res.status(500).json({ "message": 'Unexpected error when sending email' });
-                        failureCallback('Unexpected error when sending email:' + error)
-                    } else {
-                        //console.log('Message sent: ' + info.response);
-                        //res.status(200).json({ "message": info.response });
-                        successCallback(info.response)
-                    }
-                    ;
-                });
-            }
-        });
-    }
+        try {
+            // verify connection configuration
+            transporter.verify(function (error, success) {
+                if (error) {
+                    logger.log(req, 'Failed to verify: ' + JSON.stringify(error));
+                    //res.status(500).json({ "message": 'Email server is not ready to send email now.' });
+                    //failureCallback('Email server is not ready to send email now:' + error)
+                    failureCallback('Failed to verify: ' + JSON.stringify(error))
+                } else {
+                    logger.log(req, 'Transporter verified.');
+                    transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                            logger.log(req, 'Failed to sendMail: ' + JSON.stringify(error));
+                            //res.status(500).json({ "message": 'Unexpected error when sending email' });
+                            failureCallback('Failed to sendMail: ' + JSON.stringify(error))
+                        } else {
+                            logger.log(req, 'Message sent with response: ' + info.response);
+                            //res.status(200).json({ "message": info.response });
+                            successCallback(info.response)
+                        }
+                    });
+                }
 
+            });
+        } catch (exception) {
+            failureCallback('Unexpected error when sending email:' + exception)
+        }
+    }
 }
 
 /**
@@ -96,7 +101,7 @@ exports.notifyEmail = function (req, transporter, emailTo, emailSubject, emailTe
  * @param successCallback - for example: "OK|9231583|420724811441"
  * @param failureCallback
  */
-exports.notifySms = function (req, phoneNumber, message, gateway, successCallback, failureCallback) {
+notifySmsOne = function (req, phoneNumber, message, gateway, successCallback, failureCallback) {
 
     //var finalHash = crypto.createHash('sha1').update(hashBase + message).digest('hex');
     nconf.file('sms', './app/config/config.notify.json');
@@ -169,5 +174,38 @@ exports.checkSmsStatus = function (successCallback, failureCallback) {
                 failureCallback(response)
             }
         });
+    }
+}
+
+
+exports.notifySmsUserOne = function (req, payload, user, successCallback) {
+    if ((user.phone[0].value !== undefined) && (user.phone[0].value !== null) && (user.phone[0].value !== "")) {
+        var gateway = (payload.urgent === undefined || payload.urgent === false || payload.urgent === 'false') ? 'lowcost' : 'high';
+        notifySmsOne(req, '' + user.phone[0].countryCode + user.phone[0].value,
+            payload.messageSubject + ' ' + payload.messageBody, gateway,
+            () => {
+                successCallback()
+            },
+            () => {
+                throw Error('Unable to process sms notification:')
+            })
+    } else {
+        successCallback() // try next
+    }
+}
+
+exports.notifyEmailUserOne = function (req, payload, transporter, user, successCallback) {
+    if ((user.email[0].value !== undefined) && (user.email[0].value !== null) && (user.email[0].value !== "")) {
+        notifyEmailOne(req, transporter, '' + user.email[0].value,
+            payload.messageSubject, payload.messageBody,
+            () => {
+                successCallback()
+            },
+            (error) => {
+                throw Error('Unable to process email notification:')
+            }
+        )
+    } else {
+        successCallback() //try next
     }
 }

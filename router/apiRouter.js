@@ -98,12 +98,6 @@ exports.getApiRouter = function () {
 // KOTO NOTIFY
 // ----------------------------------------------------
 
-    api_router.route('/kotinode/notify/email')
-        .post(kotoNotifyController.notifyEmail);
-
-    api_router.route('/kotinode/notify/sms')
-        .post(kotoNotifyController.notifySms);
-
     api_router.route('/kotinode/notify/sms/credit')
         .get(kotoNotifyController.getSmsCredit);
 

@@ -5,60 +5,6 @@ var kotoUserController = require('../controllers/kotoUserController')
 var KotoNotifyModel = require('../models/kotoNotifyModel');
 var constants = require('../utils/const')
 
-/**
- * @param req
- * @param res
- */
-exports.notifyEmail = function (req, res) {
-    apiKeyUtils.verifyToken(req, res, () => {
-        logger.log(req, "exports.notifyEmail");
-        var payload = req.body
-        if (payload.to !== undefined
-            && payload.subject !== undefined
-            && (payload.text !== undefined /*|| payload.html!==undefined*/)) {
-
-            notifyUtils.notifyEmail(req, payload.to, payload.subject, payload.text,
-                (successMessage) => {
-                    res.status(200).json({ "message": successMessage });
-                },
-                (errorMessage) => {
-                    res.status(500).json({ "message": errorMessage });
-                })
-
-        } else {
-            res.status(401).json({ "message": "Missing or incomplete message parameters in body!" })
-        }
-    })
-};
-
-/**
- * @param req
- * @param res
- */
-exports.notifySms = function (req, res) {
-    apiKeyUtils.verifyToken(req, res, () => {
-        logger.log(req, "exports.notifySms");
-        var payload = req.body
-        if (payload.number !== undefined
-            && payload.message !== undefined) {
-            logger.log(req, 'Getting send the message:' + payload.message);
-            var gateway = (payload.urgent === undefined || payload.urgent === false || payload.urgent === 'false') ? 'lowcost' : 'high';
-            notifyUtils.notifySms(req, payload.number, payload.message, gateway,
-                (smsResponse) => {
-                    logger.log(req, smsResponse.body)
-                    res.status(200).json({ "message": smsResponse.body, "gateway": gateway });
-                }, (smsResponse) => {
-                    logger.err(req, smsResponse.body)
-                    res.status(500).json({ "message": smsResponse.body });
-                })
-        }
-        else {
-            res.status(401).json({ "message": "Missing or incomplete message parameters in body!" })
-        }
-    })
-};
-
-
 exports.notify = function (req, res) {
     apiKeyUtils.verifyToken(req, res, (tokenPayload) => {
         try {
@@ -82,94 +28,19 @@ exports.notify = function (req, res) {
                 if (payload.messageSubject === undefined) throw Error('Missing messageSubject parameter!')
                 if (payload.messageBody === undefined) throw Error('Missing messageBody parameter!')
 
-                var gateway = (payload.urgent === undefined || payload.urgent === false || payload.urgent === 'false') ? 'lowcost' : 'high';
                 kotoUserController.getInternalUserListByTag(payload.tagList, (userList) => {
                     const userListSize = userList.length
                     const notificationTypeRange = payload.notificationType.length
                     let notificationSentGroup = 0
-                    userList.forEach(function (user, index) {
-                        logger.log(req, "USER:" + JSON.stringify(user))
-                        logger.log(req, "INDEX:" + index)
-                        /**
-                         *  SMS
-                         */
-                        if (payload.notificationType.indexOf("sms") > -1) {
-                            if ((user.phone[0].value !== undefined) && (user.phone[0].value !== null) && (user.phone[0].value !== "")) {
-                                notifyUtils.notifySms(req, '' + user.phone[0].countryCode + user.phone[0].value,
-                                    payload.messageSubject + ' ' + payload.messageBody, gateway,
-                                    () => {
-                                        if ((index + 1) === userListSize) { //check sms for last user
-                                            notificationSentGroup = notificationSentGroup + 1
-                                            if (notificationTypeRange == notificationSentGroup) {//check if other groups (email) is done
-                                                kotoNotify.messageProcessDateTime = new Date()
-                                                kotoNotify.save(function (err, result) {
-                                                    if (err)
-                                                        throw Error('Unable to save [sms]:' + JSON.stringify(kotoNotify))
-                                                    else {
-                                                        logger.log(req, "sms userListSize:" + userListSize)
-                                                        res.status(200).json({ "message": `${userListSize} users notified via: ${kotoNotify.notificationType} ` })
-                                                    }
-                                                })
-                                            }
-                                        }
-                                    },
-                                    () => {
-                                        throw Error('Unable to process sms notification:' + JSON.stringify(kotoNotify))
-                                    })
-                            } else {
-                                notificationSentGroup = notificationSentGroup + 1
-                            }
-                        }
 
-                        /**
-                         *  EMAIL
-                         */
-                        if (payload.notificationType.indexOf("email") > -1) {
-                            if ((user.email[0].value !== undefined) && (user.email[0].value !== null) && (user.email[0].value !== "")) {
-                                notifyUtils.notifyEmail(req, transporter, '' + user.email[0].value,
-                                    payload.messageSubject, payload.messageBody,
-                                    () => {
-                                        if ((index + 1) === userListSize) {//check sms for last user
-                                            notificationSentGroup = notificationSentGroup + 1
-                                            if (notificationTypeRange == notificationSentGroup) {//check if other groups (sms) is done
-                                                kotoNotify.messageProcessDateTime = new Date()
-                                                kotoNotify.save(function (err, result) {
-                                                    logger.log(req, "email userListSize:" + userListSize)
-                                                    if (err) {
-                                                        logger.log(req, error)
-                                                        throw Error('Unable to save [email]:' + JSON.stringify(kotoNotify))
-                                                    }
-                                                    else {
-                                                        res.status(200).json({ "message": `${userListSize} users notified via: ${kotoNotify.notificationType}` })
-                                                    }
-                                                })
-                                            }
+                    /**
+                     * SMS
+                     */
+                    notifyUserList(req, payload, transporter, userList, 0, () => {
+                        notifySuccess(req, res, kotoNotify)
+                    })
 
-                                        }
-                                    },
-                                    (error) => {
-                                        logger.err(req, error)
-                                        //throw Error('Unable process email notification:' + JSON.stringify(kotoNotify))
-                                        kotoNotify.messageProcessDateTime = new Date()
-                                        kotoNotify.messageSubject = '[EMAIL FAILURE]' + kotoNotify.messageSubject
-                                        kotoNotify.save(function (err, result) {
-                                            if (err) {
-                                                logger.log(req, error)
-                                                throw Error('Unable to save [email]:' + JSON.stringify(kotoNotify))
-                                            }
-                                            else {
-                                                res.status(500).json({ "message": 'Email unexpected failure' })
-                                            }
-                                        })
-                                    }
-                                )
-                            } else {
-                                notificationSentGroup = notificationSentGroup + 1
-                            }
-                        }
-
-                    });
-                })
+                });
             }
         } catch (payloadException) {
             if (payloadException.message === undefined) {
@@ -177,6 +48,48 @@ exports.notify = function (req, res) {
             } else {
                 res.status(403).json({ "message": payloadException.message })
             }
+        }
+    })
+}
+
+const notifyUserList = function (req, payload, transporter, userList, index, successCalback) {
+    if (index < userList.length) {
+        notifyOneUser(req, payload, transporter, userList[index], () => {
+            notifyUserList(payload, userList, index + 1, successCalback)
+        })
+    } else {
+        successCalback()
+    }
+
+}
+notifyOneUser = function (req, payload, transporter, user, successCallback) {
+    if (payload.notificationType.indexOf("sms") > -1) {
+        notifyUtils.notifySmsUserOne(req, payload, user, () => {
+            if (payload.notificationType.indexOf("email") > -1) {
+                notifyUtils.notifyEmailUserOne(req, payload, transporter, user, () => {
+                    successCallback
+                })
+            } else {
+                successCallback
+            }
+        })
+    } else if (payload.notificationType.indexOf("email") > -1) {
+        notifyUtils.notifyEmailUserOne(req, payload, transporter, user, () => {
+            successCallback
+        })
+    }
+}
+
+notifySuccess = function (req, res, kotoNotify) {
+    kotoNotify.messageProcessDateTime = new Date()
+    logger.log(req, 'success email callback.c... saving.')
+    kotoNotify.save(function (err, result) {
+        if (err) {
+            logger.log(req, error)
+            throw Error('Unable to save [email]:' + JSON.stringify(kotoNotify))
+        }
+        else {
+            res.status(200).json({ "message": `Notification finished for type > ${kotoNotify.notificationType}` })
         }
     })
 }
