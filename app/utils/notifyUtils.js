@@ -27,6 +27,8 @@ exports.notifyEmail = function (req, emailTo, emailSubject, emailText, successCa
         failureCallback('Email config is missing on the kotoServer!')
     } else {
         var transporter = nodemailer.createTransport({
+            pool: true,
+            maxConnections: 2,
             host: nconf.get('email').rosti.smtp.host,
             port: nconf.get('email').rosti.smtp.port,
             requireTLS: true,
