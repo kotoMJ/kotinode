@@ -17,7 +17,7 @@ exports.notifyEmail = function (req, res) {
             && payload.subject !== undefined
             && (payload.text !== undefined /*|| payload.html!==undefined*/)) {
 
-            notifyUtils.notifyEmail(payload.to, payload.subject, payload.text,
+            notifyUtils.notifyEmail(req, payload.to, payload.subject, payload.text,
                 (successMessage) => {
                     res.status(200).json({ "message": successMessage });
                 },
@@ -43,7 +43,7 @@ exports.notifySms = function (req, res) {
             && payload.message !== undefined) {
             logger.log(req, 'Getting send the message:' + payload.message);
             var gateway = (payload.urgent === undefined || payload.urgent === false || payload.urgent === 'false') ? 'lowcost' : 'high';
-            notifyUtils.notifySms(payload.number, payload.message, gateway,
+            notifyUtils.notifySms(req, payload.number, payload.message, gateway,
                 (smsResponse) => {
                     logger.log(req, smsResponse.body)
                     res.status(200).json({ "message": smsResponse.body, "gateway": gateway });
@@ -94,7 +94,7 @@ exports.notify = function (req, res) {
                          */
                         if (payload.notificationType.indexOf("sms") > -1) {
                             if ((user.phone[0].value !== undefined) && (user.phone[0].value !== null)) {
-                                notifyUtils.notifySms('' + user.phone[0].countryCode + user.phone[0].value,
+                                notifyUtils.notifySms(req, '' + user.phone[0].countryCode + user.phone[0].value,
                                     payload.messageSubject + ' ' + payload.messageBody, gateway,
                                     () => {
                                         if ((index + 1) === userListSize) { //check sms for last user
@@ -125,7 +125,7 @@ exports.notify = function (req, res) {
                          */
                         if (payload.notificationType.indexOf("email") > -1) {
                             if ((user.email[0].value !== undefined) && (user.email[0].value !== null)) {
-                                notifyUtils.notifyEmail('' + user.email[0].value,
+                                notifyUtils.notifyEmail(req, '' + user.email[0].value,
                                     payload.messageSubject, payload.messageBody,
                                     () => {
                                         if ((index + 1) === userListSize) {//check sms for last user

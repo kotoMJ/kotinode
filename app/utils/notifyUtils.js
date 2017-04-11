@@ -21,7 +21,7 @@ var logger = require('../utils/logger.js');
  * @param successCallback - for example "250 Message Queued"
  * @param failureCallback
  */
-exports.notifyEmail = function (emailTo, emailSubject, emailText, successCallback, failureCallback) {
+exports.notifyEmail = function (req, emailTo, emailSubject, emailText, successCallback, failureCallback) {
     nconf.file('email', './app/config/config.notify.json');
     if (nconf.get('email') === undefined) {
         failureCallback('Email config is missing on the kotoServer!')
@@ -84,14 +84,14 @@ exports.notifyEmail = function (emailTo, emailSubject, emailText, successCallbac
  * @param successCallback - for example: "OK|9231583|420724811441"
  * @param failureCallback
  */
-exports.notifySms = function (phoneNumber, message, gateway, successCallback, failureCallback) {
+exports.notifySms = function (req, phoneNumber, message, gateway, successCallback, failureCallback) {
 
     //var finalHash = crypto.createHash('sha1').update(hashBase + message).digest('hex');
     nconf.file('sms', './app/config/config.notify.json');
     if (nconf.get('sms') === undefined) {
         failureCallback({ body: 'SMS config is missing on the kotoServer!' })
     } else {
-        console.log(JSON.stringify(nconf.get('sms')))
+        logger.log(req, JSON.stringify(nconf.get('sms')))
         var sendUrl = nconf.get('sms').smsmanager.apiSend;
         var username = nconf.get('sms').smsmanager.username;
         var hashBase = nconf.get('sms').smsmanager.hashFix;
@@ -114,6 +114,7 @@ exports.notifySms = function (phoneNumber, message, gateway, successCallback, fa
                 successCallback(response)
             } else {
                 //res.status(500).json({ "message": response.body });
+                logger.err(req, 'response.body.error' + response)
                 failureCallback(response)
             }
         });
