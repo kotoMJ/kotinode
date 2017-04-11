@@ -5,6 +5,21 @@ var crypto = require('crypto');
 var nconf = require('nconf');
 var logger = require('../utils/logger.js');
 
+
+Object.defineProperty(exports, "MAIL_TRANSPORTER", nodemailer.createTransport({
+    pool: true,
+    maxConnections: 2,
+    host: nconf.get('email').rosti.smtp.host,
+    port: nconf.get('email').rosti.smtp.port,
+    requireTLS: true,
+    secure: false,
+    auth: {
+        user: nconf.get('email').rosti.smtp.user,
+        pass: nconf.get('email').rosti.smtp.pass
+    },
+    debug: process.env.NODE_ENV == 'dev',
+}));
+
 /**
  *
  * https://docs.rosti.cz/emails/
@@ -21,24 +36,11 @@ var logger = require('../utils/logger.js');
  * @param successCallback - for example "250 Message Queued"
  * @param failureCallback
  */
-exports.notifyEmail = function (req, emailTo, emailSubject, emailText, successCallback, failureCallback) {
+exports.notifyEmail = function (req, transporter, emailTo, emailSubject, emailText, successCallback, failureCallback) {
     nconf.file('email', './app/config/config.notify.json');
     if (nconf.get('email') === undefined) {
         failureCallback('Email config is missing on the kotoServer!')
     } else {
-        var transporter = nodemailer.createTransport({
-            pool: true,
-            maxConnections: 2,
-            host: nconf.get('email').rosti.smtp.host,
-            port: nconf.get('email').rosti.smtp.port,
-            requireTLS: true,
-            secure: false,
-            auth: {
-                user: nconf.get('email').rosti.smtp.user,
-                pass: nconf.get('email').rosti.smtp.pass
-            },
-            debug: process.env.NODE_ENV == 'dev',
-        });
 
         var mailOptions = {
             from: nconf.get('email').rosti.smtp.sender, // sender address

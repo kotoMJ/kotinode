@@ -66,6 +66,7 @@ exports.notify = function (req, res) {
             logger.log(req, "exports.notify");
             logger.log(req, JSON.stringify(req.body))
             const payload = req.body
+            const transporter = notifyUtils.MAIL_TRANSPORTER
             //payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
             if (payload === undefined) {
                 throw new Error('Missing payload in body!');
@@ -125,7 +126,7 @@ exports.notify = function (req, res) {
                          */
                         if (payload.notificationType.indexOf("email") > -1) {
                             if ((user.email[0].value !== undefined) && (user.email[0].value !== null)) {
-                                notifyUtils.notifyEmail(req, '' + user.email[0].value,
+                                notifyUtils.notifyEmail(req, transporter, '' + user.email[0].value,
                                     payload.messageSubject, payload.messageBody,
                                     () => {
                                         if ((index + 1) === userListSize) {//check sms for last user
