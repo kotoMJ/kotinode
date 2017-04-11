@@ -66,7 +66,7 @@ exports.notify = function (req, res) {
             logger.log(req, "exports.notify");
             logger.log(req, JSON.stringify(req.body))
             const payload = req.body
-            const transporter = notifyUtils.MAIL_TRANSPORTER
+            const transporter = notifyUtils.getEmailTransport()
             //payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
             if (payload === undefined) {
                 throw new Error('Missing payload in body!');
