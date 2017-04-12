@@ -52,12 +52,16 @@ exports.notify = function (req, res) {
     })
 }
 
-const notifyUserList = function (req, payload, transporter, userList, index, successCalback) {
+var notifyUserList = function (req, payload, transporter, userList, index, successCalback) {
+    logger.log(req, 'notifyUserList.started')
+    logger.log(req, 'index' + index + ' ,userList.length' + userList.length)
     if (index < userList.length) {
         notifyOneUser(req, payload, transporter, userList[index], () => {
-            notifyUserList(payload, userList, index + 1, successCalback)
+            logger.log(req, 'notifyUserList.recursive...')
+            notifyUserList(req, payload, transporter, userList, index + 1, successCalback)
         })
     } else {
+        logger.log(req, 'notifyUserList.finalize')
         successCalback()
     }
 
@@ -67,15 +71,16 @@ notifyOneUser = function (req, payload, transporter, user, successCallback) {
         notifyUtils.notifySmsUserOne(req, payload, user, () => {
             if (payload.notificationType.indexOf("email") > -1) {
                 notifyUtils.notifyEmailUserOne(req, payload, transporter, user, () => {
-                    successCallback
+                    logger.log(req, 'notifyOneUser.success')
+                    successCallback()
                 })
             } else {
-                successCallback
+                successCallback()
             }
         })
     } else if (payload.notificationType.indexOf("email") > -1) {
         notifyUtils.notifyEmailUserOne(req, payload, transporter, user, () => {
-            successCallback
+            successCallback()
         })
     }
 }

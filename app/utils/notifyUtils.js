@@ -198,10 +198,12 @@ exports.notifyEmailUserOne = function (req, payload, transporter, user, successC
     if ((user.email[0].value !== undefined) && (user.email[0].value !== null) && (user.email[0].value !== "")) {
         notifyEmailOne(req, transporter, '' + user.email[0].value,
             payload.messageSubject, payload.messageBody,
-            () => {
+            (message) => {
+                logger.log(req, 'exports.notifyEmailUserOne.success:' + message)
                 successCallback()
             },
             (error) => {
+                logger.err(req, 'exports.notifyEmailUserOne.error')
                 throw Error('Unable to process email notification:')
             }
         )
