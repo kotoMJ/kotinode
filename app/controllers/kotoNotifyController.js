@@ -33,16 +33,13 @@ exports.notify = function (req, res) {
                     const notificationTypeRange = payload.notificationType.length
                     let notificationSentGroup = 0
 
-                    /**
-                     * SMS
-                     */
                     notifyUserList(req, payload, transporter, userList, 0, () => {
+                        transporter.close()
                         notifySuccess(req, res, kotoNotify)
                     })
 
                 });
             }
-            transporter.close()
         } catch (payloadException) {
             transporter.close()
             if (payloadException.message === undefined) {

@@ -13,7 +13,7 @@ exports.getEmailTransport = function (failureCallback) {
     } else {
         return nodemailer.createTransport({
             pool: true,
-            maxConnections: 4,
+            maxConnections: 3,
             host: nconf.get('email').rosti.smtp.host,
             port: nconf.get('email').rosti.smtp.port,
             requireTLS: true,
@@ -65,7 +65,7 @@ notifyEmailOne = function (req, transporter, emailTo, emailSubject, emailText, s
                     logger.log(req, 'Failed to verify: ' + JSON.stringify(error));
                     //res.status(500).json({ "message": 'Email server is not ready to send email now.' });
                     //failureCallback('Email server is not ready to send email now:' + error)
-                    failureCallback('Failed to verify: ' + JSON.stringify(error))
+                    failureCallback(error)
                 } else {
                     logger.log(req, 'Transporter verified. transporter.sendMail.....');
                     transporter.sendMail(mailOptions, function (error, info) {
@@ -194,8 +194,10 @@ exports.notifySmsUserOne = function (req, payload, user, successCallback) {
         successCallback() // try next
     }
 }
-
 exports.notifyEmailUserOne = function (req, payload, transporter, user, successCallback) {
+    notifyEmailUserOneI(req, payload, transporter, user, successCallback)
+}
+let notifyEmailUserOneI = function (req, payload, transporter, user, successCallback) {
     logger.log(req, 'exports.notifyEmailUserOne started')
     if ((user.email[0].value !== undefined) && (user.email[0].value !== null) && (user.email[0].value !== "")) {
         logger.log(req, 'exports.notifyEmailUserOne for:' + user.email[0].value)
@@ -208,13 +210,21 @@ exports.notifyEmailUserOne = function (req, payload, transporter, user, successC
                     successCallback()
                 },
                 (error) => {
-                    logger.err(req, 'exports.notifyEmailUserOne.error')
-                    throw Error('Unable to process email notification:')
+                    logger.err(req, 'exports.notifyEmailUserOne.error:' + JSON.stringify(error))
+                    if (error.responseCode === 421) {
+                        setTimeout(() => {
+                            notifyEmailUserOneI(req, payload, transporter, user, successCallback)
+                        }, 15000)
+                    } else {
+                        throw Error('Unable to process email notification:')
+                    }
                 }
             )
         } else {
             logger.log(req, 'exports.notifyEmailUserOne not ready, wait for 2 sec...')
-            setTimeout(2000, notifyEmailUserOne(req, payload, transporter, user, successCallback))
+            setTimeout(() => {
+                notifyEmailUserOneI(req, payload, transporter, user, successCallback)
+            }, 2000)
         }
     } else {
         successCallback() //try next
