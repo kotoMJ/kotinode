@@ -67,8 +67,9 @@ notifyEmailOne = function (req, transporter, emailTo, emailSubject, emailText, s
                     //failureCallback('Email server is not ready to send email now:' + error)
                     failureCallback('Failed to verify: ' + JSON.stringify(error))
                 } else {
-                    logger.log(req, 'Transporter verified.');
+                    logger.log(req, 'Transporter verified. transporter.sendMail.....');
                     transporter.sendMail(mailOptions, function (error, info) {
+                        logger.log(req, 'Transporter.sendMail callback...');
                         if (error) {
                             logger.log(req, 'Failed to sendMail: ' + JSON.stringify(error));
                             //res.status(500).json({ "message": 'Unexpected error when sending email' });
@@ -195,18 +196,26 @@ exports.notifySmsUserOne = function (req, payload, user, successCallback) {
 }
 
 exports.notifyEmailUserOne = function (req, payload, transporter, user, successCallback) {
+    logger.log(req, 'exports.notifyEmailUserOne started')
     if ((user.email[0].value !== undefined) && (user.email[0].value !== null) && (user.email[0].value !== "")) {
-        notifyEmailOne(req, transporter, '' + user.email[0].value,
-            payload.messageSubject, payload.messageBody,
-            (message) => {
-                logger.log(req, 'exports.notifyEmailUserOne.success:' + message)
-                successCallback()
-            },
-            (error) => {
-                logger.err(req, 'exports.notifyEmailUserOne.error')
-                throw Error('Unable to process email notification:')
-            }
-        )
+        logger.log(req, 'exports.notifyEmailUserOne for:' + user.email[0].value)
+        if (transporter.isIdle()) {
+            logger.log(req, 'exports.notifyEmailUserOne sending one...')
+            notifyEmailOne(req, transporter, '' + user.email[0].value,
+                payload.messageSubject, payload.messageBody,
+                (message) => {
+                    logger.log(req, 'exports.notifyEmailUserOne.success:' + message)
+                    successCallback()
+                },
+                (error) => {
+                    logger.err(req, 'exports.notifyEmailUserOne.error')
+                    throw Error('Unable to process email notification:')
+                }
+            )
+        } else {
+            logger.log(req, 'exports.notifyEmailUserOne not ready, wait for 2 sec...')
+            setTimeout(2000, notifyEmailUserOne(req, payload, transporter, user, successCallback))
+        }
     } else {
         successCallback() //try next
     }

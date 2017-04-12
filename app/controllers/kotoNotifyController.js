@@ -7,12 +7,12 @@ var constants = require('../utils/const')
 
 exports.notify = function (req, res) {
     apiKeyUtils.verifyToken(req, res, (tokenPayload) => {
+        const transporter = notifyUtils.getEmailTransport()
         try {
             logger.log(req, 'tokenPayload:' + tokenPayload)
             logger.log(req, "exports.notify");
             logger.log(req, JSON.stringify(req.body))
             const payload = req.body
-            const transporter = notifyUtils.getEmailTransport()
             //payload.date = moment(payload.date, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate();
             if (payload === undefined) {
                 throw new Error('Missing payload in body!');
@@ -42,7 +42,9 @@ exports.notify = function (req, res) {
 
                 });
             }
+            transporter.close()
         } catch (payloadException) {
+            transporter.close()
             if (payloadException.message === undefined) {
                 res.status(500).json({ "message": payloadException })
             } else {
