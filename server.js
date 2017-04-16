@@ -1,6 +1,5 @@
 // call the packages we need
 const express = require('express');        // call express
-const graphiqlExpress = require('graphql-server-express').graphiqlExpress;
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
@@ -84,22 +83,9 @@ mongoose.connection.once('open', function () {
 
     app.use('/api', apiRouter.getApiRouter());
 
+    app.use('/graphql', bodyParser.json(), gqlRouter.graphqlExpress)
 
-    app.use('/graphql', graphqlExpress((req) => {
-        return {
-            schema: executableSchema,
-            context: {
-                authorization: req.headers.authorization
-            }
-        }
-    }));
-
-    // app.use('/graphql', bodyParser.json(), gqlRouter.graphqlExpress())
-
-
-    app.use('/graphiql', graphiqlExpress({
-        endpointURL: '/graphql'
-    }));
+    app.use('/graphiql', gqlRouter.graphiqlExpress);
 
     app.use('/', webRouter.getWebRouter());
     app.use((req, res) => {
