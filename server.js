@@ -1,16 +1,28 @@
 // call the packages we need
-var express = require('express');        // call express
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
-var logger = require('./app/utils/logger.js');
-var webRouter = require('./router/webRouter');
-var apiRouter = require('./router/apiRouter');
-var app = express();
+const express = require('express');        // call express
+const graphiqlExpress = require('graphql-server-express').graphiqlExpress;
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const config = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
+const logger = require('./app/utils/logger.js');
+const webRouter = require('./router/webRouter');
+const apiRouter = require('./router/apiRouter');
+const gqlRouter = require('./router/gqlRouter');
+const app = express();
 // and support socket io
-var server = require('http').createServer(app);
+const server = require('http').createServer(app);
 koTio = require('socket.io')(server);
 
+
+var graphqlExpress = require('graphql-server-express').graphqlExpress;
+var makeExecutableSchema = require('graphql-tools').makeExecutableSchema;
+const schema = require('./app/graphql/schema').schema;
+const resolvers = require('./app/graphql/resolvers').resolvers;
+
+const executableSchema = makeExecutableSchema({
+    typeDefs: schema,
+    resolvers: resolvers
+});
 /*
  * Mongoose by default sets the auto_reconnect option to true.
  * We recommend setting socket options at both the server and replica set level.
@@ -20,8 +32,8 @@ koTio = require('socket.io')(server);
 var mongoOptions = {
     user: config.mongoUser,
     pass: config.mongoPass,
-    server: {socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}},
-    replset: {socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}}
+    server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
+    replset: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }
 };
 var dbCon = mongoose.connect(config.mongoUri, mongoOptions);
 
@@ -56,13 +68,13 @@ mongoose.connection.once('open', function () {
 
 
     express.response.jsonWrapped = function (obj) {
-        return this.json({result: obj});
+        return this.json({ result: obj });
     };
 
 // REGISTER OUR ROUTES -------------------------------
     // configure app to use bodyParser()
     // this will let us get the data from a POST
-    app.use(bodyParser.urlencoded({extended: true}));
+    app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
 
     //serve all public content as public (//http://localhost:8080/public/gallery/low/2013-05-28-Otmice/00_otmice.webp)
@@ -71,6 +83,24 @@ mongoose.connection.once('open', function () {
     app.use('/', express.static('public/kotipoint-web'));
 
     app.use('/api', apiRouter.getApiRouter());
+
+
+    app.use('/graphql', graphqlExpress((req) => {
+        return {
+            schema: executableSchema,
+            context: {
+                authorization: req.headers.authorization
+            }
+        }
+    }));
+
+    // app.use('/graphql', bodyParser.json(), gqlRouter.graphqlExpress())
+
+
+    app.use('/graphiql', graphiqlExpress({
+        endpointURL: '/graphql'
+    }));
+
     app.use('/', webRouter.getWebRouter());
     app.use((req, res) => {
         res.status(404).send('PAGE DOES NOT EXISTS')
