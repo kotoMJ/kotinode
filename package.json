@@ -2,6 +2,7 @@
   "name": "node-api",
   "main": "server.js",
   "dependencies": {
+    "bluebird": "^3.5.0",
     "body-parser": "^1.17.1",
     "config.json": "~0.0.4",
     "express": "^4.14.0",
