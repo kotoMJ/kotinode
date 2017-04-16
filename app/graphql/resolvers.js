@@ -14,12 +14,7 @@ exports.resolvers = {
         },
         notification(root, args, context){
             try {
-                //return [{messageSubject:'fake'}]
-
-                //return verifyGQLToken2(context.apiToken)
-
                 return verifyGQLTokenPromise(context.apiToken).then(() => KotoNotifyModel.find().sort({ messageArriveDateTime: constants.DESC_SORT_ORDER }).exec())
-
             } catch (err) {
                 return err
 
