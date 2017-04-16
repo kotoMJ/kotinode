@@ -32,9 +32,11 @@ var mongoOptions = {
     user: config.mongoUser,
     pass: config.mongoPass,
     server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
-    replset: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }
+    replset: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
 };
 var dbCon = mongoose.connect(config.mongoUri, mongoOptions);
+
+mongoose.Promise = require('bluebird');
 
 // CONNECTION EVENTS
 // When successfully connected

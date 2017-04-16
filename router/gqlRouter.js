@@ -14,7 +14,7 @@ exports.graphqlExpress = graphqlExpress((req) => {
     return {
         schema: executableSchema,
         context: {
-            authorization: req.headers.authorization
+            apiToken: req.headers.apitoken
         }
     }
 })

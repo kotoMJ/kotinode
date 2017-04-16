@@ -13,14 +13,33 @@ exports.resolvers = {
             return KotoEventModel.find().sort({ date: constants.DESC_SORT_ORDER }).exec()
         },
         notification(root, args, context){
-            return KotoNotifyModel.find().sort({ messageArriveDateTime: constants.DESC_SORT_ORDER }).exec()
+            try {
+                //return [{messageSubject:'fake'}]
+
+                //return verifyGQLToken2(context.apiToken)
+
+                return verifyGQLTokenPromise(context.apiToken).then(() => KotoNotifyModel.find().sort({ messageArriveDateTime: constants.DESC_SORT_ORDER }).exec())
+
+            } catch (err) {
+                return err
+
+            }
         }
     }
 }
 
+const verifyGQLTokenPromise = function (apiToken) {
+    return new Promise(function (resolve, reject) {
+        if (apiToken === undefined) {
+            reject()
+        } else {
+            console.log(apiToken)
+            resolve([{ messageSubject: 'fake2' }])
+        }
+    })
+}
 
-verifyGQLToken = function (req, res, tokenVerifiedCallback) {
-    var apiToken = req.headers['apitoken'];
+const verifyGQLToken = function (apiToken) {
     logger.log(req, 'verifyToken.jwtIn:' + apiToken)
     if (apiToken === undefined) {
         throw new Error("Missing or incomplete authentication parameters")
