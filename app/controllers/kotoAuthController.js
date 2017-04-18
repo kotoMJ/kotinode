@@ -1,6 +1,7 @@
 var jwt = require('jsonwebtoken');
 var logger = require('../utils/logger.js');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
+const Promise = require('bluebird');
 
 exports.preflight = function (req, res) {
     logger.log(req, 'Preflight...');

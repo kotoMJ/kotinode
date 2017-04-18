@@ -2,10 +2,6 @@ var KotoEventModel = require('../models/kotoEventModel');
 var KotoNotifyModel = require('../models/kotoNotifyModel');
 var KotoAuthController = require('../controllers/kotoAuthController')
 const constants = require('../utils/const')
-const Promise = require('bluebird');
-var jwt = require('jsonwebtoken');
-var logger = require('../utils/logger.js');
-var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 
 
 exports.resolvers = {
