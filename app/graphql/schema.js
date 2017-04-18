@@ -10,9 +10,22 @@ exports.schema = [`
     
     type EventBundle {
         name: String
+        event: [Event]
+    }
+    
+    type Event {
+        headline: String
+        description: String
     }
     
     type Notification {
+        sender: String
+        tagList: [String]
+        notificationType: String
+        urgent: Boolean
         messageSubject: String
+        messageBody: String
+        messageArriveDateTime: String
+        messageProcessDateTime: String
     }
 `]
