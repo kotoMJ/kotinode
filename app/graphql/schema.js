@@ -1,4 +1,6 @@
 exports.schema = [`
+    scalar Date
+
     # Entry point to our application
     type Query {
         # List of all enventBundles
@@ -40,7 +42,7 @@ exports.schema = [`
         urgent: Boolean
         messageSubject: String
         messageBody: String
-        messageArriveDateTime: String
-        messageProcessDateTime: String
+        messageArriveDateTime: Date
+        messageProcessDateTime: Date
     }
 `]
