@@ -177,5 +177,11 @@ exports.getApiRouter = function () {
         })
         .options(kotoAuthController.preflight);
 
+    api_router.route('/securityshowcase/login')
+        .post(function (req, res, next) {
+            showcaseController.postShowcaseSecurityLogin(req, res);
+        });
+
+
     return api_router;
 }
