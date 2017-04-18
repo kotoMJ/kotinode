@@ -168,14 +168,14 @@ exports.getApiRouter = function () {
         });
 
 // ----------------------------------------------------
-// SECURITY SHOWCASE - SIMPLE AUTH
+// SECURITY SHOWCASE - JWT AUTH
 // ----------------------------------------------------
 
-    api_router.route('/securityshowcase/login')
+    api_router.route('/securityshowcase/jwtLogin')
         .post(function (req, res, next) {
-            showcaseController.postShowcaseSecurityLogin(req, res);
-        });
-
+            kotoAuthController.postKotoLogin(req, res);
+        })
+        .options(kotoAuthController.preflight);
 
     return api_router;
 }

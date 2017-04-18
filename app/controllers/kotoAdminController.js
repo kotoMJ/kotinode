@@ -12,6 +12,7 @@ var fileUtils = require('../utils/fileUtils.js');
 var stringUtils = require('../utils/stringUtils.js');
 var apiKeyUtils = require('../controllers/kotoAuthController')
 var moment = require('moment');
+const adminRestrictionRoles = ['koto-admin']
 
 exports.reset_gallery = function (req, res) {
     var apiKey = req.headers['apikey'];
@@ -89,24 +90,24 @@ exports.reset_gallery = function (req, res) {
                     logger.log(req, 'Gallery model clean failed! ' + err);
                 }
 
-                res.json({message: 'Insert real done'});
+                res.json({ message: 'Insert real done' });
             });
         });
-    })
+    }, adminRestrictionRoles)
 }
 
 exports.sortGallerySummary = function (req, res) {
 
     KotoGallerySummaryModel.find()
-        .sort({galleryDate: -1}).exec(function (err, eventList) {
+        .sort({ galleryDate: -1 }).exec(function (err, eventList) {
         var i = 0;
         eventList.forEach(function (record) {
             console.log("ToUpdate:" + record);
             mongoose.model('KotoGallerySummary', KotoGallerySummaryModel).collection.findAndModify(
-                {sortId: record.sortId},//query
+                { sortId: record.sortId },//query
                 [['galleryDate', 'asc']],//sort order
-                {$set: {sortId: i++}},//replacement, replaces only the field "id"
-                {new: true},//options
+                { $set: { sortId: i++ } },//replacement, replaces only the field "id"
+                { new: true },//options
                 onUpdateSummary);
         });
     });
@@ -121,7 +122,7 @@ exports.sortGallerySummary = function (req, res) {
         }
     };
 
-    res.json({message: 'sort done!'});
+    res.json({ message: 'sort done!' });
 }
 
 exports.drop = function (req, res) {
@@ -139,10 +140,10 @@ exports.drop = function (req, res) {
                 logger.log(req, 'DB drop failed!' + err);
             }
 
-            res.json({message: 'DB dropped and EVENT reinitialized'});
+            res.json({ message: 'DB dropped and EVENT reinitialized' });
         });
 
-    })
+    }, adminRestrictionRoles)
 }
 
 exports.reset_event = function (req, res) {
@@ -178,7 +179,7 @@ exports.reset_event = function (req, res) {
 
                 var startIndex = 0;
                 KotoEventModel.find()
-                    .sort({eventDate: -1}).exec(function (err, eventList) {
+                    .sort({ eventDate: -1 }).exec(function (err, eventList) {
                     if (eventList) {
                         startIndex = eventList.length;
                     }
@@ -207,25 +208,25 @@ exports.reset_event = function (req, res) {
                 }
             };
 
-            res.json({message: 'Event model reinitialized successfully.'});
+            res.json({ message: 'Event model reinitialized successfully.' });
         });
 
 
-    })
+    }, adminRestrictionRoles)
 }
 
 exports.sortEvent = function (req, res) {
 
     KotoEventModel.find()
-        .sort({eventDate: -1}).exec(function (err, eventList) {
+        .sort({ eventDate: -1 }).exec(function (err, eventList) {
         var index = 0;
         eventList.forEach(function (record) {
             console.log("ToUpdate:" + record);
             mongoose.model('KotoEventBatch', KotoEventModel).collection.findAndModify(
-                {sortId: record.sortId},//query
+                { sortId: record.sortId },//query
                 [['eventDate', 'asc']],//sort order
-                {$set: {sortId: index++}},//replacement, replaces only the field "id"
-                {new: true},//options
+                { $set: { sortId: index++ } },//replacement, replaces only the field "id"
+                { new: true },//options
                 onUpdateEvent);
         });
     });
@@ -240,7 +241,7 @@ exports.sortEvent = function (req, res) {
         }
     };
 
-    res.json({message: 'sort done!'});
+    res.json({ message: 'sort done!' });
 }
 
 exports.reset_user = function (req, res) {
@@ -267,13 +268,13 @@ exports.reset_user = function (req, res) {
             function onInsertUser(err, docs) {
                 if (err) {
                     console.error(err);
-                    res.status(500).json({message: err});
+                    res.status(500).json({ message: err });
                 } else {
                     console.log(docs);
-                    res.status(200).json({message: 'User model reinitialized successfully.'});
+                    res.status(200).json({ message: 'User model reinitialized successfully.' });
                 }
             };
         });
 
-    })
+    }, adminRestrictionRoles)
 }

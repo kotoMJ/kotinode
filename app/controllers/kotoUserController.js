@@ -2,26 +2,29 @@ var logger = require('../utils/logger.js');
 var apiKeyUtils = require('./kotoAuthController')
 var KotoUserModel = require('../models/kotoUserModel');
 var constants = require('../utils/const')
+const userRestrictionRoles = ['koto-admin', 'koto-editor']
 
 exports.getUserList = function (req, res) {
     logger.log(req, 'getUserList');
-    const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
+    apiKeyUtils.verifyToken(req, res, () => {
+        const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
 
-    setTimeout(function () {
-        KotoUserModel.find().sort({
-            'address.municipality': constants.ASC_SORT_ORDER,
-            'address.houseNumber': constants.ASC_SORT_ORDER,
-        }).exec(function (err, userList) {
-            if (err) {
-                res.status(500).send(err)
-            } else {
-                res.status(200).jsonWrapped(userList);
-            }
-        });
-    }, delay);// delay to simulate slow connection!
+        setTimeout(function () {
+            KotoUserModel.find().sort({
+                'address.municipality': constants.ASC_SORT_ORDER,
+                'address.houseNumber': constants.ASC_SORT_ORDER,
+            }).exec(function (err, userList) {
+                if (err) {
+                    res.status(500).send(err)
+                } else {
+                    res.status(200).jsonWrapped(userList);
+                }
+            });
+        }, delay);// delay to simulate slow connection!
+    }, userRestrictionRoles)
 };
 
-exports.getInternalUserListByTag = function (tagListCondition, callback) {
+getInternalUserListByTag = function (tagListCondition, callback) {
     setTimeout(function () {
         KotoUserModel.find({ tagList: { "$in": tagListCondition } }).sort({ date: constants.DESC_SORT_ORDER }).exec(function (err, userList) {
             if (err) {
@@ -34,18 +37,20 @@ exports.getInternalUserListByTag = function (tagListCondition, callback) {
 };
 
 exports.getUserById = function (req, res) {
-    const id = req.params.user_id;
-    const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
-    logger.log(req, 'getUserById:' + id);
-    setTimeout(function () {
-        KotoUserModel.find().where('_id').equals(id).exec(function (err, userList) {
-            if (err) {
-                res.status(500).send(err)
-            } else {
-                res.status(200).jsonWrapped(userList);
-            }
-        });
-    }, delay);// delay to simulate slow connection!
+    apiKeyUtils.verifyToken(req, res, () => {
+        const id = req.params.user_id;
+        const delay = isNaN(parseInt(req.query.delay)) ? 0 : parseInt(req.query.delay);
+        logger.log(req, 'getUserById:' + id);
+        setTimeout(function () {
+            KotoUserModel.find().where('_id').equals(id).exec(function (err, userList) {
+                if (err) {
+                    res.status(500).send(err)
+                } else {
+                    res.status(200).jsonWrapped(userList);
+                }
+            });
+        }, delay);// delay to simulate slow connection!
+    }, userRestrictionRoles)
 };
 
 /**
@@ -78,7 +83,7 @@ exports.deleteUserById = function (req, res) {
                 res.status(500).send(err);
             res.status(200).json({ message: 'KotoUser ' + deletedUser + ' deleted' });
         })
-    })
+    }, userRestrictionRoles)
 };
 
 
@@ -90,7 +95,7 @@ exports.deleteUsers = function (req, res) {
             else
                 res.status(200).json({ message: 'All KotoUser deleted' });
         })
-    })
+    }, userRestrictionRoles)
 }
 
 exports.createUser = function (req, res) {
@@ -139,7 +144,7 @@ exports.createUser = function (req, res) {
                     res.status(200).json({ message: 'KotoUser created: ' + result._id });
             });
         }
-    })
+    }, userRestrictionRoles)
 };
 
 exports.replaceUserById = function (req, res) {
@@ -199,6 +204,6 @@ exports.replaceUserById = function (req, res) {
                 }
             });
         }
-    })
+    }, userRestrictionRoles)
 };
 

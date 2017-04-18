@@ -10,13 +10,18 @@
     "userList": [
         {
             "email": "a@a.cz",
-            "role": "admin",
+          "role": "koto-admin",
             "password": "1234"
         },
         {
             "email": "b@b.cz",
-            "role": "editor",
+          "role": "koto-editor",
             "password": "0987"
+        },
+      {
+        "email": "security@showcase.cz",
+        "role": "showcase-visitor",
+        "password": "showcase1234"
         }
     ]
 }
