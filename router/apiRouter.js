@@ -168,7 +168,7 @@ exports.getApiRouter = function () {
         });
 
 // ----------------------------------------------------
-// SECURITY SHOWCASE - SIMPLE AUTH
+// SECURITY SHOWCASE - JWT AUTH
 // ----------------------------------------------------
 
     api_router.route('/securityshowcase/jwtLogin')
