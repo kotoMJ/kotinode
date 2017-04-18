@@ -12,7 +12,7 @@ exports.schema = [`
     
     type EventBundle {
         name: String
-        date: String
+        date: Date
         eventList: [Event]
     }
     
