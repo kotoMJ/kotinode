@@ -37,7 +37,7 @@ exports.postKotoLogin = function (req, res) {
         var jwtToken = jwt.sign(profile, kotiConfig.api_key, { 'expiresIn': kotiConfig.api_expire });  // 5*60: 5min
         logger.log(req, 'jwtOut:' + jwtToken)
         res.status(200).json({
-            dataValue: { id_token: jwtToken }
+            id_token: jwtToken
         });
 
         alertClients('info', `User '${credentials.user}' just logged in`);
