@@ -11,10 +11,13 @@ const executableSchema = makeExecutableSchema({
 
 
 exports.graphqlExpress = graphqlExpress((req) => {
+    const requestId = Math.floor((Math.random() * 1000000000000) + 1);
+
     return {
         schema: executableSchema,
         context: {
-            apiToken: req.headers.apitoken
+            apiToken: req.headers.apitoken,
+            requestId: requestId
         }
     }
 })
