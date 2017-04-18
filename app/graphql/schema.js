@@ -10,12 +10,27 @@ exports.schema = [`
     
     type EventBundle {
         name: String
-        event: [Event]
+        date: String
+        eventList: [Event]
     }
     
     type Event {
         headline: String
         description: String
+        imageResource: String
+        category: [EventCategory]
+        date: String
+        time: String
+        location: [EventLocation]
+        text: [String]
+    }
+    
+    type EventCategory {
+        name: String
+    }
+    
+    type EventLocation {
+        name: String
     }
     
     type Notification {
