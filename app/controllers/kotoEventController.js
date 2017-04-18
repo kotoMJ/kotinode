@@ -5,6 +5,7 @@ var kotiConfig = require('config.json')('./app/config/config.json', process.env.
 var logger = require('../utils/logger.js');
 var apiKeyUtils = require('../controllers/kotoAuthController')
 const constants = require('../utils/const')
+const eventRestrictionRoles = ['koto-admin', 'koto-editor']
 
 // get all the kotinode items (accessed at GET http://url:port/api/kotinode/event
 exports.getEventFixed = function (req, res) {
@@ -60,7 +61,7 @@ exports.createEventBundle = function (req, res) {
             else
                 res.json({ message: eventBundle._id });
         });
-    })
+    }, eventRestrictionRoles)
 
 };
 
@@ -75,7 +76,7 @@ exports.deleteEventBundle = function (req, res) {
 
             res.json({ message: req.params.bundle_id });
         });
-    })
+    }, eventRestrictionRoles)
 };
 
 
@@ -87,7 +88,7 @@ exports.cleanupEventBundleAll = function (req, res) {
             else
                 res.json({ message: 'All KotoEvents deleted' });
         });
-    })
+    }, eventRestrictionRoles)
 };
 
 exports.addEventToBundle = function (req, res) {
@@ -110,7 +111,7 @@ exports.addEventToBundle = function (req, res) {
                 res.status(200).json({ message: raw });
             }
         });
-    })
+    }, eventRestrictionRoles)
 
 };
 
@@ -128,5 +129,5 @@ exports.deleteEventFromBundle = function (req, res) {
                 res.status(200).json({ message: raw });
             }
         });
-    })
+    }, eventRestrictionRoles)
 };

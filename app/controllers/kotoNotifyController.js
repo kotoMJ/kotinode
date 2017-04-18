@@ -4,6 +4,7 @@ var notifyUtils = require('../utils/notifyUtils')
 var kotoUserController = require('../controllers/kotoUserController')
 var KotoNotifyModel = require('../models/kotoNotifyModel');
 var constants = require('../utils/const')
+const notifyRestrictionRoles = ['koto-admin', 'koto-editor']
 
 exports.notify = function (req, res) {
     apiKeyUtils.verifyToken(req, res, (tokenPayload) => {
@@ -48,7 +49,7 @@ exports.notify = function (req, res) {
                 res.status(403).json({ "message": payloadException.message })
             }
         }
-    })
+    }, notifyRestrictionRoles)
 }
 
 var notifyUserList = function (req, payload, transporter, userList, index, successCalback) {
@@ -133,7 +134,7 @@ exports.getNotificationList = function (req, res) {
                 }
             });
         }, delay);// delay to simulate slow connection!
-    })
+    }, notifyRestrictionRoles)
 };
 
 
@@ -153,7 +154,7 @@ exports.getSmsCredit = function (req, res) {
                     res.status(500).send(err)
                 })
         }, 0);
-    })
+    }, notifyRestrictionRoles)
 }
 
 
@@ -165,5 +166,5 @@ exports.deleteNotify = function (req, res) {
             else
                 res.status(200).json({ message: 'All KotoNotify deleted' });
         })
-    })
+    }, notifyRestrictionRoles)
 };
