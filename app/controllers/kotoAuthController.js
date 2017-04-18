@@ -20,7 +20,7 @@ exports.postKotoLogin = function (req, res) {
     var currentUser = null;
     for (var i in userList) {
         logger.log(req, JSON.stringify(userList[i]));
-        if (userList[i].email === credentials.user) {
+        if (userList[i].email === credentials.email) {
             currentUser = userList[i];
             break;
         }
