@@ -2,10 +2,23 @@ var KotoEventModel = require('../models/kotoEventModel');
 var KotoNotifyModel = require('../models/kotoNotifyModel');
 var KotoAuthController = require('../controllers/kotoAuthController')
 const constants = require('../utils/const')
+var logger = require('../utils/logger.js');
 
 
 exports.resolvers = {
     Query: {
+        login(root, args, context) {
+            logger.log(context.requestId, 'login...' + JSON.stringify(context.payload))
+            if ((context.payload !== undefined) &&
+                (context.payload.variables) &&
+                (context.payload.variables.email !== undefined) &&
+                (context.payload.variables.password !== undefined)) {
+                logger.log(context.requestId, 'I am in...')
+                return KotoAuthController.loginGQLPromise(context.requestId, context.payload.variables.email, context.payload.variables.password)
+            } else {
+                return { errorMessage: 'Invalid user/password' }
+            }
+        },
         eventBundles(root, args, context) {
             return KotoEventModel.find().sort({ date: constants.DESC_SORT_ORDER }).exec()
         },

@@ -49,7 +49,7 @@ exports.postKotoLogin = function (req, res) {
     }
 };
 
-exports.loginGQLPromise = function (requestId, credentials) {
+exports.loginGQLPromise = function (requestId, email, password) {
     return new Promise(function (resolve, reject) {
         logger.log(requestId, "postKotoLogin");
         logger.log(requestId, JSON.stringify(kotiConfig.userList));
@@ -57,13 +57,13 @@ exports.loginGQLPromise = function (requestId, credentials) {
         var currentUser = null;
         for (var i in userList) {
             logger.log(requestId, JSON.stringify(userList[i]));
-            if (userList[i].email === credentials.user) {
+            if (userList[i].email === email) {
                 currentUser = userList[i];
                 break;
             }
         }
 
-        if (currentUser !== null && credentials.password === currentUser.password) {
+        if (currentUser !== null && password === currentUser.password) {
             logger.log(requestId, "in...");
             // Once authenticated, the user profiles is signed and the jwt token is returned as response to the client.
             // It's expected the jwt token will be included in the subsequent client requests.
@@ -74,12 +74,12 @@ exports.loginGQLPromise = function (requestId, credentials) {
             var jwtToken = jwt.sign(profile, kotiConfig.api_key, { 'expiresIn': kotiConfig.api_expire });  // 5*60: 5min
             logger.log(requestId, 'jwtOut:' + jwtToken)
             resolve({
-                id_token: jwtToken
+                token: jwtToken
             })
             //alertClients('info', `User '${credentials.user}' just logged in`);
         } else {
             logger.log(requestId, "bad...");
-            reject({ 'message': 'Invalid user/password' });
+            reject('Invalid user/password');
             //alertClients('error', `User '${credentials.user}' just failed to login`);
         }
     })

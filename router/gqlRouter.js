@@ -17,7 +17,8 @@ exports.graphqlExpress = graphqlExpress((req) => {
         schema: executableSchema,
         context: {
             apiToken: req.headers.apitoken,
-            requestId: requestId
+            requestId: requestId,
+            payload: req.body,
         }
     }
 })

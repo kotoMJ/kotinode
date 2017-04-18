@@ -3,11 +3,18 @@ exports.schema = [`
 
     # Entry point to our application
     type Query {
+        login: LoginResponse
+    
         # List of all enventBundles
         eventBundles: [EventBundle]
         
         # List of all notifications
         notification: [Notification]
+    }
+    
+    type LoginResponse {
+        token: String
+        errorMessage: String
     }
     
     type EventBundle {
