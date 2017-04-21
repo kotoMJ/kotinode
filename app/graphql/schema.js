@@ -3,7 +3,7 @@ exports.schema = [`
 
     # Entry point to our application
     type Query {
-        login: LoginResponse
+        login(email:String!, password: String!): AccessToken
     
         # List of all enventBundles
         eventBundles: [EventBundle]
@@ -12,7 +12,7 @@ exports.schema = [`
         notification: [Notification]
     }
     
-    type LoginResponse {
+    type AccessToken {
         token: String
         errorMessage: String
     }

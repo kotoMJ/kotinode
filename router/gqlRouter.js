@@ -18,7 +18,6 @@ exports.graphqlExpress = graphqlExpress((req) => {
         context: {
             apiToken: req.headers.apitoken,
             requestId: requestId,
-            payload: req.body,
         }
     }
 })

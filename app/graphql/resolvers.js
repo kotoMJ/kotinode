@@ -7,14 +7,11 @@ var logger = require('../utils/logger.js');
 
 exports.resolvers = {
     Query: {
-        login(root, args, context) {
-            logger.log(context.requestId, 'login...' + JSON.stringify(context.payload))
-            if ((context.payload !== undefined) &&
-                (context.payload.variables) &&
-                (context.payload.variables.email !== undefined) &&
-                (context.payload.variables.password !== undefined)) {
+        login(root, { email, password }, context) {
+            if ((email !== undefined) && (email !== null) &&
+                (password !== undefined) && (password !== null)) {
                 logger.log(context.requestId, 'I am in...')
-                return KotoAuthController.loginGQLPromise(context.requestId, context.payload.variables.email, context.payload.variables.password)
+                return KotoAuthController.loginGQLPromise(context.requestId, email, password)
             } else {
                 return { errorMessage: 'Invalid user/password' }
             }
