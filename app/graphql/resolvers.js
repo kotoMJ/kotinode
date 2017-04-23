@@ -29,7 +29,7 @@ exports.resolvers = {
             }
         }
     },
-    Date: {
+    DateTime: {
         __parseValue(value) {
             return new Date(value); // value from the client
         },
