@@ -1,9 +1,9 @@
 exports.schema = [`
-    scalar Date
+    scalar DateTime
 
     # Entry point to our application
     type Query {
-        login: LoginResponse
+        login(email:String!, password: String!): AccessToken
     
         # List of all enventBundles
         eventBundles: [EventBundle]
@@ -12,14 +12,14 @@ exports.schema = [`
         notification: [Notification]
     }
     
-    type LoginResponse {
+    type AccessToken {
         token: String
         errorMessage: String
     }
     
     type EventBundle {
         name: String
-        date: Date
+        date: DateTime
         eventList: [Event]
     }
     
@@ -28,8 +28,8 @@ exports.schema = [`
         description: String
         imageResource: String
         category: [EventCategory]
-        date: String
-        time: String
+        date: DateTime
+        time: DateTime
         location: [EventLocation]
         text: [String]
     }
@@ -49,7 +49,7 @@ exports.schema = [`
         urgent: Boolean
         messageSubject: String
         messageBody: String
-        messageArriveDateTime: Date
-        messageProcessDateTime: Date
+        messageArriveDateTime: DateTime
+        messageProcessDateTime: DateTime
     }
 `]

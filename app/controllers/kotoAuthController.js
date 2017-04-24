@@ -93,7 +93,8 @@ function alertClients(type, msg) {
 
 exports.verifyToken = function (req, res, tokenVerifiedCallback, allowedRolesArray) {
     try {
-        var apiToken = req.headers['apitoken'];
+        let apiToken = req.headers['apitoken'];
+        if (apiToken === undefined) apiToken = req.headers['authorization']
         logger.log(req, 'verifyToken.jwtIn:' + apiToken)
         if (apiToken === undefined) {
             res.status(403).json({ "message": "Missing or incomplete authentication parameters" })
