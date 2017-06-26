@@ -8,6 +8,7 @@ var kotoUserController = require('../app/controllers/kotoUserController');
 var kotoNotifyController = require('../app/controllers/kotoNotifyController');
 var showcaseController = require('../app/controllers/showcaseController');
 var demoTransparentAccount = require('../app/controllers/demoaccounts');
+var animalController = require('../app/controllers/kotoAnimalController');
 var logger = require('../app/utils/logger.js');
 exports.getApiRouter = function () {
 
@@ -107,7 +108,6 @@ exports.getApiRouter = function () {
         .purge(kotoNotifyController.deleteNotify);
 
 
-
 // ----------------------------------------------------
 // KOTO GALLERY
 // ----------------------------------------------------
@@ -182,6 +182,19 @@ exports.getApiRouter = function () {
             showcaseController.postShowcaseSecurityLogin(req, res);
         });
 
+// ----------------------------------------------------
+// ANIMALS
+// ----------------------------------------------------
+
+    api_router.route('/animals/koto')
+        .get(function (req, res, next) {
+            animalController.getAnimalKoto(req, res);
+        });
+
+    api_router.route('/animals/insect')
+        .get(function (req, res, next) {
+            animalController.getAnimalInsects(req, res);
+        });
 
     return api_router;
 }
