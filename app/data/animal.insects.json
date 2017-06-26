@@ -1,203 +1,237 @@
 [
   {
+    "tag": 1,
     "friendlyName": "Black Widow",
     "scientificName": "Latrodectus mactans",
     "classification": "Arachnida",
     "dangerLevel": 10
   },
   {
+    "tag": 2,
     "friendlyName": "Brown Recluse",
     "scientificName": "Loxosceles reclusa",
     "classification": "Arachnida",
     "dangerLevel": 10
   },
   {
+    "tag": 3,
     "friendlyName": "Honey Bee",
     "scientificName": "Apis mellifera",
     "classification": "Hymenoptera",
     "dangerLevel": 6
   },
   {
+    "tag": 4,
     "friendlyName": "Army Ants",
     "scientificName": "Dorylus gribodoi",
     "classification": "Hymenoptera",
     "dangerLevel": 8
   },
   {
+    "tag": 5,
     "friendlyName": "Ladybug",
     "scientificName": "Coccinella septempunctata",
     "classification": "Coleoptera",
     "dangerLevel": 1
   },
   {
+    "tag": 6,
     "friendlyName": "Dog Flea",
     "scientificName": "Ctenocephalides canis",
     "classification": "Pterygota",
     "dangerLevel": 5
   },
   {
+    "tag": 7,
     "friendlyName": "Head Lice",
     "scientificName": "Pediculus humanus capitis",
     "classification": "Pterygota",
     "dangerLevel": 3
   },
   {
+    "tag": 8,
     "friendlyName": "Malaria Mosquito",
     "scientificName": "Anopheles quadrimaculatus",
     "classification": "Diptera",
     "dangerLevel": 7
   },
   {
+    "tag": 9,
     "friendlyName": "Wolf Spider",
     "scientificName": "Lycosa tarantula",
     "classification": "Arachnida",
     "dangerLevel": 6
   },
   {
+    "tag": 10,
     "friendlyName": "Brown Scorpion",
     "scientificName": "Isometrus maculatus",
     "classification": "Scorpiones",
     "dangerLevel": 8
   },
   {
+    "tag": 11,
     "friendlyName": "Centipede",
     "scientificName": "Scutigera coleoptrata",
     "classification": "Chilopoda",
     "dangerLevel": 2
   },
   {
+    "tag": 12,
     "friendlyName": "American Cockroach",
     "scientificName": "Periplaneta americana",
     "classification": "Pterygota",
     "dangerLevel": 3
   },
   {
+    "tag": 13,
     "friendlyName": "Fruit Fly",
     "scientificName": "Ceratitis capitata",
     "classification": "Diptera",
     "dangerLevel": 2
   },
   {
+    "tag": 14,
     "friendlyName": "Yellow Jacket",
     "scientificName": "Vespula squamosa",
     "classification": "Hymenoptera",
     "dangerLevel": 7
   },
   {
+    "tag": 15,
     "friendlyName": "Drywood Termites",
     "scientificName": "Incisitermes minor",
     "classification": "Pterygota",
     "dangerLevel": 1
   },
   {
+    "tag": 16,
     "friendlyName": "Monarch Butterfly",
     "scientificName": "Danaus plexippus",
     "classification": "Lepidoptera",
     "dangerLevel": 1
   },
   {
+    "tag": 17,
     "friendlyName": "Dung Beetle",
     "scientificName": "Digitonthophagus gazella",
     "classification": "Coleoptera",
     "dangerLevel": 1
   },
   {
+    "tag": 18,
     "friendlyName": "Tsetse Fly",
     "scientificName": "Glossina palpalis gambiensis",
     "classification": "Diptera",
     "dangerLevel": 10
   },
   {
+    "tag": 19,
     "friendlyName": "Praying Mantis",
     "scientificName": "Mantis religiosa",
     "classification": "Pterygota",
     "dangerLevel": 2
   },
   {
+    "tag": 20,
     "friendlyName": "Black Earwig",
     "scientificName": "Chelisoches morio",
     "classification": "Dermaptera",
     "dangerLevel": 1
   },
   {
+    "tag": 21,
     "friendlyName": "House Fly",
     "scientificName": "Musca domestica",
     "classification": "Diptera",
     "dangerLevel": 1
   },
   {
+    "tag": 22,
     "friendlyName": "Bed Bugs",
     "scientificName": "Cimex lectularius",
     "classification": "Hemiptera",
     "dangerLevel": 2
   },
   {
+    "tag": 23,
     "friendlyName": "Carpenter Ants",
     "scientificName": "Camponotus pennsylvanicus",
     "classification": "Hymenoptera",
     "dangerLevel": 3
   },
   {
+    "tag": 24,
     "friendlyName": "Field Cricket",
     "scientificName": "Gryllus texensis",
     "classification": "Orthoptera",
     "dangerLevel": 1
   },
   {
+    "tag": 25,
     "friendlyName": "Carpet Moth",
     "scientificName": "Trichophaga tapetzella",
     "classification": "Lepidoptera",
     "dangerLevel": 1
   },
   {
+    "tag": 26,
     "friendlyName": "Deer Tick",
     "scientificName": "",
     "classification": "",
     "dangerLevel": 5
   },
   {
+    "tag": 27,
     "friendlyName": "Puss Caterpillars",
     "scientificName": "",
     "classification": "",
     "dangerLevel": 5
   },
   {
+    "tag": 28,
     "friendlyName": "House Centipedes",
     "scientificName": "",
     "classification": "",
     "dangerLevel": 5
   },
   {
+    "tag": 29,
     "friendlyName": "Assassin Bugs",
     "scientificName": "",
     "classification": "",
     "dangerLevel": 5
   },
   {
+    "tag": 30,
     "friendlyName": "Bullet Ants",
     "scientificName": "",
     "classification": "",
     "dangerLevel": 8
   },
   {
+    "tag": 31,
     "friendlyName": "Brazilian Wandering Spider",
     "scientificName": "",
     "classification": "",
     "dangerLevel": 5
   },
   {
+    "tag": 32,
     "friendlyName": "Fire Ants",
     "scientificName": "",
     "classification": "",
     "dangerLevel": 8
   },
   {
+    "tag": 33,
     "friendlyName": "Siafu Ants",
     "scientificName": "",
     "classification": "",
     "dangerLevel": 8
   },
   {
+    "tag": 34,
     "friendlyName": "Giant Japanese or Asian Hornet",
     "scientificName": "",
     "classification": "",
