@@ -7,3 +7,10 @@
 /public/gallery/high/
 /public/gallery/original/
 /app/data/user.list.json
+/extra/mongodb/*.wt
+/extra/mongodb/*.lock
+/extra/mongodb/*.turtle
+/extra/mongodb/*.bson
+/extra/mongodb/WiredTiger
+/extra/mongodb/journal/*
+/extra/mongodb/diagnostic.data/*
