@@ -5,6 +5,7 @@ var kotoEventController = require('../app/controllers/kotoEventController');
 var kotoGalleryController = require('../app/controllers/kotoGalleryController');
 var kotoAdminController = require('../app/controllers/kotoAdminController');
 var kotoUserController = require('../app/controllers/kotoUserController');
+var kotiHeatingController = require('../app/controllers/kotiHeatingController');
 var kotoNotifyController = require('../app/controllers/kotoNotifyController');
 var showcaseController = require('../app/controllers/showcaseController');
 var demoTransparentAccount = require('../app/controllers/demoaccounts');
@@ -142,6 +143,16 @@ exports.getApiRouter = function () {
         .delete(kotoUserController.deleteUserById)
         .put(kotoUserController.replaceUserById);
 
+// ----------------------------------------------------
+// HEATING
+// ----------------------------------------------------
+
+    api_router.route('/kotinode/heating/info')
+        .post(kotiHeatingController.saveLastHeatingInfo)
+        .get(kotiHeatingController.getLastHeatingInfo);
+
+    api_router.route('/kotinode/heating/raw/info')
+        .post(kotiHeatingController.saveLastHeatingInfoRaw);
 
 // ----------------------------------------------------
 // DB SHOWCASE - CLASS
@@ -195,6 +206,7 @@ exports.getApiRouter = function () {
         .get(function (req, res, next) {
             animalController.getAnimalInsects(req, res);
         });
+
 
     return api_router;
 }
