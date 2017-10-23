@@ -23,5 +23,6 @@
         "role": "showcase-visitor",
         "password": "showcase1234"
         }
-    ]
+    ],
+    "heatingKey": "changeItLocally"
 }
