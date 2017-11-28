@@ -1,14 +1,17 @@
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var logger = require('../utils/logger.js');
+var KotiHeatingModel = require('../models/kotiHeatingModel');
 
 exports.saveHeatingStatus = function (req, res) {
     logger.log(req, 'body:' + JSON.stringify(req.body));
-    var temperature = req.body.temperature;
-    var timetable = req.body.timetable;
+    var temperatureValue = req.body.temperature;
+    var timetableValue = req.body.timetable;
     var keyBody = req.body.key;
     var keyHeader = req.headers['key'];
+    var deviceDateTimeValue = req.body.deviceDateTime;
+    var deviceModeValue = req.body.deviceMode
 
-    if (temperature === undefined) {
+    if (temperatureValue === undefined) {
         logger.log(req, 'Missing t parameter');
         return res.status(401).json({"message": "Missing t parameter"})
     }
@@ -19,14 +22,32 @@ exports.saveHeatingStatus = function (req, res) {
 
     if ((keyBody === kotiConfig.heatingKey) || ( keyHeader === kotiConfig.heatingKey)) {
 
+        //[hour:18][minute:25][day:MO]
+        var matches = deviceDateTimeValue.match(/\[hour:(.*?)\]\[minute:(.*?)\]\[day:(.*?)\]/);
 
+        var hourValue = matches[1];
+        var minuteValue = matches[2];
+        var dayValue = matches[3];
 
-        return res.status(200).json({
-            "dataValue": {
-                "temperature": temperature,
-                "keyHeader": keyHeader,
-                "keyBody": keyBody
-            }
+        var heatingModel = new KotiHeatingModel(
+            {
+                heatingDeviceStatus: {
+                    uniqueId: 0,
+                    hour: hourValue,
+                    minute: minuteValue,
+                    day: dayValue,
+                    deviceMode: deviceModeValue,
+                    temperature: temperatureValue,
+                    timestamp: new Date(),
+                }
+            });
+        logger.log(req, heatingModel)
+        // save the bear and check for errors
+        heatingModel.save(function (err, updateResult) {
+            if (err)
+                res.send(err)
+            else
+                res.status(200).jsonWrapped(updateResult)
         })
     } else {
         logger.log(req, 'Invalid credentials');
@@ -37,13 +58,15 @@ exports.saveHeatingStatus = function (req, res) {
 };
 
 exports.getHeatingStatus = function (req, res) {
-
-    //TODO read from DB
-    return res.status(200).json({
-        "dataValue": {
-            "temperature": 19.5
+    logger.log(req, "getHeatingStatus")
+    KotiHeatingModel.find().where('heatingDeviceStatus.uniqueId').equals(0).exec(function (err, findResult) {
+        if (err) {
+            res.status(500).send(err)
+        } else {
+            logger.log(req, findResult)
+            res.jsonWrapped(findResult);
         }
-    })
+    });
 }
 
 //hexString = yourNumber.toString(16);
@@ -62,7 +85,7 @@ exports.getHeatingScheduleRaw = function (req, res) {
 
 
     //TODO read from DB
-    return res.status(200).send(su+mo+tu+we+th+fr+sa);
+    return res.status(200).send(su + mo + tu + we + th + fr + sa);
 }
 
 exports.getHeatingSchedule = function (req, res) {
