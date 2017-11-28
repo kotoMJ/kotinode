@@ -29,26 +29,28 @@ exports.saveHeatingStatus = function (req, res) {
         var minuteValue = matches[2];
         var dayValue = matches[3];
 
-        var heatingModel = new KotiHeatingModel(
+        var newHeatingModel =
             {
+                uniqueModelId: 0,
                 heatingDeviceStatus: {
-                    uniqueId: 0,
                     hour: hourValue,
                     minute: minuteValue,
                     day: dayValue,
                     deviceMode: deviceModeValue,
                     temperature: temperatureValue,
                     timestamp: new Date(),
+                    timetable: timetableValue
                 }
-            });
-        logger.log(req, heatingModel)
-        // save the bear and check for errors
-        heatingModel.save(function (err, updateResult) {
-            if (err)
-                res.send(err)
-            else
-                res.status(200).jsonWrapped(updateResult)
-        })
+            };
+        logger.log(req, newHeatingModel)
+        KotiHeatingModel.findOneAndUpdate({uniqueModelId: 0}, newHeatingModel,
+            {upsert: true, new: true, runValidators: true}, // options
+            function (err, updateResult) {
+                if (err)
+                    res.send(err)
+                else
+                    res.status(200).jsonWrapped(updateResult)
+            })
     } else {
         logger.log(req, 'Invalid credentials');
         return res.status(403).json({
@@ -59,7 +61,7 @@ exports.saveHeatingStatus = function (req, res) {
 
 exports.getHeatingStatus = function (req, res) {
     logger.log(req, "getHeatingStatus")
-    KotiHeatingModel.find().where('heatingDeviceStatus.uniqueId').equals(0).exec(function (err, findResult) {
+    KotiHeatingModel.find().where('uniqueModelId').equals(0).exec(function (err, findResult) {
         if (err) {
             res.status(500).send(err)
         } else {
