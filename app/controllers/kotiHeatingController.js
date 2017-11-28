@@ -3,7 +3,6 @@ var logger = require('../utils/logger.js');
 var KotiHeatingModel = require('../models/kotiHeatingModel');
 
 exports.saveHeatingStatus = function (req, res) {
-    logger.log(req, 'body:' + JSON.stringify(req.body));
     var temperatureValue = req.body.temperature;
     var timetableValue = req.body.timetable;
     var keyBody = req.body.key;
@@ -42,12 +41,15 @@ exports.saveHeatingStatus = function (req, res) {
                     timetable: timetableValue
                 }
             };
-        logger.log(req, newHeatingModel)
         KotiHeatingModel.findOneAndUpdate({uniqueModelId: 0}, newHeatingModel,
             {upsert: true, new: true, runValidators: true}, // options
             function (err, updateResult) {
-                if (err)
+                if (err) {
+                    logger.log(req, 'incoming body:' + JSON.stringify(req.body));
+                    logger.log(req, "error when saving model:");
+                    logger.log(req, newHeatingModel);
                     res.send(err)
+                }
                 else
                     res.status(200).jsonWrapped(updateResult)
             })
