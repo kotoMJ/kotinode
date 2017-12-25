@@ -1,8 +1,9 @@
 #KoTiNode server
 
 KoTiNode is a server (including bundled web-client) as a basic communication platform for small municipal infrastructure. 
-Web is bundled from [KoTiPoint-web](https://github.com/kotomisak/kotipoint-web)repository.
+Web is bundled from [KoTiPoint-web](https://github.com/kotomisak/kotipoint-web) repository.
 
+IoT client is in [KoTiHeating](https://github.com/kotomisak/kotiheating-arduino) repository.
 
 ## The idea behind
 The main idea of this server (and connected clients) is to provide basic server side 
