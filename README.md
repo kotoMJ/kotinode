@@ -22,11 +22,10 @@ For feature (current and future) details [check the CHANGELOG](./CHANGELOG.md)
 </a>
 
 
+## Licence
+ © Copyleft (also known as GNU GPLv3)
+
 ## Powered by
 <a href="http://kotopeky.cz/project">
 <img border="0" alt="project" src="./extra/jetbrains/jetbrains-variant-4-grayscale.svg">
 </a>
-
-
-## Licence
- © Copyleft (also known as GNU GPLv3)
