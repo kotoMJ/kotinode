@@ -1,6 +1,7 @@
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 var logger = require('../utils/logger.js');
-var KotiHeatingModel = require('../models/kotiHeatingModel');
+var KotiHeatingSchema = require('../models/KotiHeatingSchema');
+var KotiHeatingSchedule = require('../models/KotiHeatingSchedule');
 
 exports.saveHeatingStatus = function (req, res) {
     var temperatureValue = req.body.temperature;
@@ -19,7 +20,7 @@ exports.saveHeatingStatus = function (req, res) {
         return res.status(401).json({"message": "Missing k parameter"})
     }
 
-    if ((keyBody === kotiConfig.heatingKey) || ( keyHeader === kotiConfig.heatingKey)) {
+    if ((keyBody === kotiConfig.heatingKey) || (keyHeader === kotiConfig.heatingKey)) {
 
         //[hour:18][minute:25][day:MO]
         var matches = deviceDateTimeValue.match(/\[hour:(.*?)\]\[minute:(.*?)\]\[day:(.*?)\]/);
@@ -28,7 +29,7 @@ exports.saveHeatingStatus = function (req, res) {
         var minuteValue = matches[2];
         var dayValue = matches[3];
 
-        var newHeatingModel =
+        var newHeatingSchema =
             {
                 uniqueModelId: 0,
                 heatingDeviceStatus: {
@@ -41,7 +42,7 @@ exports.saveHeatingStatus = function (req, res) {
                     timetable: timetableValue
                 }
             };
-        KotiHeatingModel.findOneAndUpdate({uniqueModelId: 0}, newHeatingModel,
+        KotiHeatingSchema.findOneAndUpdate({uniqueModelId: 0}, newHeatingSchema,
             {upsert: true, new: true, runValidators: true}, // options
             function (err, updateResult) {
                 if (err) {
@@ -63,7 +64,7 @@ exports.saveHeatingStatus = function (req, res) {
 
 exports.getHeatingStatus = function (req, res) {
     logger.log(req, "getHeatingStatus")
-    KotiHeatingModel.find().where('uniqueModelId').equals(0).exec(function (err, findResult) {
+    KotiHeatingSchema.find().where('uniqueModelId').equals(0).exec(function (err, findResult) {
         if (err) {
             res.status(500).send(err)
         } else {
@@ -76,20 +77,72 @@ exports.getHeatingStatus = function (req, res) {
 //hexString = yourNumber.toString(16);
 //yourNumber = parseInt(hexString, 16);
 
+exports.setHeatingSchedule = function (req, res) {
+    logger.log(req, "getHeatingStatus")
+    var timetable = req.body.timetable;
+    var validity = req.body.validity;
+
+    var newHeatingSchedule =
+        {
+            uniqueScheduleId: 0,
+            timetable: timetable,
+            validity: validity
+        };
+
+    KotiHeatingSchedule.findOneAndUpdate({uniqueScheduleId: 0}, newHeatingSchedule,
+        {upsert: true, new: true, runValidators: true}, // options
+        function (err, updateResult) {
+            if (err) {
+                logger.log(req, 'incoming body:' + JSON.stringify(req.body));
+                logger.log(req, "error when saving model:");
+                logger.log(req, newHeatingSchedule);
+                res.send(err)
+            }
+            else
+                res.status(200).jsonWrapped(updateResult)
+        })
+}
+
 exports.getHeatingScheduleRaw = function (req, res) {
 
 
-    let su = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
-    let mo = new Array('150 150 150 150 150 150 150 230 230 230 230 230 230 230 230 230 230 230 230 230 200 150 150 150 ');
-    let tu = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
-    let we = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
-    let th = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
-    let fr = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
-    let sa = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
+    KotiHeatingSchema.find().where('uniqueModelId').equals(0).exec(function (err, schema) {
+        if (err) {
+            return res.status(500).send(err)
+        } else {
+            logger.log(req, schema)
+
+
+            let week = []
+            if (schema.timetable) {
+                for (let day = 0; day < 8; day++) {
+                    let day = []
+                    if (schema.timetable.length === 8) {
+                        for (let hour = 0; hour < 25; hour++) {
+                            if (schema.timetable[day].length === 24) {
+                                day.push(schema.timetable[day][hour]).push(" ")
+                            }
+                        }
+                    }
+                    week.push(day)
+                }
+            }
+
+            return res.status(200).send(week);
+        }
+    });
+
+    // let su = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
+    // let mo = new Array('150 150 150 150 150 150 150 230 230 230 230 230 230 230 230 230 230 230 230 230 200 150 150 150 ');
+    // let tu = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
+    // let we = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
+    // let th = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
+    // let fr = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
+    // let sa = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
 
 
     //TODO read from DB
-    return res.status(200).send(su + mo + tu + we + th + fr + sa);
+    //return res.status(200).send(/*su + mo + tu + we + th + fr + sa*/);
 }
 
 exports.getHeatingSchedule = function (req, res) {

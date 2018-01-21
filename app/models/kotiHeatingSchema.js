@@ -18,4 +18,4 @@ var KotiHeatingSchema = new Schema({
 });
 
 
-module.exports = mongoose.model('KotiHeatingModel', KotiHeatingSchema);
+module.exports = mongoose.model('KotiHeatingSchema', KotiHeatingSchema);
