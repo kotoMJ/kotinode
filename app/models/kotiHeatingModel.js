@@ -7,6 +7,7 @@ var KotiHeatingSchema = new Schema({
         hour: {type: Number},
         minute: {type: Number},
         day: {type: String},
+        deviceMode: {type: Number},
         temperature: {type: Number, required: true},
         timestamp: {type: Date, required: true},
         timetable: [[{type: Number, required: true}]]
