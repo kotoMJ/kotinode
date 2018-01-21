@@ -10,7 +10,7 @@ The main idea of this server (and connected clients) is to provide basic server 
 for many form of clients to be connected and to provide new communication channels for small municipal infrastructure.
 
 
-##Release notes
+## Release notes
 Ecosystem is hosted on [Kotopeky.cz](https://kotopeky.cz) and [Tihava.cz](https://tihava.cz)<br/>
 
 For feature (current and future) details [check the CHANGELOG](./CHANGELOG.md)
@@ -21,5 +21,12 @@ For feature (current and future) details [check the CHANGELOG](./CHANGELOG.md)
 <img border="0" alt="project" src="./public/images/KoTiDiagram.png">
 </a>
 
-##Licence
+
+## Powered by
+<a href="http://kotopeky.cz/project">
+<img border="0" alt="project" src="./extra/jetbrains/jetbrains-variant-4-grayscale.svg">
+</a>
+
+
+## Licence
  © Copyleft (also known as GNU GPLv3)
