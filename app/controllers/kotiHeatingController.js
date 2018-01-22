@@ -102,19 +102,19 @@ exports.getHeatingScheduleRaw = function (req, res) {
         if (err) {
             return res.status(500).send(err)
         } else {
-            logger.log(req, 'loaded schema:' + JSON.stringify(schema));
+            // logger.log(req, 'loaded schema:' + JSON.stringify(schema));
             let weekString = "";
             if (schema.timetable !== undefined) {
                 for (let day = 0; day < 7; day++) {
                     let dayString = "";
-                    logger.log(req, 'schema.timetable.length:' + schema.timetable.length);
+                    // logger.log(req, 'schema.timetable.length:' + schema.timetable.length);
                     if (schema.timetable.length === 7) {
-                        logger.log(req, '[day]:' + JSON.stringify(day));
-                        logger.log(req, 'schema.timetable[day]:' + JSON.stringify(schema.timetable[day]));
+                        // logger.log(req, '[day]:' + JSON.stringify(day));
+                        // logger.log(req, 'schema.timetable[day]:' + JSON.stringify(schema.timetable[day]));
                         if (schema.timetable[day].length === 24) {
                             for (let hour = 0; hour < 24; hour++) {
-                                logger.log(req, '[hour]:' + JSON.stringify(hour));
-                                logger.log(req, 'schema.timetable[day][hour]:' + JSON.stringify(schema.timetable[day][hour]));
+                                // logger.log(req, '[hour]:' + JSON.stringify(hour));
+                                // logger.log(req, 'schema.timetable[day][hour]:' + JSON.stringify(schema.timetable[day][hour]));
                                 dayString = dayString + schema.timetable[day][hour];
                                 dayString = dayString + " "
                             }
