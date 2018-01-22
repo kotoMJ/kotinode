@@ -1,9 +1,9 @@
-var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
-var logger = require('../utils/logger.js');
-var KotiHeatingSchema = require('../models/KotiHeatingSchema');
-var KotiHeatingSchedule = require('../models/KotiHeatingSchedule');
-var apiKeyUtils = require('./kotoAuthController');
-var moment = require('moment');
+const kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
+const logger = require('../utils/logger.js');
+const KotiHeatingSchedule = require('../models/KotiHeatingSchedule');
+const KotiHeatingSchema = require('../models/KotiHeatingSchema');
+const apiKeyUtils = require('./kotoAuthController');
+const moment = require('moment');
 
 verifyAccess = function (req, res, successCallback) {
     kotoNotify.messageProcessDateTime = new Date()
