@@ -5,20 +5,6 @@ const KotiHeatingSchema = require('../models/kotiHeatingSchema');
 const apiKeyUtils = require('./kotoAuthController');
 const moment = require('moment');
 
-verifyAccess = function (req, res, successCallback) {
-    kotoNotify.messageProcessDateTime = new Date()
-    logger.log(req, 'success email callback.c... saving.')
-    kotoNotify.save(function (err, result) {
-        if (err) {
-            logger.log(req, error)
-            throw Error('Unable to save [email]:' + JSON.stringify(kotoNotify))
-        }
-        else {
-            res.status(200).json({"message": `Notification finished for type > ${kotoNotify.notificationType}`})
-        }
-    })
-}
-
 exports.saveHeatingStatus = function (req, res) {
     apiKeyUtils.verifyHeatingKey(req, res, () => {
         const temperatureValue = req.body.temperature;
@@ -29,10 +15,6 @@ exports.saveHeatingStatus = function (req, res) {
         if (temperatureValue === undefined) {
             logger.log(req, 'Missing t parameter');
             return res.status(401).json({"message": "Missing t parameter"})
-        }
-        if ((keyBody === undefined) && (keyHeader === undefined)) {
-            logger.log(req, 'Missing k parameter');
-            return res.status(401).json({"message": "Missing k parameter"})
         }
 
         //[hour:18][minute:25][day:MO]

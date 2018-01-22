@@ -92,11 +92,11 @@ function alertClients(type, msg) {
 }
 
 exports.verifyHeatingKey = function (req, res, tokenVerifiedCallback) {
-    let keyBody = req.body.key;
+    const keyBody = req.body.key;
     const keyHeader = req.headers['key'];
 
     try {
-        if ((keyBody && keyBody === kotiConfig.heatingKey) || (keyHeader && keyHeader === kotiConfig.heatingKey)) {
+        if ((keyBody === kotiConfig.heatingKey) || (keyHeader === kotiConfig.heatingKey)) {
             tokenVerifiedCallback()
         } else {
             logger.log(req, 'Invalid credentials');
