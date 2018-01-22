@@ -1,7 +1,7 @@
 const kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 const logger = require('../utils/logger.js');
-const KotiHeatingSchedule = require('../models/KotiHeatingSchedule');
-const KotiHeatingSchema = require('../models/KotiHeatingSchema');
+const KotiHeatingSchedule = require('../models/kotiHeatingSchedule');
+const KotiHeatingSchema = require('../models/kotiHeatingSchema');
 const apiKeyUtils = require('./kotoAuthController');
 const moment = require('moment');
 
