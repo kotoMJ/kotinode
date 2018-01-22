@@ -147,7 +147,7 @@ exports.getHeatingSchedule = function (req, res) {
         if (err) {
             return res.status(500).send(err)
         } else {
-            logger.log(req, 'loaded schema:' + JSON.stringify(schema));
+            // logger.log(req, 'loaded schema:' + JSON.stringify(schema));
             let weekString = "";
             if (schema.timetable !== undefined) {
                 return res.status(200).json({
