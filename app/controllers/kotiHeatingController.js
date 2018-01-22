@@ -2,7 +2,7 @@ var kotiConfig = require('config.json')('./app/config/config.json', process.env.
 var logger = require('../utils/logger.js');
 var KotiHeatingSchema = require('../models/KotiHeatingSchema');
 var KotiHeatingSchedule = require('../models/KotiHeatingSchedule');
-var apiKeyUtils = require('../controllers/kotoAuthController');
+var apiKeyUtils = require('./kotoAuthController');
 var moment = require('moment');
 
 verifyAccess = function (req, res, successCallback) {
