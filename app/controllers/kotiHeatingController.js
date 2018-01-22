@@ -2,25 +2,38 @@ var kotiConfig = require('config.json')('./app/config/config.json', process.env.
 var logger = require('../utils/logger.js');
 var KotiHeatingSchema = require('../models/KotiHeatingSchema');
 var KotiHeatingSchedule = require('../models/KotiHeatingSchedule');
+var apiKeyUtils = require('../controllers/kotoAuthController');
+var moment = require('moment');
+
+verifyAccess = function (req, res, successCallback) {
+    kotoNotify.messageProcessDateTime = new Date()
+    logger.log(req, 'success email callback.c... saving.')
+    kotoNotify.save(function (err, result) {
+        if (err) {
+            logger.log(req, error)
+            throw Error('Unable to save [email]:' + JSON.stringify(kotoNotify))
+        }
+        else {
+            res.status(200).json({"message": `Notification finished for type > ${kotoNotify.notificationType}`})
+        }
+    })
+}
 
 exports.saveHeatingStatus = function (req, res) {
-    var temperatureValue = req.body.temperature;
-    var timetableValue = req.body.timetable;
-    var keyBody = req.body.key;
-    var keyHeader = req.headers['key'];
-    var deviceDateTimeValue = req.body.deviceDateTime;
-    var deviceModeValue = req.body.deviceMode
+    apiKeyUtils.verifyHeatingKey(req, res, () => {
+        const temperatureValue = req.body.temperature;
+        const timetableValue = req.body.timetable;
+        const deviceDateTimeValue = req.body.deviceDateTime;
+        const deviceModeValue = req.body.deviceMode;
 
-    if (temperatureValue === undefined) {
-        logger.log(req, 'Missing t parameter');
-        return res.status(401).json({"message": "Missing t parameter"})
-    }
-    if ((keyBody === undefined) && (keyHeader === undefined)) {
-        logger.log(req, 'Missing k parameter');
-        return res.status(401).json({"message": "Missing k parameter"})
-    }
-
-    if ((keyBody === kotiConfig.heatingKey) || (keyHeader === kotiConfig.heatingKey)) {
+        if (temperatureValue === undefined) {
+            logger.log(req, 'Missing t parameter');
+            return res.status(401).json({"message": "Missing t parameter"})
+        }
+        if ((keyBody === undefined) && (keyHeader === undefined)) {
+            logger.log(req, 'Missing k parameter');
+            return res.status(401).json({"message": "Missing k parameter"})
+        }
 
         //[hour:18][minute:25][day:MO]
         var matches = deviceDateTimeValue.match(/\[hour:(.*?)\]\[minute:(.*?)\]\[day:(.*?)\]/);
@@ -54,12 +67,7 @@ exports.saveHeatingStatus = function (req, res) {
                 else
                     res.status(200).jsonWrapped(updateResult)
             })
-    } else {
-        logger.log(req, 'Invalid credentials');
-        return res.status(403).json({
-            "dataValue": "invalid credentials"
-        })
-    }
+    })
 };
 
 exports.getHeatingStatus = function (req, res) {
@@ -78,57 +86,65 @@ exports.getHeatingStatus = function (req, res) {
 //yourNumber = parseInt(hexString, 16);
 
 exports.setHeatingSchedule = function (req, res) {
-    logger.log(req, "getHeatingStatus")
-    var timetable = req.body.timetable;
-    var validity = req.body.validity;
+    logger.log(req, "setHeatingSchedule")
+    apiKeyUtils.verifyHeatingKey(req, res, () => {
+        logger.log(req, 'incoming body:' + JSON.stringify(req.body));
+        const timetable = req.body.timetable;
+        //const validity = req.body.validity;
+        let newHeatingSchedule =
+            {
+                uniqueScheduleId: 0,
+                timetable: timetable,
+                validity: Date()
+                //validity: moment(validity, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate()//2018-01-22T06:52:49.000Z
+            };
 
-    var newHeatingSchedule =
-        {
-            uniqueScheduleId: 0,
-            timetable: timetable,
-            validity: validity
-        };
-
-    KotiHeatingSchedule.findOneAndUpdate({uniqueScheduleId: 0}, newHeatingSchedule,
-        {upsert: true, new: true, runValidators: true}, // options
-        function (err, updateResult) {
-            if (err) {
-                logger.log(req, 'incoming body:' + JSON.stringify(req.body));
-                logger.log(req, "error when saving model:");
-                logger.log(req, newHeatingSchedule);
-                res.send(err)
-            }
-            else
-                res.status(200).jsonWrapped(updateResult)
-        })
+        KotiHeatingSchedule.findOneAndUpdate({uniqueScheduleId: 0}, newHeatingSchedule,
+            {upsert: true, new: true, runValidators: true}, // options
+            function (err, updateResult) {
+                if (err) {
+                    logger.log(req, 'incoming body:' + JSON.stringify(req.body));
+                    logger.log(req, "error when saving model:");
+                    logger.log(req, newHeatingSchedule);
+                    res.send(err)
+                }
+                else
+                    res.status(200).jsonWrapped(updateResult)
+            })
+    })
 }
 
 exports.getHeatingScheduleRaw = function (req, res) {
 
-
-    KotiHeatingSchema.find().where('uniqueModelId').equals(0).exec(function (err, schema) {
+    KotiHeatingSchedule.findOne().where('uniqueScheduleId').equals(0).exec(function (err, schema) {
         if (err) {
             return res.status(500).send(err)
         } else {
-            logger.log(req, schema)
-
-
-            let week = []
-            if (schema.timetable) {
-                for (let day = 0; day < 8; day++) {
-                    let day = []
-                    if (schema.timetable.length === 8) {
-                        for (let hour = 0; hour < 25; hour++) {
-                            if (schema.timetable[day].length === 24) {
-                                day.push(schema.timetable[day][hour]).push(" ")
+            logger.log(req, 'loaded schema:' + JSON.stringify(schema));
+            let weekString = "";
+            if (schema.timetable !== undefined) {
+                for (let day = 0; day < 7; day++) {
+                    let dayString = "";
+                    logger.log(req, 'schema.timetable.length:' + schema.timetable.length);
+                    if (schema.timetable.length === 7) {
+                        logger.log(req, '[day]:' + JSON.stringify(day));
+                        logger.log(req, 'schema.timetable[day]:' + JSON.stringify(schema.timetable[day]));
+                        if (schema.timetable[day].length === 24) {
+                            for (let hour = 0; hour < 24; hour++) {
+                                logger.log(req, '[hour]:' + JSON.stringify(hour));
+                                logger.log(req, 'schema.timetable[day][hour]:' + JSON.stringify(schema.timetable[day][hour]));
+                                dayString = dayString + schema.timetable[day][hour];
+                                dayString = dayString + " "
                             }
                         }
                     }
-                    week.push(day)
+                    weekString = weekString + dayString
                 }
+            } else {
+                logger.log(req, 'no timetable!');
             }
 
-            return res.status(200).send(week);
+            return res.status(200).send(weekString);
         }
     });
 
@@ -140,27 +156,44 @@ exports.getHeatingScheduleRaw = function (req, res) {
     // let fr = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
     // let sa = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
 
-
-    //TODO read from DB
     //return res.status(200).send(/*su + mo + tu + we + th + fr + sa*/);
 }
 
 exports.getHeatingSchedule = function (req, res) {
 
-    //TODO read from DB
-    return res.status(200).json({
-            "dataValue": {
-                "schedule":
-                    [
-                        ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150"], // NE
-                        ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "230", "230", "230", "230", "230", "230", "150", "150", "150", "150"], // PO
-                        ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150"], // UT
-                        ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150"], // ST
-                        ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150"], // CT
-                        ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150"], // PA
-                        ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150"] // SO
-                    ]
+    KotiHeatingSchedule.findOne().where('uniqueScheduleId').equals(0).exec(function (err, schema) {
+        if (err) {
+            return res.status(500).send(err)
+        } else {
+            logger.log(req, 'loaded schema:' + JSON.stringify(schema));
+            let weekString = "";
+            if (schema.timetable !== undefined) {
+                return res.status(200).json({
+                    "dataValue": {
+                        "schedule": schema.timetable
+                    }
+                })
+            } else {
+                logger.log(req, 'no timetable!');
             }
+
+            return res.status(200).send(weekString);
         }
-    )
+    });
+
+    // return res.status(200).json({
+    //         "dataValue": {
+    //             "schedule":
+    //                 [
+    //                     ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150"], // NE
+    //                     ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "230", "230", "230", "230", "230", "230", "150", "150", "150", "150"], // PO
+    //                     ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150"], // UT
+    //                     ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150"], // ST
+    //                     ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150"], // CT
+    //                     ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150"], // PA
+    //                     ["150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150", "150"] // SO
+    //                 ]
+    //         }
+    //     }
+    // )
 }

@@ -34,7 +34,7 @@ exports.postKotoLogin = function (req, res) {
             'user': currentUser.email,
             'role': currentUser.role,
         };
-        var jwtToken = jwt.sign(profile, kotiConfig.api_key, { 'expiresIn': kotiConfig.api_expire });  // 5*60: 5min
+        var jwtToken = jwt.sign(profile, kotiConfig.api_key, {'expiresIn': kotiConfig.api_expire});  // 5*60: 5min
         logger.log(req, 'jwtOut:' + jwtToken)
         res.status(200).json({
             id_token: jwtToken
@@ -43,7 +43,7 @@ exports.postKotoLogin = function (req, res) {
         alertClients('info', `User '${credentials.user}' just logged in`);
     } else {
         logger.log(req, "bad...");
-        res.status(401).json({ 'message': 'Invalid user/password' });
+        res.status(401).json({'message': 'Invalid user/password'});
 
         alertClients('error', `User '${credentials.user}' just failed to login`);
     }
@@ -71,7 +71,7 @@ exports.loginGQLPromise = function (requestId, email, password) {
                 'user': currentUser.email,
                 'role': currentUser.role,
             };
-            var jwtToken = jwt.sign(profile, kotiConfig.api_key, { 'expiresIn': kotiConfig.api_expire });  // 5*60: 5min
+            var jwtToken = jwt.sign(profile, kotiConfig.api_key, {'expiresIn': kotiConfig.api_expire});  // 5*60: 5min
             logger.log(requestId, 'jwtOut:' + jwtToken)
             resolve({
                 token: jwtToken
@@ -88,7 +88,26 @@ exports.loginGQLPromise = function (requestId, email, password) {
 // Alerts all clients via socket io.
 function alertClients(type, msg) {
     console.log("SocketIO alerting clients: ", msg);
-    koTio.sockets.emit('alert', { message: msg, time: new Date(), type });
+    koTio.sockets.emit('alert', {message: msg, time: new Date(), type});
+}
+
+exports.verifyHeatingKey = function (req, res, tokenVerifiedCallback) {
+    let keyBody = req.body.key;
+    const keyHeader = req.headers['key'];
+
+    try {
+        if ((keyBody === kotiConfig.heatingKey) || (keyHeader === kotiConfig.heatingKey)) {
+            tokenVerifiedCallback()
+        } else {
+            logger.log(req, 'Invalid credentials');
+            return res.status(403).json({
+                "dataValue": "invalid credentials"
+            })
+        }
+    } catch (Exception) {
+        logger.err(req, Exception)
+        res.status(403).json({"message": "Unexpected authentization error!"})
+    }
 }
 
 exports.verifyToken = function (req, res, tokenVerifiedCallback, allowedRolesArray) {
@@ -97,35 +116,35 @@ exports.verifyToken = function (req, res, tokenVerifiedCallback, allowedRolesArr
         if (apiToken === undefined) apiToken = req.headers['authorization']
         logger.log(req, 'verifyToken.jwtIn:' + apiToken)
         if (apiToken === undefined) {
-            res.status(403).json({ "message": "Missing or incomplete authentication parameters" })
+            res.status(403).json({"message": "Missing or incomplete authentication parameters"})
         } else {
             jwt.verify(apiToken, kotiConfig.api_key, function (err, decoded) {
                 if (decoded) {
                     const now = new Date().getTime() / 1000;
                     if (now > apiToken.exp) {
                         logger.log(req, 'Expired token for USER:' + decoded.user + ' ROLE:' + decoded.role)
-                        res.status(401).json({ "message": "Authentication parameters expired!" })
+                        res.status(401).json({"message": "Authentication parameters expired!"})
                     } else {
                         if (allowedRolesArray === undefined || allowedRolesArray.indexOf(decoded.role) != -1) {
                             logger.log(req, 'Valid token for USER:' + decoded.user + ' ROLE:' + decoded.role)
                             tokenVerifiedCallback(decoded)
                         } else {
-                            res.status(403).json({ "message": "Missing permissions!" })
+                            res.status(403).json({"message": "Missing permissions!"})
                         }
                     }
                 } else {
                     logger.err(req, 'verifyToken.verify failed:' + err)
                     if (err && err.name === 'TokenExpiredError') {
-                        res.status(401).json({ "message": "Authentication parameters expired!" })
+                        res.status(401).json({"message": "Authentication parameters expired!"})
                     } else {
-                        res.status(403).json({ "message": "Missing permissions!" })
+                        res.status(403).json({"message": "Missing permissions!"})
                     }
                 }
             });
         }
     } catch (Exception) {
         logger.err(req, Exception)
-        res.status(403).json({ "message": "Unexpected authentization error!" })
+        res.status(403).json({"message": "Unexpected authentization error!"})
     }
 }
 
