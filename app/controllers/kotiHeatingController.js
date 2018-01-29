@@ -4,6 +4,7 @@ const KotiHeatingSchedule = require('../models/kotiHeatingSchedule');
 const KotiHeatingSchema = require('../models/kotiHeatingSchema');
 const apiKeyUtils = require('./kotoAuthController');
 const moment = require('moment');
+const sslCertificate = require('get-ssl-certificate');
 
 exports.saveHeatingStatus = function (req, res) {
     apiKeyUtils.verifyHeatingKey(req, res, () => {
@@ -178,4 +179,8 @@ exports.getHeatingSchedule = function (req, res) {
     //         }
     //     }
     // )
+}
+
+exports.getCert = function (req, res) {
+    return res.status(200).send(sslCertificate);
 }

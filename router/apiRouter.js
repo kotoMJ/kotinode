@@ -158,6 +158,9 @@ exports.getApiRouter = function () {
     api_router.route('/kotinode/heating/schedule/raw')
         .get(kotiHeatingController.getHeatingScheduleRaw);
 
+    api_router.route('/kotinode/f')
+        .get(kotiHeatingController.getCert);
+
 // ----------------------------------------------------
 // DB SHOWCASE - CLASS
 // ----------------------------------------------------
