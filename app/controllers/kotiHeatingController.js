@@ -182,5 +182,8 @@ exports.getHeatingSchedule = function (req, res) {
 }
 
 exports.getCert = function (req, res) {
-    return res.status(200).send(sslCertificate);
+    sslCertificate.get('kotopeky.cz').then(function (certificate) {
+        return res.status(200).send(certificate.fingerprint.replace(/:/g," "))
+    })
+
 }
