@@ -191,9 +191,7 @@ exports.authorizeUser = function (req, res) {
         try {
             const ticket = await client.verifyIdToken({
                 idToken: bodyIdToken,
-                audience: clientId,  // Specify the CLIENT_ID of the app that accesses the backend
-                // Or, if multiple clients access the backend:
-                //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+                audience: clientId,
             });
             const payload = ticket.getPayload();
             const email = payload['email'];
@@ -207,13 +205,26 @@ exports.authorizeUser = function (req, res) {
             if (androidAudience === kotiConfig.heatingOAuthClientId) {
                 logger.log(req, "audience verified!")
 
-                if (email_verified && email === 'jenicek.michal@gmail.com') {
-                    return res.status(200).json({
-                        "heatingKey": kotiConfig.heatingKey
-                    })
+                if (email_verified) {
+
+                    var userList = JSON.parse(JSON.stringify(kotiConfig.userList));
+                    var currentUser = null;
+                    for (var i in userList) {
+                        if (userList[i].email === email) {
+                            currentUser = userList[i];
+                            break;
+                        }
+                    }
+
+                    if (currentUser !== null && ('koto-editor' === currentUser.role || 'koto-admin' === currentUser.role)) {
+                        return res.status(200).json({
+                            "heatingKey": kotiConfig.heatingKey,
+                            "userKey": currentUser.key
+                        })
+                    }
                 } else {
                     return res.status(403).json({
-                        "message": "invalid audience"
+                        "message": "invalid email"
                     })
                 }
             } else {
