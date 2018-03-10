@@ -201,6 +201,15 @@ exports.getApiRouter = function () {
         });
 
 // ----------------------------------------------------
+// AUTH
+// ----------------------------------------------------
+
+    api_router.route('/kotinode/auth/google')
+        .post(function (req, res, next) {
+            kotoAuthController.authorizeUser(req, res);
+        });
+
+// ----------------------------------------------------
 // ANIMALS
 // ----------------------------------------------------
 

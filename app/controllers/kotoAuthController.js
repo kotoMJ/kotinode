@@ -2,6 +2,7 @@ var jwt = require('jsonwebtoken');
 var logger = require('../utils/logger.js');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 const Promise = require('bluebird');
+const {OAuth2Client} = require('google-auth-library');
 
 exports.preflight = function (req, res) {
     logger.log(req, 'Preflight...');
@@ -175,4 +176,59 @@ exports.verifyGQLTokenPromise = function (requestId, apiToken) {
             });
         }
     })
+}
+
+
+exports.authorizeUser = function (req, res) {
+
+    logger.log(req, 'body=' + JSON.stringify(req.body))
+
+    const clientId = "950395156002-1emg9edo9g73u6bi1uuiksij6r05ddi6.apps.googleusercontent.com"
+    const client = new OAuth2Client(clientId);
+    const bodyIdToken = req.body.idToken;
+
+    async function verify() {
+        try {
+            const ticket = await client.verifyIdToken({
+                idToken: bodyIdToken,
+                audience: clientId,  // Specify the CLIENT_ID of the app that accesses the backend
+                // Or, if multiple clients access the backend:
+                //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+            });
+            const payload = ticket.getPayload();
+            const email = payload['email'];
+            const email_verified = payload['email_verified'];
+            const webAudience = payload['aud'];//the client ID of the web component of the project
+            const androidAudience = payload['azp'];//the client ID of the Android app component of project
+
+            logger.log(req, 'payload=' + JSON.stringify(payload))
+            logger.log(req, 'email=' + email + ', email_verified=' + email_verified)
+
+            if (androidAudience === kotiConfig.heatingOAuthClientId) {
+                logger.log(req, "audience verified!")
+
+                if (email_verified && email === 'jenicek.michal@gmail.com') {
+                    return res.status(200).json({
+                        "heatingKey": kotiConfig.heatingKey
+                    })
+                } else {
+                    return res.status(403).json({
+                        "message": "invalid audience"
+                    })
+                }
+            } else {
+                logger.err(req, "unknown audience!")
+                return res.status(403).json({
+                    "message": "invalid audience"
+                })
+            }
+        } catch (e) {
+            return res.status(403).json({
+                "message": "invalid idToken"
+            })
+        }
+    }
+
+    verify().catch(console.error)
+
 }

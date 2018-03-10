@@ -24,5 +24,6 @@
         "password": "showcase1234"
         }
     ],
-    "heatingKey": "changeItLocally"
+    "heatingKey": "changeItLocally",
+    "heatingOAuthClientId": "950395156002-bt5p52h3fcdpdrvugmll3pmb9ejii1ak.apps.googleusercontent.com"
 }
