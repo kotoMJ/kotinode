@@ -147,19 +147,23 @@ exports.getApiRouter = function () {
 // HEATING
 // ----------------------------------------------------
 
-    api_router.route('/kotinode/heating/status')
+    api_router.route('/kotinode/heating/status/:heating_id')
         .post(kotiHeatingController.saveHeatingStatus)
         .get(kotiHeatingController.getHeatingStatus);
 
-    api_router.route('/kotinode/heating/schedule')
+    api_router.route('/kotinode/heating/schedule/:heating_id')
         .post(kotiHeatingController.setHeatingSchedule)
         .get(kotiHeatingController.getHeatingSchedule);
 
-    api_router.route('/kotinode/heating/schedule/raw')
+    api_router.route('/kotinode/heating/schedule/raw/:heating_id')
         .get(kotiHeatingController.getHeatingScheduleRaw);
 
-    api_router.route('/kotinode/f')
+    api_router.route('/kotinode/cert')
         .get(kotiHeatingController.getCert);
+
+    api_router.route('/kotinode/heating/cleanup')
+        .delete(kotiHeatingController.cleanupHeatingData);
+
 
 // ----------------------------------------------------
 // DB SHOWCASE - CLASS

@@ -93,8 +93,12 @@ function alertClients(type, msg) {
 }
 
 exports.verifyHeatingKey = function (req, res, tokenVerifiedCallback) {
+    logger.log(req, "verifyHeatingKey")
     const keyBody = req.body.key;
     const keyHeader = req.headers['key'];
+    const heatingId = req.params.heating_id;
+
+    logger.log(req, "heatingId=" + heatingId)
 
     try {
         if ((keyBody === kotiConfig.heatingKey) || (keyHeader === kotiConfig.heatingKey)) {
@@ -103,6 +107,65 @@ exports.verifyHeatingKey = function (req, res, tokenVerifiedCallback) {
             logger.log(req, 'Invalid credentials');
             return res.status(403).json({
                 "dataValue": "invalid credentials"
+            })
+        }
+    } catch (Exception) {
+        logger.err(req, Exception)
+        res.status(403).json({"message": "Unexpected authentization error!"})
+    }
+}
+
+exports.verifyUserHeatingKey = function (req, res, tokenVerifiedCallback) {
+    logger.log(req, "verifyHeatingKey")
+    const userKey = req.headers['key'];
+    const heatingId = parseInt(req.params.heating_id);
+
+    logger.log(req, "heatingId=" + heatingId)
+
+    try {
+        let userList = JSON.parse(JSON.stringify(kotiConfig.userList));
+        let currentUser = null;
+        for (let i in userList) {
+            if (userList[i].key === userKey) {
+                currentUser = userList[i];
+                break;
+            }
+        }
+
+        if (currentUser && currentUser.heatingList && currentUser.heatingList.indexOf(heatingId) >= 0) {
+            tokenVerifiedCallback()
+        } else {
+            logger.log(req, "UserKey[" + userKey + "]not authorized to requested heating deviceId=" + heatingId);
+            return res.status(403).json({
+                "dataValue": "User not authorized to requested heating device"
+            })
+        }
+    } catch (Exception) {
+        logger.err(req, Exception)
+        res.status(403).json({"message": "Unexpected authentization error!"})
+    }
+}
+
+exports.verifyUserAdminKey = function (req, res, tokenVerifiedCallback) {
+    logger.log(req, "verifyHeatingKey")
+    const userKey = req.headers['key'];
+
+    try {
+        let userList = JSON.parse(JSON.stringify(kotiConfig.userList));
+        let currentUser = null;
+        for (let i in userList) {
+            if (userList[i].key === userKey) {
+                currentUser = userList[i];
+                break;
+            }
+        }
+
+        if (currentUser && currentUser.heatingList && currentUser.role==="koto-admin") {
+            tokenVerifiedCallback()
+        } else {
+            logger.log(req, "UserKey[" + userKey + "]not authorized as admin!");
+            return res.status(403).json({
+                "dataValue": "User not authorized as admin"
             })
         }
     } catch (Exception) {
@@ -219,7 +282,8 @@ exports.authorizeUser = function (req, res) {
                     if (currentUser !== null && ('koto-editor' === currentUser.role || 'koto-admin' === currentUser.role)) {
                         return res.status(200).json({
                             "heatingKey": kotiConfig.heatingKey,
-                            "userKey": currentUser.key
+                            "userKey": currentUser.key,
+                            "heatingList": kotiConfig.heatingList
                         })
                     }
                 } else {
