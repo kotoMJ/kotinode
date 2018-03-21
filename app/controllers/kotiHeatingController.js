@@ -101,37 +101,39 @@ exports.setHeatingSchedule = function (req, res) {
 }
 
 exports.getHeatingScheduleRaw = function (req, res) {
-    const heatingId = req.params.heating_id;
-    KotiHeatingSchedule.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
-        if (err) {
-            return res.status(500).send(err)
-        } else {
-            // logger.log(req, 'loaded schema:' + JSON.stringify(schema));
-            let weekString = "";
-            if (schema.timetable !== undefined) {
-                for (let day = 0; day < 7; day++) {
-                    let dayString = "";
-                    // logger.log(req, 'schema.timetable.length:' + schema.timetable.length);
-                    if (schema.timetable.length === 7) {
-                        // logger.log(req, '[day]:' + JSON.stringify(day));
-                        // logger.log(req, 'schema.timetable[day]:' + JSON.stringify(schema.timetable[day]));
-                        if (schema.timetable[day].length === 24) {
-                            for (let hour = 0; hour < 24; hour++) {
-                                // logger.log(req, '[hour]:' + JSON.stringify(hour));
-                                // logger.log(req, 'schema.timetable[day][hour]:' + JSON.stringify(schema.timetable[day][hour]));
-                                dayString = dayString + schema.timetable[day][hour];
-                                dayString = dayString + " "
+    apiKeyUtils.verifyHeatingKey(req, res, () => {
+        const heatingId = req.params.heating_id;
+        KotiHeatingSchedule.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
+            if (err) {
+                return res.status(500).send(err)
+            } else {
+                // logger.log(req, 'loaded schema:' + JSON.stringify(schema));
+                let weekString = "";
+                if (schema.timetable !== undefined) {
+                    for (let day = 0; day < 7; day++) {
+                        let dayString = "";
+                        // logger.log(req, 'schema.timetable.length:' + schema.timetable.length);
+                        if (schema.timetable.length === 7) {
+                            // logger.log(req, '[day]:' + JSON.stringify(day));
+                            // logger.log(req, 'schema.timetable[day]:' + JSON.stringify(schema.timetable[day]));
+                            if (schema.timetable[day].length === 24) {
+                                for (let hour = 0; hour < 24; hour++) {
+                                    // logger.log(req, '[hour]:' + JSON.stringify(hour));
+                                    // logger.log(req, 'schema.timetable[day][hour]:' + JSON.stringify(schema.timetable[day][hour]));
+                                    dayString = dayString + schema.timetable[day][hour];
+                                    dayString = dayString + " "
+                                }
                             }
                         }
+                        weekString = weekString + dayString
                     }
-                    weekString = weekString + dayString
+                } else {
+                    logger.log(req, 'no timetable!');
                 }
-            } else {
-                logger.log(req, 'no timetable!');
-            }
 
-            return res.status(200).send(weekString);
-        }
+                return res.status(200).send(weekString);
+            }
+        });
     });
 
     // let su = new Array('150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 150 ');
