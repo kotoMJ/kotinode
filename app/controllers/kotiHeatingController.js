@@ -57,7 +57,7 @@ exports.getHeatingStatus = function (req, res) {
     logger.log(req, "getHeatingStatus")
     apiKeyUtils.verifyUserHeatingKey(req, res, () => {
         const heatingId = parseInt(req.params.heating_id);
-        KotiHeatingSchema.find().where('heatingId').equals(heatingId).exec(function (err, findResult) {
+        KotiHeatingSchema.findOne().where('heatingId').equals(heatingId).exec(function (err, findResult) {
             if (err) {
                 res.status(500).send(err)
             } else {
@@ -151,25 +151,50 @@ exports.getHeatingSchedule = function (req, res) {
     logger.log(req, "getHeatingSchedule")
     apiKeyUtils.verifyUserHeatingKey(req, res, () => {
         const heatingId = req.params.heating_id;
-        KotiHeatingSchedule.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
-            if (err) {
-                return res.status(500).send(err)
-            } else {
-                logger.log(req, 'loaded schema:' + JSON.stringify(schema));
-                let weekString = "";
-                if (schema !== null && schema.timetable !== undefined) {
-                    return res.status(200).json({
-                        "dataValue": {
-                            "schedule": schema.timetable
-                        }
-                    })
+        const scheduleTypeId = req.params.type_id;
+        if (scheduleTypeId === "REQUEST_REMOTE") {
+            KotiHeatingSchedule.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
+                if (err) {
+                    return res.status(500).send(err)
                 } else {
-                    logger.log(req, 'no schema or timetable for heatingId=' + heatingId);
-                }
+                    logger.log(req, 'loaded schema:' + JSON.stringify(schema));
+                    let weekString = "";
+                    if (schema !== null && schema.timetable !== undefined) {
+                        return res.jsonWrapped({
+                            "typeId": scheduleTypeId,
+                            "deviceId": heatingId,
+                            "timetable": schema.timetable
 
-                return res.status(204).send(weekString);
-            }
-        });
+                        })
+                    } else {
+                        logger.log(req, 'no schema or timetable for heatingId=' + heatingId);
+                    }
+
+                    return res.status(204).send(weekString);
+                }
+            });
+        } else if (scheduleTypeId === "DEVICE") {
+            KotiHeatingSchema.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
+                if (err) {
+                    res.status(500).send(err)
+                } else {
+                    logger.log(req, 'loaded schema:' + JSON.stringify(schema));
+                    logger.log(req, ' timetable:' + JSON.stringify(schema.timetable));
+                    if (schema !== null && schema.timetable !== undefined) {
+                        return res.jsonWrapped({
+                            "typeId": scheduleTypeId,
+                            "deviceId": heatingId,
+                            "timetable": schema.timetable
+
+                        })
+                    } else {
+                        logger.log(req, 'no schema or timetable for heatingId=' + heatingId);
+                    }
+                }
+            });
+        } else {
+            return res.status(400).send({"message": "Unknown schedule type id"});
+        }
     });
 
     // return res.status(200).json({

@@ -106,7 +106,7 @@ exports.verifyHeatingKey = function (req, res, tokenVerifiedCallback) {
         } else {
             logger.log(req, 'Invalid credentials');
             return res.status(403).json({
-                "dataValue": "invalid credentials"
+                "message": "invalid credentials"
             })
         }
     } catch (Exception) {
@@ -137,7 +137,7 @@ exports.verifyUserHeatingKey = function (req, res, tokenVerifiedCallback) {
         } else {
             logger.log(req, "UserKey[" + userKey + "]not authorized to requested heating deviceId=" + heatingId);
             return res.status(403).json({
-                "dataValue": "User not authorized to requested heating device"
+                "message": "User not authorized to requested heating device"
             })
         }
     } catch (Exception) {
@@ -160,12 +160,12 @@ exports.verifyUserAdminKey = function (req, res, tokenVerifiedCallback) {
             }
         }
 
-        if (currentUser && currentUser.heatingList && currentUser.role==="koto-admin") {
+        if (currentUser && currentUser.heatingList && currentUser.role === "koto-admin") {
             tokenVerifiedCallback()
         } else {
             logger.log(req, "UserKey[" + userKey + "]not authorized as admin!");
             return res.status(403).json({
-                "dataValue": "User not authorized as admin"
+                "message": "User not authorized as admin"
             })
         }
     } catch (Exception) {

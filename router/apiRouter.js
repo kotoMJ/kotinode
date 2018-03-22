@@ -152,7 +152,9 @@ exports.getApiRouter = function () {
         .get(kotiHeatingController.getHeatingStatus);
 
     api_router.route('/kotinode/heating/schedule/:heating_id')
-        .post(kotiHeatingController.setHeatingSchedule)
+        .post(kotiHeatingController.setHeatingSchedule);
+
+    api_router.route('/kotinode/heating/schedule/:heating_id/:type_id')
         .get(kotiHeatingController.getHeatingSchedule);
 
     api_router.route('/kotinode/heating/schedule/raw/:heating_id')
