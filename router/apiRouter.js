@@ -154,11 +154,12 @@ exports.getApiRouter = function () {
     api_router.route('/kotinode/heating/schedule/:heating_id')
         .post(kotiHeatingController.setHeatingSchedule);
 
-    api_router.route('/kotinode/heating/schedule/:heating_id/:type_id')
-        .get(kotiHeatingController.getHeatingSchedule);
-
+    //Attention, schedule/raw must be applied before schedule
     api_router.route('/kotinode/heating/schedule/raw/:heating_id')
         .get(kotiHeatingController.getHeatingScheduleRaw);
+
+    api_router.route('/kotinode/heating/schedule/:heating_id/:type_id')
+        .get(kotiHeatingController.getHeatingSchedule);
 
     api_router.route('/kotinode/cert')
         .get(kotiHeatingController.getCert);

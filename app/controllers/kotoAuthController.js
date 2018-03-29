@@ -96,7 +96,7 @@ exports.verifyHeatingKey = function (req, res, tokenVerifiedCallback) {
     logger.log(req, "verifyHeatingKey")
     const keyBody = req.body.key;
     const keyHeader = req.headers['key'];
-    const heatingId = req.params.heating_id;
+    const heatingId = parseInt(req.params.heating_id);
 
     logger.log(req, "heatingId=" + heatingId)
 
