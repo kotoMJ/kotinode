@@ -168,9 +168,8 @@ exports.getHeatingSchedule = function (req, res) {
                         })
                     } else {
                         logger.log(req, 'no schema or timetable for heatingId=' + heatingId);
+                        return res.status(204).send(weekString);
                     }
-
-                    return res.status(204).send(weekString);
                 }
             });
         } else if (scheduleTypeId === "DEVICE") {

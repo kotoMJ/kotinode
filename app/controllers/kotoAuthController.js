@@ -280,11 +280,14 @@ exports.authorizeUser = function (req, res) {
                     }
 
                     if (currentUser !== null && ('koto-editor' === currentUser.role || 'koto-admin' === currentUser.role)) {
+
                         return res.status(200).json({
                             "heatingKey": kotiConfig.heatingKey,
                             "userKey": currentUser.key,
-                            "heatingList": kotiConfig.heatingList
+                            "heatingList": currentUser.heatingList
                         })
+                    }else {
+                        return res.status(204).send("")
                     }
                 } else {
                     return res.status(403).json({
