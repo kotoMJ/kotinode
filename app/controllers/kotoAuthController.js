@@ -117,7 +117,7 @@ exports.verifyHeatingKey = function (req, res, tokenVerifiedCallback) {
 
 exports.verifyUserHeatingKey = function (req, res, tokenVerifiedCallback) {
     logger.log(req, "verifyHeatingKey")
-    const userKey = req.headers['key'];
+    const userKey = req.headers['userkey'];
     const heatingId = parseInt(req.params.heating_id);
 
     logger.log(req, "heatingId=" + heatingId)
@@ -282,7 +282,6 @@ exports.authorizeUser = function (req, res) {
                     if (currentUser !== null && ('koto-editor' === currentUser.role || 'koto-admin' === currentUser.role)) {
 
                         return res.status(200).json({
-                            "heatingKey": kotiConfig.heatingKey,
                             "userKey": currentUser.key,
                             "heatingList": currentUser.heatingList
                         })
