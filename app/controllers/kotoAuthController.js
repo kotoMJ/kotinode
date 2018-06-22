@@ -135,7 +135,7 @@ exports.verifyUserHeatingKey = function (req, res, tokenVerifiedCallback) {
         if (currentUser && currentUser.heatingList && currentUser.heatingList.indexOf(heatingId) >= 0) {
             tokenVerifiedCallback()
         } else {
-            logger.log(req, "UserKey[" + userKey + "]not authorized to requested heating deviceId=" + heatingId);
+            logger.log(req, "UserKey[" + userKey + "]not authorized to requested heating heatingId=" + heatingId);
             return res.status(403).json({
                 "message": "User not authorized to requested heating device"
             })

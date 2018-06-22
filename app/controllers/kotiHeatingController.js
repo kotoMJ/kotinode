@@ -1,7 +1,7 @@
 const kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 const logger = require('../utils/logger.js');
 const KotiHeatingSchedule = require('../models/kotiHeatingSchedule');
-const KotiHeatingSchema = require('../models/kotiHeatingStatus');
+const KotiHeatingStatus = require('../models/kotiHeatingStatus');
 const apiKeyUtils = require('./kotoAuthController');
 const moment = require('moment');
 const sslCertificate = require('get-ssl-certificate');
@@ -9,9 +9,9 @@ const sslCertificate = require('get-ssl-certificate');
 exports.saveHeatingStatus = function (req, res) {
     apiKeyUtils.verifyHeatingKey(req, res, () => {
         const heatingId = req.params.heating_id;
-        const heatingName = req.body.deviceName;
-        const heatingDateTimeValue = req.body.deviceDateTime;
-        const heatingModeValue = req.body.deviceMode;
+        const heatingName = req.body.heatingName;
+        const heatingDateTimeValue = req.body.heatingDateTime;
+        const heatingModeValue = req.body.heatingMode;
         const temperatureValue = req.body.temperature;
         const timetableValue = req.body.timetable;
 
@@ -39,7 +39,7 @@ exports.saveHeatingStatus = function (req, res) {
                 timestamp: new Date(),
                 timetable: timetableValue
             };
-        KotiHeatingSchema.findOneAndUpdate({heatingId: heatingId}, newHeatingStatus,
+        KotiHeatingStatus.findOneAndUpdate({heatingId: heatingId}, newHeatingStatus,
             {upsert: true, new: true, runValidators: true}, // options
             function (err, updateResult) {
                 if (err) {
@@ -57,7 +57,7 @@ exports.getHeatingStatus = function (req, res) {
     logger.log(req, "getHeatingStatus")
     apiKeyUtils.verifyUserHeatingKey(req, res, () => {
         const heatingId = parseInt(req.params.heating_id);
-        KotiHeatingSchema.findOne().where('heatingId').equals(heatingId).exec(function (err, findResult) {
+        KotiHeatingStatus.findOne().where('heatingId').equals(heatingId).exec(function (err, findResult) {
             if (err) {
                 res.status(500).send(err)
             } else {
@@ -73,7 +73,7 @@ exports.getHeatingStatus = function (req, res) {
 
 exports.setHeatingSchedule = function (req, res) {
     logger.log(req, "setHeatingSchedule")
-    apiKeyUtils.verifyHeatingKey(req, res, () => {
+    apiKeyUtils.verifyUserHeatingKey(req, res, () => {
         logger.log(req, 'incoming body:' + JSON.stringify(req.body));
         const timetable = req.body.timetable;
         const heatingId = req.params.heating_id;
@@ -92,7 +92,7 @@ exports.setHeatingSchedule = function (req, res) {
                 if (err) {
                     logger.log(req, "error when saving model:");
                     logger.log(req, JSON.stringify(newHeatingSchedule));
-                    res.send(err)
+                    res.status(500).send(err)
                 }
                 else
                     res.status(200).jsonWrapped(updateResult)
@@ -107,19 +107,19 @@ exports.getHeatingScheduleRaw = function (req, res) {
             if (err) {
                 return res.status(500).send(err)
             } else {
-                // logger.log(req, 'loaded schema:' + JSON.stringify(schema));
+                logger.log(req, 'loaded schema:' + JSON.stringify(schema));
                 let weekString = "";
                 if (schema.timetable !== undefined) {
                     for (let day = 0; day < 7; day++) {
                         let dayString = "";
-                        // logger.log(req, 'schema.timetable.length:' + schema.timetable.length);
+                         //logger.log(req, 'schema.timetable.length:' + schema.timetable.length);
                         if (schema.timetable.length === 7) {
-                            // logger.log(req, '[day]:' + JSON.stringify(day));
-                            // logger.log(req, 'schema.timetable[day]:' + JSON.stringify(schema.timetable[day]));
+                             logger.log(req, '[day]:' + JSON.stringify(day));
+                             logger.log(req, 'schema.timetable[day]:' + JSON.stringify(schema.timetable[day]));
                             if (schema.timetable[day].length === 24) {
                                 for (let hour = 0; hour < 24; hour++) {
-                                    // logger.log(req, '[hour]:' + JSON.stringify(hour));
-                                    // logger.log(req, 'schema.timetable[day][hour]:' + JSON.stringify(schema.timetable[day][hour]));
+                                     //logger.log(req, '[hour]:' + JSON.stringify(hour));
+                                     //logger.log(req, 'schema.timetable[day][hour]:' + JSON.stringify(schema.timetable[day][hour]));
                                     dayString = dayString + schema.timetable[day][hour];
                                     dayString = dayString + " "
                                 }
@@ -162,7 +162,7 @@ exports.getHeatingSchedule = function (req, res) {
                     if (schema !== null && schema.timetable !== undefined) {
                         return res.jsonWrapped({
                             "typeId": scheduleTypeId,
-                            "deviceId": heatingId,
+                            "heatingId": heatingId,
                             "timetable": schema.timetable
 
                         })
@@ -173,7 +173,7 @@ exports.getHeatingSchedule = function (req, res) {
                 }
             });
         } else if (scheduleTypeId === "DEVICE") {
-            KotiHeatingSchema.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
+            KotiHeatingStatus.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
                 if (err) {
                     res.status(500).send(err)
                 } else {
@@ -182,7 +182,7 @@ exports.getHeatingSchedule = function (req, res) {
                     if (schema !== null && schema.timetable !== undefined) {
                         return res.jsonWrapped({
                             "typeId": scheduleTypeId,
-                            "deviceId": heatingId,
+                            "heatingId": heatingId,
                             "timetable": schema.timetable
 
                         })
