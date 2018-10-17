@@ -1,28 +1,42 @@
 {
-    "mongoUri" : "mongodb://localhost/kotinode",
-    "mongoUser": "",
-    "mongoPass": "",
-    "port" : 8080,
-    "api_key": "x3c4ku3s7g",
+  "mongoUri": "mongodb://localhost/kotinode",
+  "mongoUser": "",
+  "mongoPass": "",
+  "port": 8080,
+  "api_key": "x3c4ku3s7g",
   "api_expire": 600,
-    "adminUser": "a@a.cz",
-    "adminPassword": "1234",
-    "userList": [
-        {
-            "email": "a@a.cz",
-          "role": "koto-admin",
-            "password": "1234"
-        },
-        {
-            "email": "b@b.cz",
-          "role": "koto-editor",
-            "password": "0987"
-        },
-      {
-        "email": "security@showcase.cz",
-        "role": "showcase-visitor",
-        "password": "showcase1234"
-        }
-    ],
-    "heatingKey": "changeItLocally"
+  "adminUser": "a@a.cz",
+  "adminPassword": "1234",
+  "userList": [
+    {
+      "email": "a@a.cz",
+      "role": "koto-admin",
+      "password": "1234",
+      "key": "P57EyK9Lzq5gah",
+      "heatingList":[0]
+    },
+    {
+      "email": "b@b.cz",
+      "role": "koto-editor",
+      "password": "0987",
+      "key": "CPXbC768b46Ev8",
+      "heatingList":[0]
+    },
+    {
+      "email": "security@showcase.cz",
+      "role": "showcase-visitor",
+      "password": "showcase1234",
+      "key": "d9Fv4kvfGU6b2",
+      "heatingList":[]
+    },
+    {
+      "email": "jenicek.michal@gmail.com",
+      "role": "koto-admin",
+      "password": "abcd123",
+      "key": "BaFBcTKJjK6HHe",
+      "heatingList":[0]
+    }
+  ],
+  "heatingKey": "changeItLocally",
+  "heatingOAuthClientId": "950395156002-bt5p52h3fcdpdrvugmll3pmb9ejii1ak.apps.googleusercontent.com"
 }

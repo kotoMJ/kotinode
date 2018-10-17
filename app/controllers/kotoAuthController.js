@@ -2,6 +2,7 @@ var jwt = require('jsonwebtoken');
 var logger = require('../utils/logger.js');
 var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
 const Promise = require('bluebird');
+const {OAuth2Client} = require('google-auth-library');
 
 exports.preflight = function (req, res) {
     logger.log(req, 'Preflight...');
@@ -92,8 +93,12 @@ function alertClients(type, msg) {
 }
 
 exports.verifyHeatingKey = function (req, res, tokenVerifiedCallback) {
+    logger.log(req, "verifyHeatingKey")
     const keyBody = req.body.key;
     const keyHeader = req.headers['key'];
+    const heatingId = parseInt(req.params.heating_id);
+
+    logger.log(req, "heatingId=" + heatingId)
 
     try {
         if ((keyBody === kotiConfig.heatingKey) || (keyHeader === kotiConfig.heatingKey)) {
@@ -101,7 +106,66 @@ exports.verifyHeatingKey = function (req, res, tokenVerifiedCallback) {
         } else {
             logger.log(req, 'Invalid credentials');
             return res.status(403).json({
-                "dataValue": "invalid credentials"
+                "message": "invalid credentials"
+            })
+        }
+    } catch (Exception) {
+        logger.err(req, Exception)
+        res.status(403).json({"message": "Unexpected authentization error!"})
+    }
+}
+
+exports.verifyUserHeatingKey = function (req, res, tokenVerifiedCallback) {
+    logger.log(req, "verifyHeatingKey")
+    const userKey = req.headers['userkey'];
+    const heatingId = parseInt(req.params.heating_id);
+
+    logger.log(req, "heatingId=" + heatingId)
+
+    try {
+        let userList = JSON.parse(JSON.stringify(kotiConfig.userList));
+        let currentUser = null;
+        for (let i in userList) {
+            if (userList[i].key === userKey) {
+                currentUser = userList[i];
+                break;
+            }
+        }
+
+        if (currentUser && currentUser.heatingList && currentUser.heatingList.indexOf(heatingId) >= 0) {
+            tokenVerifiedCallback()
+        } else {
+            logger.log(req, "UserKey[" + userKey + "]not authorized to requested heating heatingId=" + heatingId);
+            return res.status(403).json({
+                "message": "User not authorized to requested heating device"
+            })
+        }
+    } catch (Exception) {
+        logger.err(req, Exception)
+        res.status(403).json({"message": "Unexpected authentization error!"})
+    }
+}
+
+exports.verifyUserAdminKey = function (req, res, tokenVerifiedCallback) {
+    logger.log(req, "verifyHeatingKey")
+    const userKey = req.headers['key'];
+
+    try {
+        let userList = JSON.parse(JSON.stringify(kotiConfig.userList));
+        let currentUser = null;
+        for (let i in userList) {
+            if (userList[i].key === userKey) {
+                currentUser = userList[i];
+                break;
+            }
+        }
+
+        if (currentUser && currentUser.heatingList && currentUser.role === "koto-admin") {
+            tokenVerifiedCallback()
+        } else {
+            logger.log(req, "UserKey[" + userKey + "]not authorized as admin!");
+            return res.status(403).json({
+                "message": "User not authorized as admin"
             })
         }
     } catch (Exception) {
@@ -175,4 +239,73 @@ exports.verifyGQLTokenPromise = function (requestId, apiToken) {
             });
         }
     })
+}
+
+
+exports.authorizeUser = function (req, res) {
+
+    logger.log(req, 'body=' + JSON.stringify(req.body))
+
+    const clientId = "950395156002-1emg9edo9g73u6bi1uuiksij6r05ddi6.apps.googleusercontent.com"
+    const client = new OAuth2Client(clientId);
+    const bodyIdToken = req.body.idToken;
+
+    async function verify() {
+        try {
+            const ticket = await client.verifyIdToken({
+                idToken: bodyIdToken,
+                audience: clientId,
+            });
+            const payload = ticket.getPayload();
+            const email = payload['email'];
+            const email_verified = payload['email_verified'];
+            const webAudience = payload['aud'];//the client ID of the web component of the project
+            const androidAudience = payload['azp'];//the client ID of the Android app component of project
+
+            logger.log(req, 'payload=' + JSON.stringify(payload))
+            logger.log(req, 'email=' + email + ', email_verified=' + email_verified)
+
+            if (androidAudience === kotiConfig.heatingOAuthClientId) {
+                logger.log(req, "audience verified!")
+
+                if (email_verified) {
+
+                    var userList = JSON.parse(JSON.stringify(kotiConfig.userList));
+                    var currentUser = null;
+                    for (var i in userList) {
+                        if (userList[i].email === email) {
+                            currentUser = userList[i];
+                            break;
+                        }
+                    }
+
+                    if (currentUser !== null && ('koto-editor' === currentUser.role || 'koto-admin' === currentUser.role)) {
+
+                        return res.status(200).json({
+                            "userKey": currentUser.key,
+                            "heatingList": currentUser.heatingList
+                        })
+                    }else {
+                        return res.status(204).send("")
+                    }
+                } else {
+                    return res.status(403).json({
+                        "message": "invalid email"
+                    })
+                }
+            } else {
+                logger.err(req, "unknown audience!")
+                return res.status(403).json({
+                    "message": "invalid audience"
+                })
+            }
+        } catch (e) {
+            return res.status(403).json({
+                "message": "invalid idToken"
+            })
+        }
+    }
+
+    verify().catch(console.error)
+
 }

@@ -147,19 +147,26 @@ exports.getApiRouter = function () {
 // HEATING
 // ----------------------------------------------------
 
-    api_router.route('/kotinode/heating/status')
+    api_router.route('/kotinode/heating/status/:heating_id')
         .post(kotiHeatingController.saveHeatingStatus)
         .get(kotiHeatingController.getHeatingStatus);
 
-    api_router.route('/kotinode/heating/schedule')
-        .post(kotiHeatingController.setHeatingSchedule)
-        .get(kotiHeatingController.getHeatingSchedule);
+    api_router.route('/kotinode/heating/schedule/:heating_id')
+        .post(kotiHeatingController.setHeatingSchedule);
 
-    api_router.route('/kotinode/heating/schedule/raw')
+    //Attention, schedule/raw must be applied before schedule
+    api_router.route('/kotinode/heating/schedule/raw/:heating_id')
         .get(kotiHeatingController.getHeatingScheduleRaw);
 
-    api_router.route('/kotinode/f')
+    api_router.route('/kotinode/heating/schedule/:heating_id/:type_id')
+        .get(kotiHeatingController.getHeatingSchedule);
+
+    api_router.route('/kotinode/cert')
         .get(kotiHeatingController.getCert);
+
+    api_router.route('/kotinode/heating/cleanup')
+        .delete(kotiHeatingController.cleanupHeatingData);
+
 
 // ----------------------------------------------------
 // DB SHOWCASE - CLASS
@@ -198,6 +205,15 @@ exports.getApiRouter = function () {
     api_router.route('/securityshowcase/login')
         .post(function (req, res, next) {
             showcaseController.postShowcaseSecurityLogin(req, res);
+        });
+
+// ----------------------------------------------------
+// AUTH
+// ----------------------------------------------------
+
+    api_router.route('/kotinode/auth/google')
+        .post(function (req, res, next) {
+            kotoAuthController.authorizeUser(req, res);
         });
 
 // ----------------------------------------------------
