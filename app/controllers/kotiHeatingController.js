@@ -152,7 +152,7 @@ exports.getHeatingSchedule = function (req, res) {
     apiKeyUtils.verifyUserHeatingKey(req, res, () => {
         const heatingId = req.params.heating_id;
         const scheduleTypeId = req.params.type_id;
-        if (scheduleTypeId === "REQUEST_REMOTE") {
+        if (scheduleTypeId === "REQUEST") {
             KotiHeatingSchedule.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
                 if (err) {
                     return res.status(500).send(err)
