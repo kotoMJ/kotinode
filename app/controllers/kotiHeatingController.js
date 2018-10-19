@@ -6,6 +6,11 @@ const apiKeyUtils = require('./kotoAuthController');
 const moment = require('moment');
 const sslCertificate = require('get-ssl-certificate');
 
+/**
+ * SET HEATING STATUS - set by every heating device periodically.
+ * @param req
+ * @param res
+ */
 exports.saveHeatingStatus = function (req, res) {
     apiKeyUtils.verifyHeatingKey(req, res, () => {
         const heatingId = req.params.heating_id;
@@ -75,6 +80,11 @@ exports.saveHeatingStatus = function (req, res) {
     })
 };
 
+/**
+ * PROVIDE HEATING STATUS - read by client (Android app) with every refresh to user.
+ * @param req
+ * @param res
+ */
 exports.getHeatingStatus = function (req, res) {
     logger.log(req, "getHeatingStatus")
     apiKeyUtils.verifyUserHeatingKey(req, res, () => {
@@ -90,9 +100,11 @@ exports.getHeatingStatus = function (req, res) {
     })
 }
 
-//hexString = yourNumber.toString(16);
-//yourNumber = parseInt(hexString, 16);
-
+/**
+ * SET HEATING SCHEDULE - set by client (Android app) when user change the schedule.
+ * @param req
+ * @param res
+ */
 exports.setHeatingSchedule = function (req, res) {
     logger.log(req, "setHeatingSchedule")
     apiKeyUtils.verifyUserHeatingKey(req, res, () => {
@@ -122,6 +134,12 @@ exports.setHeatingSchedule = function (req, res) {
     })
 }
 
+
+/**
+ * PROVIDE HEATING SCHEDULE - in raw format - read by heating (Arduino app) periodically.
+ * @param req
+ * @param res
+ */
 exports.getHeatingScheduleRaw = function (req, res) {
     apiKeyUtils.verifyHeatingKey(req, res, () => {
         const heatingId = req.params.heating_id;
@@ -169,6 +187,11 @@ exports.getHeatingScheduleRaw = function (req, res) {
     //return res.status(200).send(/*su + mo + tu + we + th + fr + sa*/);
 }
 
+/**
+ * PROVIDE HEATING SCHEDULE - in json format - .
+ * @param req
+ * @param res
+ */
 exports.getHeatingSchedule = function (req, res) {
     logger.log(req, "getHeatingSchedule")
     apiKeyUtils.verifyUserHeatingKey(req, res, () => {
@@ -235,6 +258,11 @@ exports.getHeatingSchedule = function (req, res) {
     // )
 }
 
+/**
+ * PROVIDE CURRENT SHA1 FINGERPRINT OF SSH CERTIFICATE - used by external API to provide secretly HTTP endpoint for Arduino device (since Arduino needs it to start secure communication).
+ * @param req
+ * @param res
+ */
 exports.getCert = function (req, res) {
     sslCertificate.get('kotopeky.cz').then(function (certificate) {
         return res.status(200).send(certificate.fingerprint.replace(/:/g, " "))
@@ -242,6 +270,11 @@ exports.getCert = function (req, res) {
 
 }
 
+/**
+ * ADMINISTRATION TOOL to reset data and models by API.
+ * @param req
+ * @param res
+ */
 exports.cleanupHeatingData = function (req, res) {
     apiKeyUtils.verifyUserAdminKey(req, res, () => {
         logger.log(req, "Ready to drop schedule model...");
