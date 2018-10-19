@@ -147,23 +147,49 @@ exports.getApiRouter = function () {
 // HEATING
 // ----------------------------------------------------
 
+    /**
+     * SET - status of proper heating deice (identified by heating_id) - called by heating device
+     * GET - status of proper heating device (identified by heating_id) - called by client (mobile)
+     */
     api_router.route('/kotinode/heating/status/:heating_id')
         .post(kotiHeatingController.saveHeatingStatus)
         .get(kotiHeatingController.getHeatingStatus);
 
+
+    /**
+     * SET - schedule for specific heating device
+     * heating_id - identify proper heating device
+     */
     api_router.route('/kotinode/heating/schedule/:heating_id')
         .post(kotiHeatingController.setHeatingSchedule);
 
+
+    /**
+     * GET - Request for schedule - intended for heating device (type_id is DEVICE)
+     * heating_id - which heating device schedule are we requesting
+     */
     //Attention, schedule/raw must be applied before schedule
     api_router.route('/kotinode/heating/schedule/raw/:heating_id')
         .get(kotiHeatingController.getHeatingScheduleRaw);
 
+    /**
+     * GET - Request for schedule - intended for mobile
+     * heating_id - which heating device are we requesting
+     * typ_id (DEVICE/REQUEST) - do we request for real schedule of device or schedule which is requested to be on the device
+     */
     api_router.route('/kotinode/heating/schedule/:heating_id/:type_id')
         .get(kotiHeatingController.getHeatingSchedule);
 
+    /**
+     * PROVIDE CURRENT SHA1 FINGERPRINT OF SSH CERTIFICATE - used by external API to provide secretly HTTP endpoint
+     * for Arduino device (since Arduino needs it to start secure communication).
+     */
     api_router.route('/kotinode/cert')
         .get(kotiHeatingController.getCert);
 
+    /**
+     *  ADMINISTRATION TOOL to reset data and models by API.
+     */
     api_router.route('/kotinode/heating/cleanup')
         .delete(kotiHeatingController.cleanupHeatingData);
 
