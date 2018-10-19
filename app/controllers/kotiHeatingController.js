@@ -15,9 +15,31 @@ exports.saveHeatingStatus = function (req, res) {
         const temperatureValue = req.body.temperature;
         const timetableValue = req.body.timetable;
 
+        if (heatingId === undefined) {
+            logger.log(req, 'Missing t parameter');
+            return res.status(401).json({"message": "Missing heatingId parameter"})
+        }
+
+        if (heatingName === undefined) {
+            logger.log(req, 'Missing t parameter');
+            return res.status(401).json({"message": "Missing heatingName parameter"})
+        }
+
         if (temperatureValue === undefined) {
             logger.log(req, 'Missing t parameter');
-            return res.status(401).json({"message": "Missing t parameter"})
+            return res.status(401).json({"message": "Missing temperatureValue parameter"})
+        }
+
+        if (heatingDateTimeValue === undefined) {
+            return res.status(401).json({"message": "Missing heatingDateTimeValue  parameter"})
+        }
+
+        if (heatingModeValue === undefined) {
+            return res.status(401).json({"message": "Missing heatingModeValue  parameter"})
+        }
+
+        if (timetableValue === undefined) {
+            return res.status(401).json({"message": "Missing timetableValue  parameter"})
         }
 
         //[hour:18][minute:25][day:MO]
