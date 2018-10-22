@@ -23,18 +23,18 @@
       "heatingList":[0]
     },
     {
-      "email": "security@showcase.cz",
-      "role": "showcase-visitor",
-      "password": "showcase1234",
-      "key": "d9Fv4kvfGU6b2",
-      "heatingList":[]
-    },
-    {
       "email": "jenicek.michal@gmail.com",
       "role": "koto-admin",
       "password": "abcd123",
       "key": "BaFBcTKJjK6HHe",
       "heatingList":[0]
+    },
+    {
+      "email": "security@showcase.cz",
+      "role": "showcase-visitor",
+      "password": "showcase1234",
+      "key": "d9Fv4kvfGU6b2",
+      "heatingList":[]
     }
   ],
   "heatingKey": "changeItLocally",
