@@ -193,6 +193,11 @@ exports.getApiRouter = function () {
     api_router.route('/kotinode/heating/cleanup')
         .delete(kotiHeatingController.cleanupHeatingData);
 
+    /**
+     *  ADMINISTRATION TOOL to sync scheduled data with device.
+     */
+    api_router.route('/kotinode/heating/sync/:heating_id')
+        .patch(kotiHeatingController.simulateDeviceSync)
 
 // ----------------------------------------------------
 // DB SHOWCASE - CLASS

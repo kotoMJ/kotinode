@@ -163,7 +163,7 @@ exports.verifyUserAdminKey = function (req, res, tokenVerifiedCallback) {
         if (currentUser && currentUser.heatingList && currentUser.role === "koto-admin") {
             tokenVerifiedCallback()
         } else {
-            logger.log(req, "UserKey[" + userKey + "]not authorized as admin!");
+            logger.log(req, "UserAdminKey[" + userKey + "]not authorized as admin!");
             return res.status(403).json({
                 "message": "User not authorized as admin"
             })

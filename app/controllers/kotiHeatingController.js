@@ -152,14 +152,14 @@ exports.getHeatingScheduleRaw = function (req, res) {
                 if (schema.timetable !== undefined) {
                     for (let day = 0; day < 7; day++) {
                         let dayString = "";
-                         //logger.log(req, 'schema.timetable.length:' + schema.timetable.length);
+                        //logger.log(req, 'schema.timetable.length:' + schema.timetable.length);
                         if (schema.timetable.length === 7) {
-                             logger.log(req, '[day]:' + JSON.stringify(day));
-                             logger.log(req, 'schema.timetable[day]:' + JSON.stringify(schema.timetable[day]));
+                            logger.log(req, '[day]:' + JSON.stringify(day));
+                            logger.log(req, 'schema.timetable[day]:' + JSON.stringify(schema.timetable[day]));
                             if (schema.timetable[day].length === 24) {
                                 for (let hour = 0; hour < 24; hour++) {
-                                     //logger.log(req, '[hour]:' + JSON.stringify(hour));
-                                     //logger.log(req, 'schema.timetable[day][hour]:' + JSON.stringify(schema.timetable[day][hour]));
+                                    //logger.log(req, '[hour]:' + JSON.stringify(hour));
+                                    //logger.log(req, 'schema.timetable[day][hour]:' + JSON.stringify(schema.timetable[day][hour]));
                                     dayString = dayString + schema.timetable[day][hour];
                                     dayString = dayString + " "
                                 }
@@ -305,5 +305,58 @@ exports.cleanupHeatingData = function (req, res) {
         });
 
 
+    });
+}
+
+
+exports.simulateDeviceSync = function (req, res) {
+    apiKeyUtils.verifyUserAdminKey(req, res, () => {
+        logger.log(req, "Ready to simulate sync of the device...");
+        const heatingId = req.params.heating_id;
+        KotiHeatingSchedule.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
+            if (err) {
+                return res.status(500).send(err)
+            } else {
+                logger.log(req, 'loaded schema:' + JSON.stringify(schema));
+                let weekString = "";
+                if (schema !== null && schema.timetable !== undefined) {
+
+                    var currentDateTime = new Date()
+                    var timetabletemp = 1
+                    try {
+                        timetabletemp = schema.timetable[currentDateTime.getDay() - 1][currentDateTime.getHours()]/10
+                    } catch (e) {
+                        logger.err(req, "Unable to read current temperature from time table for [" + currentDateTime.getDay() - 1 + "][" + currentDateTime.getHours() + "]")
+                    }
+                    var newHeatingStatus =
+                        {
+                            heatingId: heatingId,
+                            heatingName: "fakeNameBySyncRequest",
+                            hour: currentDateTime.getHours(),
+                            minute: currentDateTime.getMinutes(),
+                            day: currentDateTime.getDay(),
+                            heatingMode: 2,
+                            temperature: timetabletemp,
+                            timestamp: currentDateTime,
+                            timetable: schema.timetable
+                        };
+
+                    KotiHeatingStatus.findOneAndUpdate({heatingId: heatingId}, newHeatingStatus,
+                        {upsert: true, new: true, runValidators: true}, // options
+                        function (err, updateResult) {
+                            if (err) {
+                                logger.log(req, "error when saving model:");
+                                res.send(err)
+                            }
+                            else
+                                res.status(200).jsonWrapped(updateResult)
+                        })
+
+                } else {
+                    logger.log(req, 'no schema or timetable for heatingId=' + heatingId);
+                    return res.status(204).send(weekString);
+                }
+            }
+        });
     });
 }
