@@ -1,0 +1,1232 @@
+{
+	"info": {
+		"_postman_id": "a24b111e-29f9-3410-6cf1-6816063cce1a",
+		"name": "kotinode",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ANIMAL",
+			"item": [
+				{
+					"name": "koto",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/animals/koto",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"animals",
+								"koto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "insects",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/animals/insect",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"animals",
+								"insect"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "EVENT",
+			"item": [
+				{
+					"name": "event",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/event/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"event",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete event",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "apikey",
+								"value": "{{api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/event/58995667589da9282cee4153/bundle/58995667589da9282cee4153",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"event",
+								"58995667589da9282cee4153",
+								"bundle",
+								"58995667589da9282cee4153"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete bundle",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/event/bundle/58988e78b31e41841f62e7c6",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"event",
+								"bundle",
+								"58988e78b31e41841f62e7c6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put event",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\n    \"headline\": \"POSTMANs topic\",\n    \"description\": \"Just the testing set\",\n    \"imageResource\": null,\n    \"category\": [\n      {\n        \"name\": \"dvelopment\"\n      }\n    ],\n    \"date\": \"2017-02-02T00:00:00.000Z\",\n    \"time\": \"1970-01-01T14:30:00.000Z\",\n    \"location\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"text\": [\n      \"Message testing to set the new event via the new API\",\n      \"New API should respect WEB/Android/Export form of news.\"\n    ]\n  }"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/event/bundle/58dc93bba416e90240d43082",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"event",
+								"bundle",
+								"58dc93bba416e90240d43082"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bundle",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/event/bundle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"event",
+								"bundle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create event bundle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"KoTiPoint kickoff 2017\",\n  \"date\": \"2017-02-20T00:00:00.000Z\",\n  \"eventList\": []\n}"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/event/bundle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"event",
+								"bundle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset & init event",
+					"request": {
+						"method": "PURGE",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/event/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"event",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "event fixed",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/event/fixed?delay=0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"event",
+								"fixed"
+							],
+							"query": [
+								{
+									"key": "delay",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GALLERY",
+			"item": [
+				{
+					"name": "admin gallery",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/admin/gallery/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"admin",
+								"gallery",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "gallery summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/gallery",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"gallery"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "gallery racice",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/gallery/2015-11-15-Racice",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"gallery",
+								"2015-11-15-Racice"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LOGIN",
+			"item": [
+				{
+					"name": "login develop",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\"email\":\"a@a.cz\",\"password\":\"1234\"}"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login production",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\"email\":\"jenicek.michal@gmail.com\",\"password\":\"qaz123WSX\"}"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "NOTIFY",
+			"item": [
+				{
+					"name": "notify email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"to\": \"jenicek.michal@gmail.com\",\n  \"subject\": \"POSTMAN PRODUCTION - Sunday\",\n  \"text\": \"Test message from production postman\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/notify/email",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"notify",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "notify sms",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"number\": \"724811441\",\n  \"message\":\"žluťoučký kůň\",\n  \"urgent\":\"true\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/notify/sms",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"notify",
+								"sms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "notify sms credit",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/notify/sms/credit",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"notify",
+								"sms",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "notify list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/notify",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"notify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "notify",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tagList\": [\"admin\"],\n    \"notificationType\": [\"email\",\"sms\"],\n    \"urgent\": true,\n    \"messageSubject\": \"OBEC KOTOPEKY TEST\",\n    \"messageBody\": \"Testovaci zprava noveho notifikacniho systemu pres email a sms.\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/notify",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"notify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset notify",
+					"request": {
+						"method": "PURGE",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/notify",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"notify"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "USER",
+			"item": [
+				{
+					"name": "reset & init users",
+					"request": {
+						"method": "PURGE",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/user/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/user/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user by id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/user/58cfbf74cdafdf3683c0ade8",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"user",
+								"58cfbf74cdafdf3683c0ade8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/user/58a6d488fee841d10e9d2746",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"user",
+								"58a6d488fee841d10e9d2746"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n    \"role\": \"CITIZEN\",\n    \"name\": [\n      {\n        \"value\": \"Duplicita\",\n        \"primary\": \"true\"\n      }\n    ],\n    \"surname\": [\n      {\n        \"value\": \"Testovaci\",\n        \"primary\": \"true\"\n      }\n    ],\n    \"phone\": [\n      {\n        \"value\": \"724811441\",\n        \"countryCode\": \"00420\",\n        \"type\": \"mobile\"\n      }\n    ],\n    \"email\": [\n      {\n        \"value\": \"jenicek.michal@gmail.com\",\n        \"type\": \"primary\"\n      }\n    ],\n    \"address\": [\n      {\n        \"municipality\": \"Kotopeky\",\n        \"houseNumber\": 12,\n        \"zip\": 26801,\n        \"permanent\": true\n      }\n    ],\n    \"passwordHash\": null,\n    \"tagList\": [\n      \"admin\"\n    ]\n  }"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user tag list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/user/tag",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"user",
+								"tag"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "apitoken",
+								"value": "{{api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n    \"role\": \"CITIZEN\",\n    \"name\": [\n      {\n        \"value\": \"Duplicita\",\n        \"primary\": \"true\"\n      }\n    ],\n    \"surname\": [\n      {\n        \"value\": \"Testovaci\",\n        \"primary\": \"true\"\n      }\n    ],\n    \"phone\": [\n      {\n        \"value\": \"724811448\",\n        \"countryCode\": \"00420\",\n        \"type\": \"mobile\"\n      }\n    ],\n    \"email\": [\n      {\n        \"value\": \"jenicek.kchal@gmail.com\",\n        \"type\": \"primary\"\n      }\n    ],\n    \"address\": [\n      {\n        \"municipality\": \"Kotopeky\",\n        \"houseNumber\": 12,\n        \"zip\": 26801,\n        \"permanent\": true\n      }\n    ],\n    \"passwordHash\": null,\n    \"tagList\": [\n      \"admin\"\n    ]\n  }"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/user/58d0d5750253222160274852",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"user",
+								"58d0d5750253222160274852"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HEATING - LEGACY",
+			"item": [
+				{
+					"name": "heating status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/heating/status",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"heating",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fingerprint SHA1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/cert",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"cert"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "heating schedule",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/heating/schedule",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"heating",
+								"schedule"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "heating schedule raw",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/heating/schedule/raw",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"heating",
+								"schedule",
+								"raw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SET heating status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "key",
+								"value": "{{heatingKey}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"temperature\":\"230\",\n\"deviceDateTime\":\"[hour:18][minute:25][day:MO]\",\n\"deviceMode\":\"2\",\n\"timetable\":[\n[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150],[150,150,150,150,150,150,150,230,230,230,230,230,230,230,230,230,230,230,230,230,200,150,150,150],[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150],[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150],[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150],[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150],[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150]]}"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/heating/status",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"heating",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SET heating schedule",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "key",
+								"value": "{{heatingKey}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"timetable\":\n  [\n    [\"140\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\", \"150\",\"150\"],\n    [\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"180\",\"180\",\"180\",\"180\",\"180\",\"180\",\"150\", \"150\",\"150\"],\n    [\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\", \"150\",\"150\"],\n    [\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\", \"150\",\"150\"],\n    [\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\", \"150\",\"150\"],\n    [\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\", \"150\",\"150\"],\n    [\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\", \"150\",\"150\"]\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/heating/schedule",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"heating",
+								"schedule"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HEATING - MASTER",
+			"item": [
+				{
+					"name": "heating status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": ""
+							},
+							{
+								"key": "userKey",
+								"value": "{{userKey}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/heating/status/{{heatingId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"heating",
+								"status",
+								"{{heatingId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fingerprint SHA1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/cert",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"cert"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "heating schedule",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "userKey",
+								"value": "{{userKey}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/heating/schedule/{{heatingId}}/DEVICE",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"heating",
+								"schedule",
+								"{{heatingId}}",
+								"DEVICE"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "heating schedule raw",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "key",
+								"value": "{{heatingKey}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/heating/schedule/raw/{{heatingId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"heating",
+								"schedule",
+								"raw",
+								"{{heatingId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SET heating status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "key",
+								"value": "{{heatingKey}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"heatingId\":\"70\",\n\"heatingName\":\"KotoOfficeFake\",\n\"temperature\":\"230\",\n\"heatingDateTime\":\"[hour:18][minute:25][day:MO]\",\n\"heatingMode\":\"2\",\n\"timetable\":[\n[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150],[150,150,150,150,150,150,150,230,230,230,230,230,230,230,230,230,230,230,230,230,200,150,150,150],[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150],[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150],[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150],[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150],[150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150,150]]}"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/heating/status/70/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"heating",
+								"status",
+								"70",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SET heating schedule",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "key",
+								"value": "{{heatingKey}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "userKey",
+								"value": "{{userKey}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"timetable\":\n  [\n    [\"140\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\", \"150\",\"150\"],\n    [\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"230\",\"230\",\"230\",\"230\",\"230\",\"230\",\"200\",\"150\", \"150\",\"150\"],\n    [\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\", \"150\",\"150\"],\n    [\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\", \"150\",\"150\"],\n    [\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\", \"150\",\"150\"],\n    [\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\", \"150\",\"150\"],\n    [\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\",\"150\", \"150\",\"130\"]\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/heating/schedule/70",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"heating",
+								"schedule",
+								"70"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6db22f31-f818-4932-9993-8975b5f95816",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "7c7433e4-bc11-4587-9df6-26e72cd9e851",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "AUTH",
+			"item": [
+				{
+					"name": "Auth google user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "key",
+								"value": "{{heatingKey}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"idToken\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6ImU5YjU2Y2ZjNjQwZDEyYmZmNDU0MDU1MzQwMmM3ZjE1N2Q0ODE4MDYifQ.eyJhenAiOiI5NTAzOTUxNTYwMDItYnQ1cDUyaDNmY2RwZHJ2dWdtbGwzcG1iOWVqaWkxYWsuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI5NTAzOTUxNTYwMDItMWVtZzllZG85ZzczdTZiaTF1dWlrc2lqNnIwNWRkaTYuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDk3NDg1NDM0MTA5MDg1MzM2NDkiLCJlbWFpbCI6ImplbmljZWsubWljaGFsQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE1MjI4NTE4NDcsImlzcyI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbSIsImlhdCI6MTUyMjg0ODI0NywibmFtZSI6Ik1pY2hhbCBKZW7DrcSNZWsiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDQuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1QS2dZQlp3eEZGMC9BQUFBQUFBQUFBSS9BQUFBQUFBQUFPTS8tVG9BVDlHcFMtQS9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiTWljaGFsIiwiZmFtaWx5X25hbWUiOiJKZW7DrcSNZWsiLCJsb2NhbGUiOiJlbiJ9.aYoPmS21lyh3EqF1SRNmMGP3IYK_dzCr7EBZEtZ_fM7qbVunN7HO2vQkEVznFWsG8HM1eNpdZLYvkcjMfIlyM65scndEHWPgY2XXGMyF9phGaOQXYHAcDvAO7T3yY3z7GdoJj7t9ryriyGUjg1DrjbO9J_H-2VS_6CiWYr037bQK4drHidVr1WUiRIWCmZZk0gg4fKrRBGAkom3O6wibe-XOdB6FaQXGekIdE0z4y1qEO6mSvdyy3wCst-mWXfSelfhq8p7NWtk3xnGVq65SHuD5xJJwlHMleUcO27rzlXGoy3WLVlQ3j_Zg0097o7lapMNr-q0P1W1pETGVHDSe7Q\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/kotinode/auth/google",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"auth",
+								"google"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "heating sync",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "key",
+								"value": "{{userKey}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/kotinode/heating/sync/{{heatingId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"kotinode",
+								"heating",
+								"sync",
+								"{{heatingId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
