@@ -10,7 +10,8 @@ var KotiHeatingStatus = new Schema({
     heatingMode: {type: Number},
     temperature: {type: Number, required: true},
     timestamp: {type: Date, required: true},
-    timetable: [[{type: Number, required: true}]]
+    timetableDevice: [[{type: Number, required: true}]],
+    timetableServer: [[{type: Number, required: false}]],
 });
 
 
