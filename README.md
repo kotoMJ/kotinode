@@ -8,7 +8,7 @@ IoT client is in [KoTiHeating](https://github.com/kotomisak/kotiheating-arduino)
 
 ## The idea behind
 The main idea of this server (and connected clients) is to provide basic server side 
-for many form of clients to be connected and to provide new communication channels for small municipal infrastructure.
+for many form of clients to be connected and to provide online connection for small municipal infrastructure.
 
 
 ## Release notes
