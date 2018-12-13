@@ -1,7 +1,10 @@
 ## Release notes for KoTiPoint ecosystem.
 
+###3.1.0
+* KotiHeatingSystem - support for multiple heating devices. Improvement for Android client.
+
 ###3.0.0
-* Add KotiHeatingSystem - this server now supports https://github.com/kotomisak/kotiheating-arduino IoT project
+* KotiHeatingSystem - this server now supports https://github.com/kotomisak/kotiheating-arduino IoT project
 
 ###2.5.0
 * Refactor internal work with the NEWS
