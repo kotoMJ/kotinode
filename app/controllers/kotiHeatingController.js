@@ -64,7 +64,7 @@ exports.saveHeatingStatus = function (req, res) {
                 heatingMode: heatingModeValue,
                 temperature: temperatureValue,
                 timestamp: new Date(),
-                timetable: timetableValue
+                timetableDevice: timetableValue
             };
         KotiHeatingStatus.findOneAndUpdate({heatingId: heatingId}, newHeatingStatus,
             {upsert: true, new: true, runValidators: true}, // options
@@ -89,15 +89,35 @@ exports.getHeatingStatus = function (req, res) {
     logger.log(req, "getHeatingStatus")
     apiKeyUtils.verifyUserHeatingKey(req, res, () => {
         const heatingId = parseInt(req.params.heating_id);
-        KotiHeatingStatus.findOne().where('heatingId').equals(heatingId).exec(function (err, findResult) {
-            if (err) {
-                res.status(500).send(err)
-            } else {
-                logger.log(req, findResult)
-                res.jsonWrapped(findResult);
-            }
-        });
+        requestHeatingStatusForId(req, res, heatingId)
     })
+}
+
+function requestHeatingStatusForId(req, res, heatingId) {
+    KotiHeatingStatus.findOne().where('heatingId').equals(heatingId).exec(function (err, findStatusResult) {
+        if (err) {
+            res.status(500).send(err)
+        } else {
+            logger.log(req, findStatusResult)
+            logger.log(req, 'loaded status:' + JSON.stringify(findStatusResult));
+            KotiHeatingSchedule.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
+                if (err) {
+                    return res.status(500).send(err)
+                } else {
+                    logger.log(req, 'loaded schedule:' + JSON.stringify(schema));
+                    if (schema !== null && schema.timetable !== undefined) {
+                        findStatusResult.timetableServer = schema.timetable
+                        res.jsonWrapped(findStatusResult);
+                    } else {
+                        logger.log(req, 'no schema or timetable for heatingId=' + heatingId);
+                        res.jsonWrapped(findStatusResult);
+                    }
+                }
+            });
+
+
+        }
+    });
 }
 
 /**
@@ -128,8 +148,9 @@ exports.setHeatingSchedule = function (req, res) {
                     logger.log(req, JSON.stringify(newHeatingSchedule));
                     res.status(500).send(err)
                 }
-                else
-                    res.status(200).jsonWrapped(updateResult)
+                else {
+                    requestHeatingStatusForId(req, res, heatingId)
+                }
             })
     })
 }
@@ -152,14 +173,14 @@ exports.getHeatingScheduleRaw = function (req, res) {
                 if (schema.timetable !== undefined) {
                     for (let day = 0; day < 7; day++) {
                         let dayString = "";
-                         //logger.log(req, 'schema.timetable.length:' + schema.timetable.length);
+                        //logger.log(req, 'schema.timetable.length:' + schema.timetable.length);
                         if (schema.timetable.length === 7) {
-                             logger.log(req, '[day]:' + JSON.stringify(day));
-                             logger.log(req, 'schema.timetable[day]:' + JSON.stringify(schema.timetable[day]));
+                            logger.log(req, '[day]:' + JSON.stringify(day));
+                            logger.log(req, 'schema.timetable[day]:' + JSON.stringify(schema.timetable[day]));
                             if (schema.timetable[day].length === 24) {
                                 for (let hour = 0; hour < 24; hour++) {
-                                     //logger.log(req, '[hour]:' + JSON.stringify(hour));
-                                     //logger.log(req, 'schema.timetable[day][hour]:' + JSON.stringify(schema.timetable[day][hour]));
+                                    //logger.log(req, '[hour]:' + JSON.stringify(hour));
+                                    //logger.log(req, 'schema.timetable[day][hour]:' + JSON.stringify(schema.timetable[day][hour]));
                                     dayString = dayString + schema.timetable[day][hour];
                                     dayString = dayString + " "
                                 }
@@ -196,49 +217,25 @@ exports.getHeatingSchedule = function (req, res) {
     logger.log(req, "getHeatingSchedule")
     apiKeyUtils.verifyUserHeatingKey(req, res, () => {
         const heatingId = req.params.heating_id;
-        const scheduleTypeId = req.params.type_id;
-        if (scheduleTypeId === "REQUEST") {
-            KotiHeatingSchedule.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
-                if (err) {
-                    return res.status(500).send(err)
-                } else {
-                    logger.log(req, 'loaded schema:' + JSON.stringify(schema));
-                    let weekString = "";
-                    if (schema !== null && schema.timetable !== undefined) {
-                        return res.jsonWrapped({
-                            "typeId": scheduleTypeId,
-                            "heatingId": heatingId,
-                            "timetable": schema.timetable
+        KotiHeatingSchedule.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
+            if (err) {
+                return res.status(500).send(err)
+            } else {
+                logger.log(req, 'loaded schema:' + JSON.stringify(schema));
+                let weekString = "";
+                if (schema !== null && schema.timetable !== undefined) {
+                    return res.jsonWrapped({
+                        "heatingId": heatingId,
+                        "timetable": schema.timetable
 
-                        })
-                    } else {
-                        logger.log(req, 'no schema or timetable for heatingId=' + heatingId);
-                        return res.status(204).send(weekString);
-                    }
-                }
-            });
-        } else if (scheduleTypeId === "DEVICE") {
-            KotiHeatingStatus.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
-                if (err) {
-                    res.status(500).send(err)
+                    })
                 } else {
-                    logger.log(req, 'loaded schema:' + JSON.stringify(schema));
-                    logger.log(req, ' timetable:' + JSON.stringify(schema.timetable));
-                    if (schema !== null && schema.timetable !== undefined) {
-                        return res.jsonWrapped({
-                            "typeId": scheduleTypeId,
-                            "heatingId": heatingId,
-                            "timetable": schema.timetable
-
-                        })
-                    } else {
-                        logger.log(req, 'no schema or timetable for heatingId=' + heatingId);
-                    }
+                    logger.log(req, 'no schema or timetable for heatingId=' + heatingId);
+                    return res.status(204).send(weekString);
                 }
-            });
-        } else {
-            return res.status(400).send({"message": "Unknown schedule type id"});
-        }
+            }
+        });
+
     });
 
     // return res.status(200).json({
@@ -281,18 +278,18 @@ exports.cleanupHeatingData = function (req, res) {
         KotiHeatingSchedule.remove({}, function (err, result) {
             if (err == null) {
                 logger.log(req, 'Schedule model cleaned!');
-                logger.log(req, "Ready to drop schema model...");
-                KotiHeatingSchema.remove({}, function (err, result) {
+                logger.log(req, "Ready to drop status model...");
+                KotiHeatingStatus.remove({}, function (err, result) {
                     if (err == null) {
-                        logger.log(req, 'Schema model cleaned!');
+                        logger.log(req, 'Status model cleaned!');
                         logger.log(req, "Drop done...");
                         return res.status(200).json({
                             "message": "drop done"
                         })
                     } else {
-                        logger.log(req, 'Schema model clean failed!' + err);
+                        logger.log(req, 'Status model clean failed!' + err);
                         return res.status(500).json({
-                            "message": "schema drop failed"
+                            "message": "status drop failed"
                         })
                     }
                 });
@@ -305,5 +302,58 @@ exports.cleanupHeatingData = function (req, res) {
         });
 
 
+    });
+}
+
+
+exports.simulateDeviceSync = function (req, res) {
+    apiKeyUtils.verifyUserAdminKey(req, res, () => {
+        logger.log(req, "Ready to simulate sync of the device...");
+        const heatingId = req.params.heating_id;
+        KotiHeatingSchedule.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
+            if (err) {
+                return res.status(500).send(err)
+            } else {
+                logger.log(req, 'loaded schema:' + JSON.stringify(schema));
+                let weekString = "";
+                if (schema !== null && schema.timetable !== undefined) {
+
+                    var currentDateTime = new Date()
+                    var timetabletemp = 1
+                    try {
+                        timetabletemp = schema.timetable[currentDateTime.getDay() - 1][currentDateTime.getHours()] / 10
+                    } catch (e) {
+                        logger.err(req, "Unable to read current temperature from time table for [" + currentDateTime.getDay() - 1 + "][" + currentDateTime.getHours() + "]")
+                    }
+                    var newHeatingStatus =
+                        {
+                            heatingId: heatingId,
+                            heatingName: "fakeNameBySyncRequest",
+                            hour: currentDateTime.getHours(),
+                            minute: currentDateTime.getMinutes(),
+                            day: currentDateTime.getDay(),
+                            heatingMode: 2,
+                            temperature: timetabletemp,
+                            timestamp: currentDateTime,
+                            timetable: schema.timetable
+                        };
+
+                    KotiHeatingStatus.findOneAndUpdate({heatingId: heatingId}, newHeatingStatus,
+                        {upsert: true, new: true, runValidators: true}, // options
+                        function (err, updateResult) {
+                            if (err) {
+                                logger.log(req, "error when saving model:");
+                                res.send(err)
+                            }
+                            else
+                                res.status(200).jsonWrapped(updateResult)
+                        })
+
+                } else {
+                    logger.log(req, 'no schema or timetable for heatingId=' + heatingId);
+                    return res.status(204).send(weekString);
+                }
+            }
+        });
     });
 }

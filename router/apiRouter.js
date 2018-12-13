@@ -165,7 +165,7 @@ exports.getApiRouter = function () {
 
 
     /**
-     * GET - Request for schedule - intended for heating device (type_id is DEVICE)
+     * GET - Get requested schedule in raw format - intended to be read by heating device
      * heating_id - which heating device schedule are we requesting
      */
     //Attention, schedule/raw must be applied before schedule
@@ -173,11 +173,10 @@ exports.getApiRouter = function () {
         .get(kotiHeatingController.getHeatingScheduleRaw);
 
     /**
-     * GET - Request for schedule - intended for mobile
+     * GET - Get requested schedule - it's schedule on server, not schedule of specific device
      * heating_id - which heating device are we requesting
-     * typ_id (DEVICE/REQUEST) - do we request for real schedule of device or schedule which is requested to be on the device
      */
-    api_router.route('/kotinode/heating/schedule/:heating_id/:type_id')
+    api_router.route('/kotinode/heating/schedule/:heating_id')
         .get(kotiHeatingController.getHeatingSchedule);
 
     /**
@@ -193,6 +192,11 @@ exports.getApiRouter = function () {
     api_router.route('/kotinode/heating/cleanup')
         .delete(kotiHeatingController.cleanupHeatingData);
 
+    /**
+     *  ADMINISTRATION TOOL to sync scheduled data with device.
+     */
+    api_router.route('/kotinode/heating/sync/:heating_id')
+        .patch(kotiHeatingController.simulateDeviceSync)
 
 // ----------------------------------------------------
 // DB SHOWCASE - CLASS
