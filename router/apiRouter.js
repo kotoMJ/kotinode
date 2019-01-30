@@ -180,6 +180,13 @@ exports.getApiRouter = function () {
         .get(kotiHeatingController.getHeatingSchedule);
 
     /**
+     * GET - Get requested mode in raw format - intended to be read by heating device
+     * heating_id - which heating device schedule are we requesting
+     */
+    api_router.route('/kotinode/heating/mode/raw/:heating_id')
+        .get(kotiHeatingController.getHeatingModeRaw);
+
+    /**
      * PROVIDE CURRENT SHA1 FINGERPRINT OF SSH CERTIFICATE - used by external API to provide secretly HTTP endpoint
      * for Arduino device (since Arduino needs it to start secure communication).
      */

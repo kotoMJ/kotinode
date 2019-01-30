@@ -73,8 +73,7 @@ exports.saveHeatingStatus = function (req, res) {
                     logger.log(req, 'incoming body:' + JSON.stringify(req.body));
                     logger.log(req, "error when saving model:");
                     res.send(err)
-                }
-                else
+                } else
                     res.status(200).jsonWrapped(updateResult)
             })
     })
@@ -132,12 +131,14 @@ exports.setHeatingSchedule = function (req, res) {
         const timetable = req.body.timetable;
         const heatingId = req.params.heating_id;
         //const validity = req.body.validity;
+        const mode = req.body.mode
         let newHeatingSchedule =
             {
                 heatingId: heatingId,
                 timetable: timetable,
-                validity: Date()
+                validity: Date(),
                 //validity: moment(validity, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate()//2018-01-22T06:52:49.000Z
+                mode: mode
             };
 
         KotiHeatingSchedule.findOneAndUpdate({heatingId: heatingId}, newHeatingSchedule,
@@ -147,8 +148,7 @@ exports.setHeatingSchedule = function (req, res) {
                     logger.log(req, "error when saving model:");
                     logger.log(req, JSON.stringify(newHeatingSchedule));
                     res.status(500).send(err)
-                }
-                else {
+                } else {
                     requestHeatingStatusForId(req, res, heatingId)
                 }
             })
@@ -226,7 +226,8 @@ exports.getHeatingSchedule = function (req, res) {
                 if (schema !== null && schema.timetable !== undefined) {
                     return res.jsonWrapped({
                         "heatingId": heatingId,
-                        "timetable": schema.timetable
+                        "timetable": schema.timetable,
+                        "mode": schema.mode
 
                     })
                 } else {
@@ -253,6 +254,49 @@ exports.getHeatingSchedule = function (req, res) {
     //         }
     //     }
     // )
+}
+
+/**
+ * PROVIDE HEATING MODE - in raw format - read by heating (Arduino app) periodically.
+ * @param req
+ * @param res
+ */
+exports.getHeatingModeRaw = function (req, res) {
+    const DO_NOT_FORCE = 3;//anything except 0/1/2 means do not force mode
+    apiKeyUtils.verifyHeatingKey(req, res, () => {
+        const heatingId = req.params.heating_id;
+        KotiHeatingSchedule.findOne().where('heatingId').equals(heatingId).exec(function (err, schema) {
+            if (err) {
+                return res.status(500).send(err)
+            } else {
+                let forceMode = schema.mode;
+                if (forceMode === undefined) {
+                    forceMode = DO_NOT_FORCE
+                }
+
+                if (schema.mode !== DO_NOT_FORCE) {
+                    let newHeatingSchedule =
+                        {
+                            heatingId: heatingId,
+                            timetable: schema.timetable,
+                            validity: Date(),
+                            mode: DO_NOT_FORCE
+                        };
+                    KotiHeatingSchedule.findOneAndUpdate({heatingId: heatingId}, newHeatingSchedule,
+                        {upsert: true, new: true, runValidators: true}, // options
+                        function (err, updateResult) {
+                            if (err) {
+                                logger.log(req, "error when saving DO_NOT_FORCE mode in KotiHeatingSchedule model."+ err);
+                                logger.log(req, JSON.stringify(newHeatingSchedule));
+
+                            }
+                        });
+                }
+                logger.log(req, "forceMode=" + forceMode)
+                return res.status(200).send("" + forceMode);
+            }
+        });
+    });
 }
 
 /**
@@ -332,10 +376,10 @@ exports.simulateDeviceSync = function (req, res) {
                             hour: currentDateTime.getHours(),
                             minute: currentDateTime.getMinutes(),
                             day: currentDateTime.getDay(),
-                            heatingMode: 2,
+                            heatingMode: schema.mode,
                             temperature: timetabletemp,
                             timestamp: currentDateTime,
-                            timetable: schema.timetable
+                            timetable: schema.timetable,
                         };
 
                     KotiHeatingStatus.findOneAndUpdate({heatingId: heatingId}, newHeatingStatus,
@@ -344,8 +388,7 @@ exports.simulateDeviceSync = function (req, res) {
                             if (err) {
                                 logger.log(req, "error when saving model:");
                                 res.send(err)
-                            }
-                            else
+                            } else
                                 res.status(200).jsonWrapped(updateResult)
                         })
 
