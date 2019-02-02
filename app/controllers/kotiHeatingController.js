@@ -71,7 +71,7 @@ exports.saveHeatingStatus = function (req, res) {
             function (err, updateResult) {
                 if (err) {
                     logger.log(req, 'incoming body:' + JSON.stringify(req.body));
-                    logger.log(req, "error when saving model:");
+                    logger.log(req, "error when saving model:"+err);
                     res.send(err)
                 } else
                     res.status(200).jsonWrapped(updateResult)
@@ -131,12 +131,16 @@ exports.setHeatingSchedule = function (req, res) {
         const timetable = req.body.timetable;
         const heatingId = req.params.heating_id;
         //const validity = req.body.validity;
-        const mode = req.body.mode
+        let mode = req.body.mode
+        if (mode === undefined) {
+            mode = 2
+        }
+
         let newHeatingSchedule =
             {
                 heatingId: heatingId,
                 timetable: timetable,
-                validity: Date(),
+                //validity: Date(),
                 //validity: moment(validity, "YYYY-MM-DDTHH:mm:ss.sssZ").toDate()//2018-01-22T06:52:49.000Z
                 mode: mode
             };
@@ -145,7 +149,7 @@ exports.setHeatingSchedule = function (req, res) {
             {upsert: true, new: true, runValidators: true}, // options
             function (err, updateResult) {
                 if (err) {
-                    logger.log(req, "error when saving model:");
+                    logger.log(req, "error when saving model:" + err);
                     logger.log(req, JSON.stringify(newHeatingSchedule));
                     res.status(500).send(err)
                 } else {
@@ -286,7 +290,7 @@ exports.getHeatingModeRaw = function (req, res) {
                         {upsert: true, new: true, runValidators: true}, // options
                         function (err, updateResult) {
                             if (err) {
-                                logger.log(req, "error when saving DO_NOT_FORCE mode in KotiHeatingSchedule model."+ err);
+                                logger.log(req, "error when saving DO_NOT_FORCE mode in KotiHeatingSchedule model." + err);
                                 logger.log(req, JSON.stringify(newHeatingSchedule));
 
                             }
@@ -386,7 +390,7 @@ exports.simulateDeviceSync = function (req, res) {
                         {upsert: true, new: true, runValidators: true}, // options
                         function (err, updateResult) {
                             if (err) {
-                                logger.log(req, "error when saving model:");
+                                logger.log(req, "error when saving model:"+err);
                                 res.send(err)
                             } else
                                 res.status(200).jsonWrapped(updateResult)
