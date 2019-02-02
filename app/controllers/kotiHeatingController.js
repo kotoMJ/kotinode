@@ -133,7 +133,7 @@ exports.setHeatingSchedule = function (req, res) {
         //const validity = req.body.validity;
         let mode = req.body.mode
         if (mode === undefined) {
-            mode = 2
+            mode = 3 // out of scope means, force no mode by default
         }
 
         let newHeatingSchedule =
