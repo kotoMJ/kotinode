@@ -1,5 +1,8 @@
 var fs = require('fs');
 var logger = require('../utils/logger.js');
+var jwt = require('jsonwebtoken');
+var kotiConfig = require('config.json')('./app/config/config.json', process.env.NODE_ENV == 'dev' ? 'development' : 'production');
+const Promise = require('bluebird');
 
 
 // ----------------------------------------------------
@@ -42,7 +45,7 @@ exports.getShowcaseTeacherFixed = function (req, res) {
 // http://url:port/api/securityshowcase/login
 // ----------------------------------------------------
 
-exports.postShowcaseSecurityLogin = function (req, res) {
+exports.simpleLogin = function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
     if ((username === undefined) || (password === undefined)) {
@@ -69,4 +72,131 @@ exports.postShowcaseSecurityLogin = function (req, res) {
         })
     }
 
+};
+
+exports.showcaseUser = function (req, res) {
+    try {
+        if (req.headers.authorization === undefined || req.headers.authorization === null) {
+            res.status(401).json({'message': 'missing jwt header'});
+        }
+        const token = req.headers.authorization.split(" ")[1]
+        logger.log(req, 'token='+token)
+        jwt.verify(token, kotiConfig.api_key, function (err, payload) {
+            console.log(payload)
+            if (payload) {
+                res.status(200).json({
+                    "dataValue": {
+                        "name": "michal",
+                        "surname": "jenicek"
+                    }
+                })
+
+            } else {
+                logger.err(req, err)
+                res.status(401).json({'message': 'invalid jwt'});
+            }
+        })
+    } catch (e) {
+        logger.err(req, e)
+        res.status(500).json({'message': 'unexpected error'});
+    }
+}
+
+// ----------------------------------------------------
+// KOTINODE JWT AUTHORIZATION
+// http://url:port/api/kotinode/login
+// ----------------------------------------------------
+
+exports.jwtLogin = function (req, res) {
+    try {
+        const credentials = req.body;
+        logger.log(req, "postKotoLogin");
+        logger.log(req, JSON.stringify(kotiConfig.userList));
+
+        if (credentials.password === undefined || credentials.email === undefined) {
+            res.status(400).json({'message': 'Missing user or password'});
+        } else {
+
+            var userList = JSON.parse(JSON.stringify(kotiConfig.userList));
+            var currentUser = null;
+            for (var i in userList) {
+                logger.log(req, JSON.stringify(userList[i]));
+                if (userList[i].email === credentials.email) {
+                    currentUser = userList[i];
+                    break;
+                }
+            }
+            if (currentUser !== null && credentials.password === currentUser.password) {
+                logger.log(req, "in...");
+                // Once authenticated, the user profiles is signed and the jwt token is returned as response to the client.
+                // It's expected the jwt token will be included in the subsequent client requests.
+                var profile = {
+                    'user': currentUser.email,
+                    'role': currentUser.role,
+                };
+                var jwtToken = jwt.sign(profile, kotiConfig.api_key, {'expiresIn': kotiConfig.api_expire});  // 5*60: 5min
+                logger.log(req, 'jwtOut:' + jwtToken)
+                res.status(200).json({
+                    id_token: jwtToken
+                });
+
+                alertClients('info', `User '${credentials.user}' just logged in`);
+            } else {
+                logger.log(req, "bad...");
+                res.status(401).json({'message': 'Invalid user/password'});
+
+                alertClients('error', `User '${credentials.user}' just failed to login`);
+            }
+        }
+    } catch (e) {
+        logger.err(req, e)
+        res.status(500).json({'message': 'unexpected error'});
+    }
+};
+
+// Alerts all clients via socket io.
+function alertClients(type, msg) {
+    console.log("SocketIO alerting clients: ", msg);
+    koTio.sockets.emit('alert', {message: msg, time: new Date(), type});
+}
+
+exports.preflight = function (req, res) {
+    logger.log(req, 'Preflight...');
+    res.status(200).json({});
+}
+
+exports.loginGQLPromise = function (requestId, email, password) {
+    return new Promise(function (resolve, reject) {
+        logger.log(requestId, "postKotoLogin");
+        logger.log(requestId, JSON.stringify(kotiConfig.userList));
+        var userList = JSON.parse(JSON.stringify(kotiConfig.userList));
+        var currentUser = null;
+        for (var i in userList) {
+            logger.log(requestId, JSON.stringify(userList[i]));
+            if (userList[i].email === email) {
+                currentUser = userList[i];
+                break;
+            }
+        }
+
+        if (currentUser !== null && password === currentUser.password) {
+            logger.log(requestId, "in...");
+            // Once authenticated, the user profiles is signed and the jwt token is returned as response to the client.
+            // It's expected the jwt token will be included in the subsequent client requests.
+            var profile = {
+                'user': currentUser.email,
+                'role': currentUser.role,
+            };
+            var jwtToken = jwt.sign(profile, kotiConfig.api_key, {'expiresIn': kotiConfig.api_expire});  // 5*60: 5min
+            logger.log(requestId, 'jwtOut:' + jwtToken)
+            resolve({
+                token: jwtToken
+            })
+            //alertClients('info', `User '${credentials.user}' just logged in`);
+        } else {
+            logger.log(requestId, "bad...");
+            reject('Invalid user/password');
+            //alertClients('error', `User '${credentials.user}' just failed to login`);
+        }
+    })
 };

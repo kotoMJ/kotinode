@@ -45,7 +45,7 @@ exports.getApiRouter = function () {
 
     api_router.route('/kotinode/login')
         .post(function (req, res, next) {
-            kotoAuthController.postKotoLogin(req, res);
+            kotoAuthController.kotoLogin(req, res);
         })
         .options(kotoAuthController.preflight);
 // ----------------------------------------------------
@@ -235,13 +235,20 @@ exports.getApiRouter = function () {
 
     api_router.route('/securityshowcase/jwtLogin')
         .post(function (req, res, next) {
-            kotoAuthController.postKotoLogin(req, res);
+            showcaseController.jwtLogin(req, res);
         })
-        .options(kotoAuthController.preflight);
+        .options(showcaseController.preflight);
+
+
+    api_router.route('/securityshowcase/secured/user')
+        .post(function (req, res, next) {
+            showcaseController.showcaseUser(req, res);
+        })
+        .options(showcaseController.preflight);
 
     api_router.route('/securityshowcase/login')
         .post(function (req, res, next) {
-            showcaseController.postShowcaseSecurityLogin(req, res);
+            showcaseController.simpleLogin(req, res);
         });
 
 // ----------------------------------------------------
